@@ -1,0 +1,32 @@
+{
+  "name": "@microfrontend/source",
+  "version": "0.0.0",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "graph": "nx graph",
+    "lint": "nx run-many -t lint",
+    "typecheck": "nx run-many -t typecheck",
+    "test": "nx run-many -t test",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "3.3.6",
+    "@nx/angular": "23.1.1",
+    "@nx/eslint": "23.1.1",
+    "@nx/eslint-plugin": "23.1.1",
+    "@nx/js": "23.1.1",
+    "@nx/nest": "23.1.1",
+    "@nx/react": "23.1.1",
+    "@nx/vue": "23.1.1",
+    "@nx/web": "23.1.1",
+    "@nx/workspace": "23.1.1",
+    "@typescript-eslint/eslint-plugin": "8.67.0",
+    "@typescript-eslint/parser": "8.67.0",
+    "eslint": "10.9.0",
+    "eslint-config-prettier": "10.1.8",
+    "nx": "23.1.1",
+    "prettier": "3.9.6",
+    "typescript": "5.9.3"
+  }
+}

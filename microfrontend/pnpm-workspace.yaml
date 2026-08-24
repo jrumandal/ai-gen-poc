@@ -1,0 +1,9 @@
+﻿packages:
+  - apps/*
+  - libs/*
+autoInstallPeers: true
+allowBuilds:
+  '@parcel/watcher': true
+  less: false
+  nx: true
+  unrs-resolver: true

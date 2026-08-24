@@ -7,12 +7,12 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 
 ## Phase 0 — Monorepo scaffolding
 - [x] 0.1 Environment check (node 22 / pnpm 11 / git / docker) — ✅ done (2026-08-24)
-- [ ] 0.2 `git init` at `d:\workspace` + `.gitignore` + initial commit (plan.md, STEPS.md)
-- [ ] 0.3 Scaffold Nx workspace (pnpm, TS, eslint) in `microfrontend/`
-- [ ] 0.4 Add Nx plugins: `@nx/angular`, `@nx/react`, `@nx/vue`, `@nx/nest`, `@nx/web`
-- [ ] 0.5 `tsconfig.base.json` path aliases (`@mf/*`, `@shared/*`, `@server/*`)
-- [ ] 0.6 Verify: `nx graph` renders; `nx run-many -t lint` passes
-- [ ] 0.7 Commit Phase 0
+- [x] 0.2 `git init` at `d:\workspace` + `.gitignore` + initial commit — ✅ done (commit 1155874)
+- [x] 0.3 Scaffold Nx workspace (pnpm, TS, eslint) in `microfrontend/` — ✅ done (2026-08-24)
+- [x] 0.4 Add Nx plugins: `@nx/angular`, `@nx/react`, `@nx/vue`, `@nx/nest`, `@nx/web` — ✅ done (2026-08-24)
+- [x] 0.5 `tsconfig.base.json` path aliases (`@mf/*`, `@shared/*`, `@server/*`) — ✅ done (2026-08-24)
+- [x] 0.6 Verify: `nx graph` renders; `nx run-many -t lint` passes — ✅ done (2026-08-24)
+- [x] 0.7 Commit Phase 0 — ✅ done (2026-08-24)
 
 ## Phase 1 — Shared contracts
 - [ ] 1.1 OpenAPI specs: `openapi/{catalog,cart,user}.yaml`
@@ -74,4 +74,9 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 - [ ] 6.5 Commit Phase 6
 
 ## Notes / blockers
-- (none yet)
+- Windows: default shell is PowerShell; wrap commands in `cmd /c`. Avoid nested double quotes in cmd (use `git commit -F file` for messages).
+- Docker Desktop is installed at `C:\Users\Gaming\AppData\Local\Programs\DockerDesktop\Docker Desktop.exe`; start it before DB phases.
+- pnpm 11: build scripts must be approved in `pnpm-workspace.yaml` `allowBuilds` (`@parcel/watcher`, `unrs-resolver` = true), otherwise `pnpm add` exits 1 with `ERR_PNPM_IGNORED_BUILDS`.
+- PowerShell 5.1 `Set-Content -Encoding utf8` writes a BOM — do NOT use it for JSON/JS files; write via Node (`node -e` or a .js script).
+- Pin `typescript@~5.9` — the npm `latest` tag is the TS 7.x native preview, incompatible with the Nx 23.1.1 toolchain.
+- ESLint 10 flat config: `@nx/enforce-module-boundaries` uses `enforceBuildableLibDependency` + `depConstraints[].onlyDependOnLibsWithTags` (not `onlyAllowImports`).
