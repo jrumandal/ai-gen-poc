@@ -1,0 +1,77 @@
+# Step Tracker — Multi-Framework Micro-Frontend Reference Architecture
+
+Resume guide: work top-to-bottom; the first `⬜ pending` step is where to continue.
+Status legend: `⬜ pending` → `🔄 in-progress` → `✅ done` (after git commit) | `⛔ blocked` (reason noted).
+
+Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (Nx + pnpm monorepo)
+
+## Phase 0 — Monorepo scaffolding
+- [x] 0.1 Environment check (node 22 / pnpm 11 / git / docker) — ✅ done (2026-08-24)
+- [ ] 0.2 `git init` at `d:\workspace` + `.gitignore` + initial commit (plan.md, STEPS.md)
+- [ ] 0.3 Scaffold Nx workspace (pnpm, TS, eslint) in `microfrontend/`
+- [ ] 0.4 Add Nx plugins: `@nx/angular`, `@nx/react`, `@nx/vue`, `@nx/nest`, `@nx/web`
+- [ ] 0.5 `tsconfig.base.json` path aliases (`@mf/*`, `@shared/*`, `@server/*`)
+- [ ] 0.6 Verify: `nx graph` renders; `nx run-many -t lint` passes
+- [ ] 0.7 Commit Phase 0
+
+## Phase 1 — Shared contracts
+- [ ] 1.1 OpenAPI specs: `openapi/{catalog,cart,user}.yaml`
+- [ ] 1.2 GraphQL SDL: `graphql/{catalog,cart,user,gateway}.graphql`
+- [ ] 1.3 `libs/shared/contracts` + graphql-codegen Nx target `generate:graphql` (TS types + Apollo client)
+- [ ] 1.4 openapi-typescript + openapi-fetch generation target `generate:api`
+- [ ] 1.5 `libs/shared/event-bus` — typed custom-event names/payloads
+- [ ] 1.6 `libs/shared/design-tokens` — CSS custom properties + `tokens.css`
+- [ ] 1.7 Verify: generated types compile; DTO round-trip unit test; `nx build shared-contracts`
+- [ ] 1.8 Commit Phase 1
+
+## Phase 1.5 — Database layer (PostgreSQL + Prisma)
+- [ ] 15.1 `prisma/schema.prisma` — Product, Category, Cart, CartItem, User, Session
+- [ ] 15.2 `docker-compose.yml` (PostgreSQL + pgAdmin) + `.env`
+- [ ] 15.3 `libs/shared/db` — Prisma client singleton + `db:migrate` / `db:seed` / `db:studio` targets
+- [ ] 15.4 Verify: `prisma validate`; `migrate dev` creates tables; seed idempotent
+- [ ] 15.5 Commit Phase 1.5
+
+## Phase 2 — Micro-Frontends (Web Components)
+- [ ] 2A.1 Angular MF `libs/mf/catalog` (custom element `catalog-mf`, customElements mode)
+- [ ] 2A.2 Catalog SSR entry (`ssr.ts` renderModule → HTML string) + `hydrate.ts` + `register.ts`
+- [ ] 2B.1 React MF `libs/mf/cart` (custom element `cart-mf`, light-DOM createRoot)
+- [ ] 2B.2 Cart SSR (`renderToString`) + hydrate (`hydrateRoot`) + register
+- [ ] 2C.1 Vue MF `libs/mf/user` (custom element `user-mf`, defineCustomElement)
+- [ ] 2C.2 User SSR (`renderToString` from `@vue/server-renderer`) + hydrate + register
+- [ ] 2.3 All MFs: import design-tokens, emit/subscribe event-bus, no cross-MF imports
+- [ ] 2.4 Verify per MF: `nx build` emits ESM + SSR entry; SSR-string test; custom-element JSDOM test
+- [ ] 2.5 Commit Phase 2
+
+## Phase 3 — Shell (Angular SSR) + composition
+- [ ] 3.1 Shell app `apps/shell` (Angular + `@angular/ssr` Express adapter)
+- [ ] 3.2 Register 3 custom elements; routes `/catalog`, `/cart`, `/account`; top nav + theme
+- [ ] 3.3 SSR composition: server calls each MF `ssr.render(props)`, injects markup; client hydrates
+- [ ] 3.4 Shared ApolloClient bootstrap injected into MFs
+- [ ] 3.5 Verify: `nx serve shell` → curl shows server-rendered markup for all 3 MFs
+- [ ] 3.6 Commit Phase 3
+
+## Phase 4 — NestJS micro-services + gateway
+- [ ] 4.1 `catalog-svc` (NestJS + GraphQL + Prisma)
+- [ ] 4.2 `cart-svc` (NestJS + GraphQL + Prisma)
+- [ ] 4.3 `user-svc` (NestJS + GraphQL + Prisma)
+- [ ] 4.4 `libs/server/shared` — health, logging, error filter, config, Prisma module
+- [ ] 4.5 `api-gateway` (Apollo Federation gateway, CORS, JWT stub, `/health` aggregate)
+- [ ] 4.6 Verify: services serve GraphQL; gateway federates cross-service query; `/health` green; contract test
+- [ ] 4.7 Commit Phase 4
+
+## Phase 5 — Capacitor hybrid mobile
+- [ ] 5.1 `apps/mobile` Capacitor project (webDir = shell build output)
+- [ ] 5.2 Sync shell build → `apps/mobile/web`; `cap sync`
+- [ ] 5.3 Bridge adapter (Capacitor detection + Web-API fallback) + `@capacitor/camera` demo
+- [ ] 5.4 Verify: `cap sync` ok; `cap build android` (requires Android SDK — note if absent)
+- [ ] 5.5 Commit Phase 5
+
+## Phase 6 — DX, docs, CI
+- [ ] 6.1 Root `README.md` (architecture, run instructions, add-MF guide, DB guide)
+- [ ] 6.2 Nx targets: `serve:all`, `build:all`, `test:all`, `lint:all`, `typecheck`, `db:migrate`, `db:seed`, `db:studio`
+- [ ] 6.3 GitHub Actions CI (lint → typecheck → test → build)
+- [ ] 6.4 Final end-to-end verification (per plan §Verification)
+- [ ] 6.5 Commit Phase 6
+
+## Notes / blockers
+- (none yet)

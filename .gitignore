@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+tmp/
+.turbo/
+.nx/
+coverage/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Capacitor
+microfrontend/apps/mobile/web/
+microfrontend/apps/mobile/android/
+microfrontend/apps/mobile/ios/
+
+# Logs & misc
+*.log
+.DS_Store
+Thumbs.db
+*.tsbuildinfo
+commitmsg.txt
