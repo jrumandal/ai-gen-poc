@@ -1,0 +1,47 @@
+# Cart domain schema (self-contained).
+# Used by the cart microfrontend and by the gateway (federation composition).
+type Query {
+  cart(cartId: ID!): Cart
+}
+
+type Mutation {
+  addItemToCart(cartId: ID!, input: AddItemInput!): Cart!
+  updateCartItem(cartId: ID!, itemId: ID!, input: UpdateItemInput!): Cart!
+  removeItemFromCart(cartId: ID!, itemId: ID!): Cart!
+  clearCart(cartId: ID!): Cart!
+}
+
+type Cart {
+  id: ID!
+  items: [CartItem!]!
+  subtotal: Money!
+  itemCount: Int!
+}
+
+type CartItem {
+  id: ID!
+  productId: ID!
+  quantity: Int!
+  unitPrice: Money!
+  product: ProductRef!
+}
+
+type ProductRef {
+  id: ID!
+  name: String!
+  imageUrl: String
+}
+
+type Money {
+  amount: Int!
+  currency: String!
+}
+
+input AddItemInput {
+  productId: ID!
+  quantity: Int!
+}
+
+input UpdateItemInput {
+  quantity: Int!
+}

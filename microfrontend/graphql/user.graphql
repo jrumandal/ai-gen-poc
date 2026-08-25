@@ -1,0 +1,73 @@
+# User domain schema (self-contained).
+# Used by the user microfrontend and by the gateway (federation composition).
+scalar DateTime
+
+type Query {
+  me: User
+  orders: [Order!]!
+}
+
+type Mutation {
+  login(input: LoginInput!): User!
+  updateProfile(input: UpdateProfileInput!): User!
+}
+
+type User {
+  id: ID!
+  email: String!
+  name: String!
+  address: Address!
+}
+
+type Address {
+  line1: String!
+  city: String!
+  state: String
+  postalCode: String!
+  country: String!
+}
+
+type Order {
+  id: ID!
+  createdAt: DateTime!
+  status: OrderStatus!
+  items: [OrderItem!]!
+  total: Money!
+}
+
+type OrderItem {
+  productId: ID!
+  quantity: Int!
+  unitPrice: Money!
+}
+
+enum OrderStatus {
+  PLACED
+  CONFIRMED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+type Money {
+  amount: Int!
+  currency: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input UpdateProfileInput {
+  name: String!
+  address: AddressInput!
+}
+
+input AddressInput {
+  line1: String!
+  city: String!
+  state: String
+  postalCode: String!
+  country: String!
+}

@@ -1,4 +1,4 @@
-# See https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+# See https://docs.github.com/en/get-started/writing-on-github/working-with-files-on-github/ignoring-files for more about ignoring files.
 
 # compiled output
 dist
@@ -37,6 +37,7 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+nul
 
 .nx/cache
 .nx/workspace-data

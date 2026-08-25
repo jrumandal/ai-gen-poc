@@ -1,0 +1,59 @@
+# Catalog domain schema (self-contained).
+# Used by the catalog microfrontend and by the gateway (federation composition).
+scalar DateTime
+
+type Query {
+  products(input: ProductFilterInput): [Product!]!
+  product(id: ID!): Product
+  categories: [Category!]!
+}
+
+type Mutation {
+  # Catalog is read-only for the storefront; no mutations in this domain.
+  _empty: Boolean
+}
+
+input ProductFilterInput {
+  category: String
+  minPrice: Int
+  maxPrice: Int
+  inStock: Boolean
+  sort: ProductSort
+  search: String
+}
+
+enum ProductSort {
+  PRICE_ASC
+  PRICE_DESC
+  NAME_ASC
+  NAME_DESC
+}
+
+type Product {
+  id: ID!
+  name: String!
+  description: String
+  price: Money!
+  imageUrl: String
+  inStock: Boolean!
+  categories: [Category!]!
+  attributes: [ProductAttribute!]!
+}
+
+type ProductAttribute {
+  name: String!
+  value: String!
+}
+
+type Category {
+  id: ID!
+  name: String!
+  slug: String!
+  parentId: ID
+  children: [Category!]!
+}
+
+type Money {
+  amount: Int!
+  currency: String!
+}

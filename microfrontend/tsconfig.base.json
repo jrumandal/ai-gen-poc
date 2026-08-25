@@ -26,7 +26,8 @@
     "paths": {
       "@mf/*": ["libs/mf/*"],
       "@shared/*": ["libs/shared/*"],
-      "@server/*": ["libs/server/*"]
+      "@server/*": ["libs/server/*"],
+      "@shared/contracts": ["./libs/shared/contracts/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

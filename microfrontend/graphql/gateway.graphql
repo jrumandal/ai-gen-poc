@@ -1,0 +1,161 @@
+# Gateway schema (federation composition of catalog + cart + user).
+# This is the single schema the shared-contracts codegen targets so that
+# every microfrontend shares one set of generated types.
+scalar DateTime
+
+type Query {
+  # catalog
+  products(input: ProductFilterInput): [Product!]!
+  product(id: ID!): Product
+  categories: [Category!]!
+  # cart
+  cart(cartId: ID!): Cart
+  # user
+  me: User
+  orders: [Order!]!
+}
+
+type Mutation {
+  # cart
+  addItemToCart(cartId: ID!, input: AddItemInput!): Cart!
+  updateCartItem(cartId: ID!, itemId: ID!, input: UpdateItemInput!): Cart!
+  removeItemFromCart(cartId: ID!, itemId: ID!): Cart!
+  clearCart(cartId: ID!): Cart!
+  # user
+  login(input: LoginInput!): User!
+  updateProfile(input: UpdateProfileInput!): User!
+}
+
+# ---- catalog ----
+input ProductFilterInput {
+  category: String
+  minPrice: Int
+  maxPrice: Int
+  inStock: Boolean
+  sort: ProductSort
+  search: String
+}
+
+enum ProductSort {
+  PRICE_ASC
+  PRICE_DESC
+  NAME_ASC
+  NAME_DESC
+}
+
+type Product {
+  id: ID!
+  name: String!
+  description: String
+  price: Money!
+  imageUrl: String
+  inStock: Boolean!
+  categories: [Category!]!
+  attributes: [ProductAttribute!]!
+}
+
+type ProductAttribute {
+  name: String!
+  value: String!
+}
+
+type Category {
+  id: ID!
+  name: String!
+  slug: String!
+  parentId: ID
+  children: [Category!]!
+}
+
+# ---- cart ----
+type Cart {
+  id: ID!
+  items: [CartItem!]!
+  subtotal: Money!
+  itemCount: Int!
+}
+
+type CartItem {
+  id: ID!
+  productId: ID!
+  quantity: Int!
+  unitPrice: Money!
+  product: ProductRef!
+}
+
+type ProductRef {
+  id: ID!
+  name: String!
+  imageUrl: String
+}
+
+input AddItemInput {
+  productId: ID!
+  quantity: Int!
+}
+
+input UpdateItemInput {
+  quantity: Int!
+}
+
+# ---- user ----
+type User {
+  id: ID!
+  email: String!
+  name: String!
+  address: Address!
+}
+
+type Address {
+  line1: String!
+  city: String!
+  state: String
+  postalCode: String!
+  country: String!
+}
+
+type Order {
+  id: ID!
+  createdAt: DateTime!
+  status: OrderStatus!
+  items: [OrderItem!]!
+  total: Money!
+}
+
+type OrderItem {
+  productId: ID!
+  quantity: Int!
+  unitPrice: Money!
+}
+
+enum OrderStatus {
+  PLACED
+  CONFIRMED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+input UpdateProfileInput {
+  name: String!
+  address: AddressInput!
+}
+
+input AddressInput {
+  line1: String!
+  city: String!
+  state: String
+  postalCode: String!
+  country: String!
+}
+
+# ---- shared ----
+type Money {
+  amount: Int!
+  currency: String!
+}

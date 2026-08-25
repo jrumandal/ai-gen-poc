@@ -1,0 +1,141 @@
+openapi: 3.0.3
+info:
+  title: User API
+  version: 1.0.0
+  description: User & order service contract (microfrontend).
+servers:
+  - url: http://localhost:4003
+    description: Local user service
+tags:
+  - name: user
+  - name: orders
+paths:
+  /user/me:
+    get:
+      tags: [user]
+      operationId: getMe
+      summary: Get the current user's profile
+      responses:
+        '200':
+          description: The current user
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/User' }
+        '401':
+          description: Not authenticated
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+    patch:
+      tags: [user]
+      operationId: updateProfile
+      summary: Update the current user's profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateProfileInput' }
+      responses:
+        '200':
+          description: The updated user
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/User' }
+  /user/orders:
+    get:
+      tags: [orders]
+      operationId: listOrders
+      summary: List the current user's orders
+      responses:
+        '200':
+          description: A list of orders
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Order' }
+  /user/login:
+    post:
+      tags: [user]
+      operationId: login
+      summary: Authenticate a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/LoginInput' }
+      responses:
+        '200':
+          description: The authenticated user
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/User' }
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+components:
+  schemas:
+    Money:
+      type: object
+      required: [amount, currency]
+      properties:
+        amount: { type: integer }
+        currency: { type: string }
+    Address:
+      type: object
+      required: [line1, city, postalCode, country]
+      properties:
+        line1: { type: string }
+        city: { type: string }
+        state: { type: string, nullable: true }
+        postalCode: { type: string }
+        country: { type: string }
+    User:
+      type: object
+      required: [id, email, name, address]
+      properties:
+        id: { type: string }
+        email: { type: string, format: email }
+        name: { type: string }
+        address: { $ref: '#/components/schemas/Address' }
+    OrderItem:
+      type: object
+      required: [productId, quantity, unitPrice]
+      properties:
+        productId: { type: string }
+        quantity: { type: integer }
+        unitPrice: { $ref: '#/components/schemas/Money' }
+    OrderStatus:
+      type: string
+      enum: [PLACED, CONFIRMED, SHIPPED, DELIVERED, CANCELLED]
+    Order:
+      type: object
+      required: [id, createdAt, status, items, total]
+      properties:
+        id: { type: string }
+        createdAt: { type: string, format: date-time }
+        status: { $ref: '#/components/schemas/OrderStatus' }
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/OrderItem' }
+        total: { $ref: '#/components/schemas/Money' }
+    UpdateProfileInput:
+      type: object
+      required: [name, address]
+      properties:
+        name: { type: string }
+        address: { $ref: '#/components/schemas/Address' }
+    LoginInput:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string, format: password }
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code: { type: string }
+        message: { type: string }

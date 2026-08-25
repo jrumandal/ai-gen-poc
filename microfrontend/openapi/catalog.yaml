@@ -1,0 +1,135 @@
+openapi: 3.0.3
+info:
+  title: Catalog API
+  version: 1.0.0
+  description: Product catalog service contract (microfrontend).
+servers:
+  - url: http://localhost:4001
+    description: Local catalog service
+tags:
+  - name: products
+  - name: categories
+paths:
+  /catalog/products:
+    get:
+      tags: [products]
+      operationId: listProducts
+      summary: List products with optional filters
+      parameters:
+        - name: category
+          in: query
+          schema: { type: string }
+        - name: minPrice
+          in: query
+          schema: { type: integer }
+        - name: maxPrice
+          in: query
+          schema: { type: integer }
+        - name: inStock
+          in: query
+          schema: { type: boolean }
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [PRICE_ASC, PRICE_DESC, NAME_ASC, NAME_DESC]
+        - name: search
+          in: query
+          schema: { type: string }
+      responses:
+        '200':
+          description: A list of products
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+  /catalog/products/{productId}:
+    get:
+      tags: [products]
+      operationId: getProduct
+      summary: Get a product by id
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: The product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /catalog/categories:
+    get:
+      tags: [categories]
+      operationId: listCategories
+      summary: List all categories
+      responses:
+        '200':
+          description: A list of categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+components:
+  schemas:
+    Money:
+      type: object
+      required: [amount, currency]
+      properties:
+        amount:
+          type: integer
+          description: Amount in minor units (cents)
+        currency:
+          type: string
+          example: USD
+    ProductAttribute:
+      type: object
+      required: [name, value]
+      properties:
+        name: { type: string }
+        value: { type: string }
+    Product:
+      type: object
+      required: [id, name, price, inStock, categories]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        description: { type: string }
+        price: { $ref: '#/components/schemas/Money' }
+        imageUrl: { type: string }
+        inStock: { type: boolean }
+        categories:
+          type: array
+          items: { $ref: '#/components/schemas/Category' }
+        attributes:
+          type: array
+          items: { $ref: '#/components/schemas/ProductAttribute' }
+    Category:
+      type: object
+      required: [id, name, slug, children]
+      properties:
+        id: { type: string }
+        name: { type: string }
+        slug: { type: string }
+        parentId: { type: string, nullable: true }
+        children:
+          type: array
+          items: { $ref: '#/components/schemas/Category' }
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code: { type: string }
+        message: { type: string }
