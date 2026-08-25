@@ -1,6 +1,13 @@
 ﻿import nxPlugin from "@nx/eslint-plugin";
+import tsParser from "@typescript-eslint/parser";
 
 const build = [
+  {
+    files: ["**/*.ts", "**/*.tsx"],
+    languageOptions: {
+      parser: tsParser,
+    },
+  },
   {
     files: ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.mjs", "**/*.cjs"],
     plugins: {
@@ -36,7 +43,14 @@ const build = [
     },
   },
   {
-    ignores: ["**/dist", "**/node_modules", "**/coverage", "**/.nx", "**/web"],
+    ignores: [
+      "**/dist",
+      "**/node_modules",
+      "**/coverage",
+      "**/.nx",
+      "**/web",
+      "**/eslint.config.*",
+    ],
   },
 ];
 

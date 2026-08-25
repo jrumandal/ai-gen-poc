@@ -11,7 +11,7 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 - [x] 0.3 Scaffold Nx workspace (pnpm, TS, eslint) in `microfrontend/` — ✅ done (2026-08-24)
 - [x] 0.4 Add Nx plugins: `@nx/angular`, `@nx/react`, `@nx/vue`, `@nx/nest`, `@nx/web` — ✅ done (2026-08-24)
 - [x] 0.5 `tsconfig.base.json` path aliases (`@mf/*`, `@shared/*`, `@server/*`) — ✅ done (2026-08-24)
-- [x] 0.6 Verify: `nx graph` renders; `nx run-many -t lint` passes — ✅ done (2026-08-24) ⚠️ re-verify after adding TS files (see lint blocker in Notes)
+- [x] 0.6 Verify: `nx graph` renders; `nx run-many -t lint` passes — ✅ re-verified (2026-08-25; contracts lint passes after TS parser fix)
 - [x] 0.7 Commit Phase 0 — ✅ done (2026-08-24)
 
 ## Phase 1 — Shared contracts
@@ -21,7 +21,7 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 - [ ] 1.4 openapi-typescript + openapi-fetch generation target `generate:api` — 🔄 in-progress (types generated via `scripts/generate-contracts.mjs`; **MISSING**: `generate:api` Nx target, `openapi-fetch` client)
 - [ ] 1.5 `libs/shared/event-bus` — typed custom-event names/payloads — ⬜ pending (lib not created)
 - [ ] 1.6 `libs/shared/design-tokens` — CSS custom properties + `tokens.css` — ⬜ pending (lib not created)
-- [ ] 1.7 Verify: generated types compile; DTO round-trip unit test; `nx build shared-contracts` — 🔄 in-progress (compile ✅ · `nx test contracts` 4/4 ✅ · `nx build contracts` ✅; ⛔ `nx lint` blocked — workspace-wide missing TS parser, see Notes)
+- [x] 1.7 Verify: generated types compile; DTO round-trip unit test; `nx build shared-contracts` — ✅ done (2026-08-25; `nx test contracts` 4/4 ✅ · `nx build contracts` ✅ · `nx lint contracts` ✅; actual Nx project name is `contracts`)
 - [ ] 1.8 Commit Phase 1 — ⬜ pending (phase incomplete; checkpoint commit for 1.1/1.2 + partial 1.3/1.4 work done 2026-08-25)
 
 ## Phase 1.5 — Database layer (PostgreSQL + Prisma)
@@ -74,10 +74,10 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 - [ ] 6.5 Commit Phase 6
 
 ## Notes / blockers
-- **⛔ LINT BLOCKER (workspace-wide, Phase 0 tooling defect, found 2026-08-25):** root `microfrontend/eslint.config.mjs` never configures a TypeScript parser, so **every** `.ts`/`.tsx` file fails with "Parsing error: Unexpected token". `nx lint contracts` fails on all TS files. This blocks plan §Verification #1 (`nx run-many -t lint,typecheck` green) and re-opens Phase 0.6's lint claim.
+- **✅ LINT BLOCKER RESOLVED (2026-08-25):** root `microfrontend/eslint.config.mjs` now configures the installed `@typescript-eslint/parser` for `.ts`/`.tsx` and excludes ESLint config files from module-boundary checks. `nx run-many -t lint,typecheck` is green for the available targets (`contracts:lint`; no separate `typecheck` target exists yet).
   - Installed: `@typescript-eslint/parser` 8.67.0 + `@typescript-eslint/eslint-plugin` 8.67.0.
   - **NOT** installed: `typescript-eslint`, `@eslint/js` — so the `@nx/eslint-plugin` flat `flat/typescript` config can't be dropped in as-is.
-  - Fix: either (a) `pnpm add -Dw typescript-eslint @eslint/js` and use `nxPlugin.configs['flat/typescript']`, or (b) wire `@typescript-eslint/parser` directly into the root flat config for `**/*.ts(x)`.
+  - Resolution: wired `@typescript-eslint/parser` directly into the root flat config for `**/*.ts(x)`.
   - Secondary: `@nx/enforce-module-boundaries` flags `libs/shared/contracts/eslint.config.mjs` importing the base config by relative path.
 - Project name for the contracts lib in Nx is **`contracts`** (not `shared-contracts`); use `nx test contracts` / `nx build contracts`.
 - Stray `nul` (0-byte Windows `> nul` redirect artifact) sits in `microfrontend/` — gitignored, do not commit. `.verdaccio/config.yml` is legit (Nx local-registry target) — commit it.
