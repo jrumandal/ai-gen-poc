@@ -22,7 +22,7 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 - [x] 1.5 `libs/shared/event-bus` — typed custom-event names/payloads — ✅ done (2026-08-25; DOM-free `EventBus` + `MFEventMap` contract; 6/6 tests; lint/test/build ✅)
 - [x] 1.6 `libs/shared/design-tokens` — CSS custom properties + `tokens.css` — ✅ done (2026-08-25; `tokens.css` + typed `tokens.ts` + `cssVar()`; 2/2 tests; lint/test/build ✅; `tokens.css` copied to dist)
 - [x] 1.7 Verify: generated types compile; DTO round-trip unit test; `nx build contracts` — ✅ done (2026-08-25; `nx test contracts` 4/4 ✅ · `nx build contracts` ✅ · `nx lint contracts` ✅; actual Nx project name is `contracts`)
-- [ ] 1.8 Commit Phase 1 — 🔄 in-progress (1.1–1.7 all done & verified; awaiting commit)
+- [x] 1.8 Commit Phase 1 — ✅ done (2026-08-25; commit f3e15ac "feat(shared): complete Phase 1 — event-bus + design-tokens libs"; 25 files, 846 insertions)
 
 ## Phase 1.5 — Database layer (PostgreSQL + Prisma)
 - [ ] 15.1 `prisma/schema.prisma` — Product, Category, Cart, CartItem, User, Session
