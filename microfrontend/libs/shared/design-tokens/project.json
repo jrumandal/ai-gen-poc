@@ -1,0 +1,34 @@
+{
+  "name": "design-tokens",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/shared/design-tokens/src",
+  "projectType": "library",
+  "release": {
+    "version": {
+      "manifestRootsToUpdate": ["dist/{projectRoot}"],
+      "currentVersionResolver": "git-tag",
+      "fallbackCurrentVersionResolver": "disk"
+    }
+  },
+  "tags": ["shared"],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/libs/shared/design-tokens",
+        "main": "libs/shared/design-tokens/src/index.ts",
+        "tsConfig": "libs/shared/design-tokens/tsconfig.lib.json",
+        "assets": [
+          "libs/shared/design-tokens/*.md",
+          "libs/shared/design-tokens/tokens.css"
+        ]
+      }
+    },
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/{projectRoot}"
+      }
+    }
+  }
+}

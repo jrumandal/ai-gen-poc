@@ -17,12 +17,12 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 ## Phase 1 — Shared contracts
 - [x] 1.1 OpenAPI specs: `openapi/{catalog,cart,user}.yaml` — ✅ done (2026-08-25; all 3 specs present & valid, incl. DTOs + `Error` model)
 - [x] 1.2 GraphQL SDL: `graphql/{catalog,cart,user,gateway}.graphql` — ✅ done (2026-08-25; all 4 SDL files present; `gateway.graphql` = federated composition)
-- [ ] 1.3 `libs/shared/contracts` + graphql-codegen Nx target `generate:graphql` (TS types + Apollo client) — 🔄 in-progress (contracts lib exists w/ OpenAPI-generated types + passing spec; **MISSING**: graphql-codegen config, `generate:graphql` target, `@apollo/client`)
-- [ ] 1.4 openapi-typescript + openapi-fetch generation target `generate:api` — 🔄 in-progress (types generated via `scripts/generate-contracts.mjs`; **MISSING**: `generate:api` Nx target, `openapi-fetch` client)
-- [ ] 1.5 `libs/shared/event-bus` — typed custom-event names/payloads — ⬜ pending (lib not created)
-- [ ] 1.6 `libs/shared/design-tokens` — CSS custom properties + `tokens.css` — ⬜ pending (lib not created)
-- [x] 1.7 Verify: generated types compile; DTO round-trip unit test; `nx build shared-contracts` — ✅ done (2026-08-25; `nx test contracts` 4/4 ✅ · `nx build contracts` ✅ · `nx lint contracts` ✅; actual Nx project name is `contracts`)
-- [ ] 1.8 Commit Phase 1 — ⬜ pending (phase incomplete; checkpoint commit for 1.1/1.2 + partial 1.3/1.4 work done 2026-08-25)
+- [x] 1.3 `libs/shared/contracts` + graphql-codegen Nx target `generate:graphql` (TS types + Apollo client) — ✅ done (2026-08-25; `codegen.mjs` + `generate:graphql` target; `generated/graphql.ts` valid TS; commit 811ae2f)
+- [x] 1.4 openapi-typescript + openapi-fetch generation target `generate:api` — ✅ done (2026-08-25; `generate:api` target + `openapi-fetch` client in `clients.ts`; commit 811ae2f)
+- [x] 1.5 `libs/shared/event-bus` — typed custom-event names/payloads — ✅ done (2026-08-25; DOM-free `EventBus` + `MFEventMap` contract; 6/6 tests; lint/test/build ✅)
+- [x] 1.6 `libs/shared/design-tokens` — CSS custom properties + `tokens.css` — ✅ done (2026-08-25; `tokens.css` + typed `tokens.ts` + `cssVar()`; 2/2 tests; lint/test/build ✅; `tokens.css` copied to dist)
+- [x] 1.7 Verify: generated types compile; DTO round-trip unit test; `nx build contracts` — ✅ done (2026-08-25; `nx test contracts` 4/4 ✅ · `nx build contracts` ✅ · `nx lint contracts` ✅; actual Nx project name is `contracts`)
+- [ ] 1.8 Commit Phase 1 — 🔄 in-progress (1.1–1.7 all done & verified; awaiting commit)
 
 ## Phase 1.5 — Database layer (PostgreSQL + Prisma)
 - [ ] 15.1 `prisma/schema.prisma` — Product, Category, Cart, CartItem, User, Session

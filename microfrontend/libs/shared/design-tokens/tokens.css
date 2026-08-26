@@ -1,0 +1,87 @@
+/* ===========================================================================
+   @shared/design-tokens
+   CSS custom properties consumed by every micro-frontend.
+   Import this file once at the shell root:  @import "@shared/design-tokens/tokens.css";
+   =========================================================================== */
+
+:root {
+  /* ---- Color: brand ------------------------------------------------------ */
+  --color-brand-50: #eef4ff;
+  --color-brand-100: #d9e6ff;
+  --color-brand-500: #2f6bff;
+  --color-brand-600: #1f56e0;
+  --color-brand-700: #1a46b8;
+
+  /* ---- Color: semantic --------------------------------------------------- */
+  --color-text-primary: #101418;
+  --color-text-secondary: #4a5560;
+  --color-text-inverse: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-subtle: #f5f7fa;
+  --color-border: #d8dee6;
+  --color-success: #1a7f4b;
+  --color-warning: #9a6700;
+  --color-danger: #c0392b;
+  --color-focus-ring: #2f6bff;
+
+  /* ---- Spacing (4px scale) ---------------------------------------------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  /* ---- Typography -------------------------------------------------------- */
+  --font-family-sans:
+    system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-family-mono:
+    ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.375rem;
+  --font-size-2xl: 1.75rem;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+
+  /* ---- Shape ------------------------------------------------------------- */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  /* ---- Elevation --------------------------------------------------------- */
+  --shadow-sm: 0 1px 2px rgba(16, 20, 24, 0.08);
+  --shadow-md: 0 4px 12px rgba(16, 20, 24, 0.12);
+  --shadow-lg: 0 12px 32px rgba(16, 20, 24, 0.16);
+
+  /* ---- Motion ------------------------------------------------------------ */
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 320ms;
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  /* ---- Layout ------------------------------------------------------------ */
+  --layout-max-width: 1200px;
+  --layout-gutter: var(--space-5);
+}
+
+/* Dark theme override — opt in with [data-theme="dark"] on <html> or <body>. */
+[data-theme='dark'] {
+  --color-text-primary: #e8ecf1;
+  --color-text-secondary: #a7b0bb;
+  --color-text-inverse: #101418;
+  --color-surface: #14181d;
+  --color-surface-subtle: #1b2129;
+  --color-border: #2c3542;
+  --color-brand-50: #10203f;
+  --color-brand-100: #17305c;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+}
