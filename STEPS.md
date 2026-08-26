@@ -25,11 +25,11 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 - [x] 1.8 Commit Phase 1 — ✅ done (2026-08-25; commit f3e15ac "feat(shared): complete Phase 1 — event-bus + design-tokens libs"; 25 files, 846 insertions)
 
 ## Phase 1.5 — Database layer (PostgreSQL + Prisma)
-- [ ] 15.1 `prisma/schema.prisma` — Product, Category, Cart, CartItem, User, Session
-- [ ] 15.2 `docker-compose.yml` (PostgreSQL + pgAdmin) + `.env`
-- [ ] 15.3 `libs/shared/db` — Prisma client singleton + `db:migrate` / `db:seed` / `db:studio` targets
-- [ ] 15.4 Verify: `prisma validate`; `migrate dev` creates tables; seed idempotent
-- [ ] 15.5 Commit Phase 1.5
+- [x] 15.1 `prisma/schema.prisma` — ✅ done (2026-08-26; Product, Category, ProductCategory, ProductAttribute, User, Session, Cart, CartItem, Order, OrderItem + OrderStatus enum; money as integer cents + currency)
+- [x] 15.2 `docker-compose.yml` (PostgreSQL 16 + pgAdmin) + `.env`/`.env.example` — ✅ done (2026-08-26; postgres healthy; `DATABASE_URL` in `.env` (gitignored); `.env.example` committed)
+- [x] 15.3 `libs/shared/db` — ✅ done (2026-08-26; PrismaClient singleton cached on `globalThis`; `db:up/down/validate/generate/migrate/deploy/seed/studio` targets; 3/3 tests; lint/test/build ✅)
+- [x] 15.4 Verify — ✅ done (2026-08-26; `prisma validate` ✅; `migrate dev --name init` created all 10 tables; `db seed` idempotent (identical counts on re-run))
+- [x] 15.5 Commit Phase 1.5 — ✅ done (2026-08-26; commit 7778e6b "feat(db): Phase 1.5 — PostgreSQL + Prisma schema, docker-compose, @shared/db lib, idempotent seed")
 
 ## Phase 2 — Micro-Frontends (Web Components)
 - [ ] 2A.1 Angular MF `libs/mf/catalog` (custom element `catalog-mf`, customElements mode)
