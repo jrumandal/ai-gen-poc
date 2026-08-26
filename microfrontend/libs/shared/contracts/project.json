@@ -22,6 +22,22 @@
         "assets": ["libs/shared/contracts/*.md"]
       }
     },
+    "generate:graphql": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/libs/shared/contracts/src/generated/graphql.ts"],
+      "options": {
+        "command": "graphql-codegen --config codegen.mjs",
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "generate:api": {
+      "executor": "nx:run-commands",
+      "outputs": ["{workspaceRoot}/libs/shared/contracts/src/generated"],
+      "options": {
+        "command": "node scripts/generate-contracts.mjs",
+        "cwd": "{workspaceRoot}"
+      }
+    },
     "nx-release-publish": {
       "options": {
         "packageRoot": "dist/{projectRoot}"

@@ -13,6 +13,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "3.3.6",
     "@graphql-codegen/cli": "^7.3.0",
+    "@graphql-codegen/typed-document-node": "^7.1.0",
     "@graphql-codegen/typescript": "^6.1.0",
     "@graphql-codegen/typescript-operations": "^6.1.6",
     "@nx/angular": "23.1.1",
@@ -49,5 +50,9 @@
   },
   "nx": {
     "includedScripts": []
+  },
+  "dependencies": {
+    "@apollo/client": "^4.2.12",
+    "openapi-fetch": "^0.17.0"
   }
 }
