@@ -1,9 +1,15 @@
-﻿packages:
+packages:
   - apps/*
   - libs/*
 autoInstallPeers: true
 allowBuilds:
   '@parcel/watcher': true
+  '@prisma/client': true
+  '@prisma/engines': true
+  esbuild: set this to true or false
   less: false
+  msgpackr-extract: set this to true or false
   nx: true
+  prisma: true
   unrs-resolver: true
+  workerd: set this to true or false
