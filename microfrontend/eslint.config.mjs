@@ -28,6 +28,10 @@ const build = [
               sourceTag: "shared",
               onlyDependOnLibsWithTags: ["*"],
             },
+            {
+              sourceTag: "mf",
+              onlyDependOnLibsWithTags: ["shared"],
+            },
           ],
         },
       ],

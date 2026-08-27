@@ -32,14 +32,14 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 - [x] 15.5 Commit Phase 1.5 — ✅ done (2026-08-26; commit 7778e6b "feat(db): Phase 1.5 — PostgreSQL + Prisma schema, docker-compose, @shared/db lib, idempotent seed")
 
 ## Phase 2 — Micro-Frontends (Web Components)
-- [ ] 2A.1 Angular MF `libs/mf/catalog` (custom element `catalog-mf`, customElements mode)
-- [ ] 2A.2 Catalog SSR entry (`ssr.ts` renderModule → HTML string) + `hydrate.ts` + `register.ts`
-- [ ] 2B.1 React MF `libs/mf/cart` (custom element `cart-mf`, light-DOM createRoot)
-- [ ] 2B.2 Cart SSR (`renderToString`) + hydrate (`hydrateRoot`) + register
-- [ ] 2C.1 Vue MF `libs/mf/user` (custom element `user-mf`, defineCustomElement)
-- [ ] 2C.2 User SSR (`renderToString` from `@vue/server-renderer`) + hydrate + register
-- [ ] 2.3 All MFs: import design-tokens, emit/subscribe event-bus, no cross-MF imports
-- [ ] 2.4 Verify per MF: `nx build` emits ESM + SSR entry; SSR-string test; custom-element JSDOM test
+- [x] 2A.1 Angular MF `libs/mf/catalog` (custom element `catalog-mf`, customElements mode) — ✅ done (2026-08-27; `CatalogComponent` + `createCustomElement` via `@angular/elements`; shared libs externalized via `peerDependencies` + `paths`→dist; `nx build catalog-mf` ✅)
+- [x] 2A.2 Catalog SSR entry (`ssr.ts` renderApplication → HTML string) + `hydrate.ts` + `register.ts` — ✅ done (2026-08-27; `ssr.ts` uses `bootstrapApplication`+`renderApplication`; `register.ts` async `createApplication`→`appRef.injector`; `hydrate.ts` async; 6/6 tests ✅ · lint ✅ · build ✅)
+- [x] 2B.1 React MF `libs/mf/cart` (custom element `cart-mf`, light-DOM createRoot) — ✅ done (2026-08-27; `Cart` React component + `CartElement` (HTMLElement, light-DOM `createRoot`); `@nx/js:tsc` ESM build; `react`/`react-dom` externalized via `peerDependencies`; `@shared/*` via `workspace:*` + `paths`→dist; `nx build cart-mf` ✅)
+- [x] 2B.2 Cart SSR (`renderToString`) + hydrate (`hydrateRoot`) + register — ✅ done (2026-08-27; `ssr.tsx` `renderToString`; `hydrate.ts` attaches event-bus; `register.ts` idempotent `customElements.define`; 9/9 tests ✅ · lint ✅ · build ✅)
+- [x] 2C.1 Vue MF `libs/mf/user` (custom element `user-mf`, light-DOM `createApp`) — ✅ done (2026-08-27; `UserPanel` Vue component + `UserElement` (HTMLElement, light-DOM `createApp().mount()`); `@nx/js:tsc` ESM build; `vue`/`@vue/server-renderer` externalized via `peerDependencies`; `@shared/*` via `workspace:*` + `paths`→dist; `nx build user-mf` ✅)
+- [x] 2C.2 User SSR (`renderToString` from `@vue/server-renderer`) + hydrate + register — ✅ done (2026-08-27; `ssr.ts` async `renderToString`; `hydrate.ts` attaches event-bus; `register.ts` idempotent `customElements.define`; 10/10 tests ✅ · lint ✅ · build ✅)
+- [x] 2.3 All MFs: import design-tokens, emit/subscribe event-bus, no cross-MF imports — ✅ done (2026-08-27; verified all 3 MFs import `@shared/contracts`+`design-tokens`+`event-bus`; no `@mf/*` cross-imports)
+- [x] 2.4 Verify per MF: `nx build` emits ESM + SSR entry; SSR-string test; custom-element JSDOM test — ✅ done (2026-08-27; catalog FESM2022 bundle exports `render`/`register`/`hydrate`; cart+user ESM `ssr.js`; all 3 MFs build/test/lint green)
 - [ ] 2.5 Commit Phase 2
 
 ## Phase 3 — Shell (Angular SSR) + composition
@@ -74,6 +74,16 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 - [ ] 6.5 Commit Phase 6
 
 ## Notes / blockers
+- **✅ VUE USER MF (2C) RESOLVED (2026-08-27):** `nx build/test/lint user-mf` all green (10/10 tests).
+  - **Vue SSR is async**: `renderToString` from `@vue/server-renderer` returns `Promise<string>` — so `ssr.ts` `render()` is `async` and tests `await` it (unlike React's sync `renderToString`).
+  - **`createApp` props cast**: `createApp(Component, props)` expects `Data` (index-signature type); a typed props interface is NOT assignable, and a direct `as Record<string, unknown>` is illegal (types not mutually assignable). Fix: cast through `unknown` → `props as unknown as Record<string, unknown>` (applied in `user-element.ts` `createAppInstance()` helper + `ssr.ts`).
+  - **Vue custom-element approach**: use `createApp(UserPanel, props).mount(container)` into a light-DOM child div (NOT `defineCustomElement`), mirroring the cart pattern. Hydration mounts into a fresh child div then removes the original SSR markup.
+  - **jsdom limitation**: `customElements.undefine` is NOT available in jsdom — do NOT use it in tests. Rely on `register()` idempotency + fresh jsdom per test file (same as cart spec).
+  - **Vue installed at root**: `vue@^3.5.41` + `@vue/server-renderer@^3.5.41` via `pnpm add -w vue @vue/server-renderer`.
+- **✅ CATALOG MF (2A) RESOLVED (2026-08-27):** `nx build/test/lint catalog-mf` all green (6/6 tests).
+  - **NG0201 `ComponentFactoryResolver`**: `@angular/elements` `createCustomElement` needs the config injector to provide `ComponentFactoryResolver`, `NgZone`, `ApplicationRef`, `ChangeDetectionScheduler`. A bare `Injector.create([])` provides none. Fix: `const appRef = await createApplication({ providers: [] })` (from `@angular/platform-browser`) then pass `appRef.injector`. `createApplication` returns a **Promise** (must `await`); `ApplicationConfig` **requires** `providers` (full-compilation type check).
+  - **Shared-lib externalization (REUSE for cart/user)**: bare `@shared/*` imports + shared libs in `peerDependencies` (ng-packagr externalizes peers, bundles deps) + `tsconfig.lib.json` `paths`→`dist/libs/shared/*` (built `.d.ts`, avoids TS6059). Type-only `@shared/contracts` is erased from FESM (expected) but present in `index.d.ts`.
+  - **Lint**: added `mf` depConstraint (`onlyDependOnLibsWithTags: ["shared"]`) to root `eslint.config.mjs`; gave `contracts` the `shared` tag (was `[]`); `dependency-checks` `ignoredDependencies: [tslib, @angular/common, rxjs, @angular/compiler]` (transitive/spec-only false positives).
 - **✅ LINT BLOCKER RESOLVED (2026-08-25):** root `microfrontend/eslint.config.mjs` now configures the installed `@typescript-eslint/parser` for `.ts`/`.tsx` and excludes ESLint config files from module-boundary checks. `nx run-many -t lint,typecheck` is green for the available targets (`contracts:lint`; no separate `typecheck` target exists yet).
   - Installed: `@typescript-eslint/parser` 8.67.0 + `@typescript-eslint/eslint-plugin` 8.67.0.
   - **NOT** installed: `typescript-eslint`, `@eslint/js` — so the `@nx/eslint-plugin` flat `flat/typescript` config can't be dropped in as-is.
