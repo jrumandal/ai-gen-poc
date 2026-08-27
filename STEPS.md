@@ -40,7 +40,7 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 - [x] 2C.2 User SSR (`renderToString` from `@vue/server-renderer`) + hydrate + register — ✅ done (2026-08-27; `ssr.ts` async `renderToString`; `hydrate.ts` attaches event-bus; `register.ts` idempotent `customElements.define`; 10/10 tests ✅ · lint ✅ · build ✅)
 - [x] 2.3 All MFs: import design-tokens, emit/subscribe event-bus, no cross-MF imports — ✅ done (2026-08-27; verified all 3 MFs import `@shared/contracts`+`design-tokens`+`event-bus`; no `@mf/*` cross-imports)
 - [x] 2.4 Verify per MF: `nx build` emits ESM + SSR entry; SSR-string test; custom-element JSDOM test — ✅ done (2026-08-27; catalog FESM2022 bundle exports `render`/`register`/`hydrate`; cart+user ESM `ssr.js`; all 3 MFs build/test/lint green)
-- [ ] 2.5 Commit Phase 2
+- [x] 2.5 Commit Phase 2 — ✅ done (2026-08-27; commit 41d173b "feat(mf): Phase 2 — Angular/React/Vue micro-frontends as Web Components"; 52 files, 4015 insertions)
 
 ## Phase 3 — Shell (Angular SSR) + composition
 - [ ] 3.1 Shell app `apps/shell` (Angular + `@angular/ssr` Express adapter)
