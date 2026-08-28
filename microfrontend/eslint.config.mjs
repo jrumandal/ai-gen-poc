@@ -18,7 +18,7 @@ const build = [
         "error",
         {
           enforceBuildableLibDependency: true,
-          allow: [],
+          allow: ["@server/api-gateway"],
           depConstraints: [
             {
               sourceTag: "app",
@@ -31,6 +31,10 @@ const build = [
             {
               sourceTag: "mf",
               onlyDependOnLibsWithTags: ["shared"],
+            },
+            {
+              sourceTag: "server",
+              onlyDependOnLibsWithTags: ["server", "shared"],
             },
           ],
         },

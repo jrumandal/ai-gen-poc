@@ -10,7 +10,10 @@
     "importHelpers": true,
     "target": "ES2022",
     "module": "ES2022",
-    "lib": ["ES2022", "dom"],
+    "lib": [
+      "ES2022",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "esModuleInterop": true,
@@ -24,11 +27,34 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "paths": {
-      "@mf/*": ["libs/mf/*"],
-      "@shared/*": ["libs/shared/*"],
-      "@server/*": ["libs/server/*"],
-      "@shared/contracts": ["./libs/shared/contracts/src/index.ts"]
+      "@mf/*": [
+        "libs/mf/*"
+      ],
+      "@shared/*": [
+        "libs/shared/*"
+      ],
+      "@server/*": [
+        "libs/server/*"
+      ],
+      "@server/shared": [
+        "./libs/server/shared/src/index.ts"
+      ],
+      "@server/shared": [
+        "./libs/server/shared/src/index.ts"
+      ],
+      "@server/api-gateway": [
+        "./apps/api-gateway/src/app/gateway/gateway.service.ts"
+      ],
+      "@shared/contracts": [
+        "./libs/shared/contracts/src/index.ts"
+      ],
+      "@microfrontend/shared": [
+        "./libs/server/shared/src/index.ts"
+      ]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }

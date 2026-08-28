@@ -1,0 +1,10 @@
+{
+  "name": "@server/api-gateway-e2e",
+  "version": "0.0.1",
+  "private": true,
+  "type": "commonjs",
+  "dependencies": {
+    "graphql": "^16.14.2",
+    "reflect-metadata": "^0.2.2"
+  }
+}

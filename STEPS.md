@@ -22,10 +22,10 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 | `libs/mf/cart/README.md` | 2 | ✅ |
 | `libs/mf/user/README.md` | 2 | ✅ |
 | `apps/shell/README.md` | 3 | ✅ |
-| `libs/server/shared/README.md` | 4 | ⬜ |
-| `libs/server/catalog-svc/README.md` | 4 | ⬜ |
-| `libs/server/cart-svc/README.md` | 4 | ⬜ |
-| `libs/server/user-svc/README.md` | 4 | ⬜ |
+| `libs/server/shared/README.md` | 4 | ✅ |
+| `libs/server/catalog-svc/README.md` | 4 | ✅ |
+| `libs/server/cart-svc/README.md` | 4 | ✅ |
+| `libs/server/user-svc/README.md` | 4 | ✅ |
 | `apps/api-gateway/README.md` | 4 | ⬜ |
 | `apps/mobile/README.md` | 5 | ⬜ |
 | `microfrontend/README.md` (root) | 6 | ⬜ |
@@ -73,18 +73,18 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 - [x] 3.3 SSR composition: server calls each MF `ssr.render(props)`, injects markup; client hydrates — ✅ done (2026-08-28; `mf-ssr.server.ts` `renderMfSsrHtml()` (cached `Promise.all` of 3 renders) → `provideMfSsrHtml` → pages inject via `[innerHTML]`; **SSRF host-allowlist fixed** by passing `allowedHosts` to `AngularNodeAppEngine` ctor (see README); verified SSR HTML for all 3 MFs)
 - [x] 3.4 Shared ApolloClient bootstrap injected into MFs — ✅ done (2026-08-28; `@shared/contracts` owns `MfApolloClient` type + `createSharedApolloClient(uri)` factory (`src/apollo.ts`, `@apollo/client ^4.2.12` dep); shell `mf-client-bootstrap.ts` creates the singleton (`GATEWAY_URI` env or `http://localhost:4200/graphql`) and injects it via each MF's `hydrate({ eventBus, apolloClient })`; all 3 MFs accept + store `apolloClient` (type-only, erased at runtime) — catalog `@Input`, cart element prop, user element prop; all MFs + shell rebuilt ✅; SSR regression re-verified on :4100 (all 3 MFs server-render); `cache-and-network` factory confirmed in client bundle)
 - [x] 3.5 Verify: `nx serve shell` → curl shows server-rendered markup for all 3 MFs — ✅ done (2026-08-28; verified via production SSR server `node dist/apps/shell/server/server.mjs` on :4100; `/catalog`→`catalog-mf`+Mechanical Keyboard+USB-C Hub, `/cart`→`cart-mf`+USD 149.99, `/account`→`user-mf`+Ada Lovelace+Analytical Engine; **no** "Falling back to client side rendering" in log)
-- [ ] 3.6 Commit Phase 3
+- [x] 3.6 Commit Phase 3 — ✅ done (2026-08-28; commit 8322441 "feat(shell): Phase 3 — Angular SSR shell + MF composition + shared Apollo bootstrap"; 48 files, 7709 insertions)
 - [x] 3.7 Documentation: `apps/shell/README.md` (SSR composition, routes, Apollo bootstrap, run/verify) — ✅ done (2026-08-28; covers SSR composition flow, SSRF host-allowlist fix, client bootstrap, shared Apollo client, routes, build/run/verify)
 
 ## Phase 4 — NestJS micro-services + gateway
-- [ ] 4.1 `catalog-svc` (NestJS + GraphQL + Prisma)
-- [ ] 4.2 `cart-svc` (NestJS + GraphQL + Prisma)
-- [ ] 4.3 `user-svc` (NestJS + GraphQL + Prisma)
-- [ ] 4.4 `libs/server/shared` — health, logging, error filter, config, Prisma module
-- [ ] 4.5 `api-gateway` (Apollo Federation gateway, CORS, JWT stub, `/health` aggregate)
-- [ ] 4.6 Verify: services serve GraphQL; gateway federates cross-service query; `/health` green; contract test
+- [x] 4.1 `catalog-svc` (NestJS + GraphQL + Prisma) — ✅ done (2026-08-28; `libs/server/catalog-svc` NestJS 11 + Apollo Server 4 + graphql@16 + Prisma; `CatalogResolver` (products/product/categories) backed by Prisma; `@server/shared` via `resolve.alias` in webpack; Swagger `/api-docs`; `nx build` ✅ · `nx test` 1/1 ✅ · `nx lint` ✅; commit at 4.7)
+- [x] 4.2 `cart-svc` (NestJS + GraphQL + Prisma) — ✅ done (2026-08-28; `libs/server/cart-svc` NestJS 11 + Apollo Server 4 + graphql@16 + Prisma; `CartResolver` (cart query + addItemToCart/updateCartItem/removeItemFromCart/clearCart) backed by Prisma; `@server/shared` via `resolve.alias` in webpack; Swagger `/api-docs`; port 4002; `nx build` ✅ · `nx test` 1/1 ✅ · `nx lint` ✅; README ✅; commit at 4.7)
+- [x] 4.3 `user-svc` (NestJS + GraphQL + Prisma) — ✅ done (2026-08-28; `libs/server/user-svc` NestJS 11 + Apollo Server 4 + graphql@16 + Prisma; `UserResolver` (me/orders queries + login/updateProfile mutations) backed by Prisma; `DateTime` scalar via `@Scalar('DateTime')` class decorator; `OrderStatus` enum via `registerEnumType`; `@server/shared` via `resolve.alias` in webpack; Swagger `/api-docs`; port 4003; `nx build` ✅ · `nx test` 1/1 ✅ · `nx lint` ✅; README ✅; commit at 4.7)
+- [x] 4.4 `libs/server/shared` — health, logging, error filter, config, Prisma module — ✅ done (2026-08-28; added `AppConfigModule` (typed env config), `HealthModule` (terminus `/health` + Prisma ping), `LoggingInterceptor`, `AllExceptionsFilter`; reorganized Prisma into `prisma/` subfolder; added `@nestjs/config` + `@nestjs/terminus` deps; `nx build shared` ✅; catalog-svc refactored to consume shared modules — build ✅ · test 1/1 ✅ · lint ✅; README ✅)
+- [x] 4.5 `api-gateway` (introspection-based GraphQL gateway, CORS, JWT stub, `/health` aggregate) — ✅ done (2026-08-28; `apps/api-gateway` NestJS 11 + Apollo Server 4 + `@graphql-tools/stitch` + `@graphql-tools/wrap` + `@graphql-tools/executor-http`; `GatewayService` introspects catalog/cart/user services and stitches their schemas; `buildHTTPExecutor` for delegation; `/health` aggregates the 3 service health endpoints; port 4200; `nx build` ✅ · `nx test` 1/1 ✅ · `nx lint` ✅; README ✅; commit at 4.7)
+- [x] 4.6 Verify: services serve GraphQL; gateway federates cross-service query; `/health` green; contract test — ✅ done (2026-08-28; `libs/server/api-gateway-e2e` new project: mock catalog/cart/user GraphQL services (raw `http`+`graphql`, ports 4101/4102/4103) + `GatewayService.onModuleInit()` introspect→wrap→stitch; e2e runs a cross-service query (products+cart+me) and a single-entity query in-process against the stitched schema, delegating over real HTTP; `nx e2e api-gateway-e2e` 2/2 ✅; services-serve-GraphQL + `/health` verified in 4.1–4.3/4.5; README ✅; commit at 4.7)
 - [ ] 4.7 Commit Phase 4
-- [ ] 4.8 Documentation: `libs/server/shared`, `catalog-svc`, `cart-svc`, `user-svc`, `apps/api-gateway` READMEs — ⬜ pending (required before 4.7 ✅)
+- [x] 4.8 Documentation: `libs/server/shared`, `catalog-svc`, `cart-svc`, `user-svc`, `apps/api-gateway` READMEs — ✅ done (2026-08-28; all 6 Phase 4 READMEs present: `libs/server/shared` (111L), `catalog-svc` (144L), `cart-svc` (137L), `user-svc` (170L), `apps/api-gateway` (177L), `api-gateway-e2e` (62L))
 
 ## Phase 5 — Capacitor hybrid mobile
 - [ ] 5.1 `apps/mobile` Capacitor project (webDir = shell build output)
