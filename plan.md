@@ -65,6 +65,32 @@ microfrontend/
 └── tsconfig.base.json
 ```
 
+## Documentation (canonical per-module references)
+
+> **Convention:** After `plan.md`, the **module READMEs are the canonical knowledge
+> reference** for each area. Read the relevant README before working on a phase to
+> avoid re-investigating the codebase. Each phase below lists its **References**.
+> When a phase creates a new module, it must add that module's README (tracked in
+> `STEPS.md` under the documentation step).
+
+| Module | README |
+| --- | --- |
+| Contracts (GraphQL + OpenAPI types) | `microfrontend/libs/shared/contracts/README.md` |
+| Event bus (typed cross-MF events) | `microfrontend/libs/shared/event-bus/README.md` |
+| Design tokens (theme) | `microfrontend/libs/shared/design-tokens/README.md` |
+| Database (Prisma client + tooling) | `microfrontend/libs/shared/db/README.md` |
+| Catalog MF (Angular) | `microfrontend/libs/mf/catalog/README.md` |
+| Cart MF (React) | `microfrontend/libs/mf/cart/README.md` |
+| User MF (Vue) | `microfrontend/libs/mf/user/README.md` |
+| Shell (Angular SSR) | `microfrontend/apps/shell/README.md` *(Phase 3)* |
+| Server shared (NestJS) | `microfrontend/libs/server/shared/README.md` *(Phase 4)* |
+| Catalog service | `microfrontend/libs/server/catalog-svc/README.md` *(Phase 4)* |
+| Cart service | `microfrontend/libs/server/cart-svc/README.md` *(Phase 4)* |
+| User service | `microfrontend/libs/server/user-svc/README.md` *(Phase 4)* |
+| API gateway | `microfrontend/apps/api-gateway/README.md` *(Phase 4)* |
+| Mobile (Capacitor) | `microfrontend/apps/mobile/README.md` *(Phase 5)* |
+| Root (architecture + run guide) | `microfrontend/README.md` *(Phase 6)* |
+
 ## Phases & Steps
 
 ### Phase 0 — Monorepo scaffolding (foundation, blocks everything)
@@ -73,6 +99,8 @@ microfrontend/
 3. Add shared dev tooling: ESLint, Prettier, TypeScript project references, `@nx/eslint`, `@nx/js`.
 4. Define Nx plugins: `@nx/angular`, `@nx/react`, `@nx/vue`, `@nx/nest`, `@nx/web` (Vite).
 5. **Verify:** `nx graph` renders the project graph; `nx run-many -t lint` passes on empty libs.
+
+**References:** workspace config (`nx.json`, `tsconfig.base.json`, `pnpm-workspace.yaml`); no module READMEs yet (scaffolding phase).
 
 ### Phase 1 — Shared contracts (parallel with Phase 2 once Phase 0 done)
 6. Author OpenAPI specs in `openapi/` (catalog.yaml, cart.yaml, user.yaml) — DTOs, endpoints, error model.
@@ -83,11 +111,15 @@ microfrontend/
 11. `libs/shared/design-tokens`: CSS custom properties (colors, spacing, type) + a `tokens.css` each MF imports.
 12. **Verify:** generated types compile; a unit test round-trips a DTO; `nx build shared-contracts` succeeds.
 
+**References:** `libs/shared/contracts/README.md`, `libs/shared/event-bus/README.md`, `libs/shared/design-tokens/README.md`.
+
 ### Phase 1.5 — Database layer (depends on Phase 0, parallel with Phase 1)
 13. `prisma/`: define Prisma schema (`schema.prisma`) with models for **Product, Category, Cart, CartItem, User, Session** — aligned with the e-commerce domain.
 14. Configure Prisma for **PostgreSQL** (local Docker compose for dev, env vars for connection string).
 15. `libs/shared/db`: shared Prisma client singleton, migration runner as Nx target `db:migrate`, seed script (`db:seed`) with sample e-commerce data.
 16. **Verify:** `prisma validate` passes; `prisma migrate dev` creates tables; `prisma studio` shows seeded data; seed script idempotent.
+
+**References:** `libs/shared/db/README.md`.
 
 ### Phase 2 — Micro-Frontends (3 parallel tracks, each depends on Phase 0 + 1)
 Each MF is a **custom element** with: a `render`/template, SSR string rendering, hydration entry, and a `dist` that the shell can import.
@@ -111,6 +143,8 @@ Each MF consumes the **shared GraphQL client** (`libs/shared/contracts`) for typ
 23. All MFs: import `design-tokens`, emit/subscribe `event-bus` events, no cross-MF direct imports (contract only).
 24. **Verify (per MF):** `nx build <mf>` emits ESM + SSR entry; a small Vite/Jest or Vitest SSR test asserts the rendered HTML string contains expected markup; custom element registers in a JSDOM test.
 
+**References:** `libs/mf/catalog/README.md`, `libs/mf/cart/README.md`, `libs/mf/user/README.md`.
+
 ### Phase 3 — Shell (Angular SSR) + composition (depends on Phase 2)
 25. `nx generate @nx/angular:application shell --ssr` (Express adapter from `@angular/ssr`).
 26. Shell registers all three custom elements (import each MF's `register()`), renders them inside the layout at routes: `/catalog`, `/cart`, `/account`.
@@ -118,6 +152,8 @@ Each MF consumes the **shared GraphQL client** (`libs/shared/contracts`) for typ
 28. Shell owns: routing, top nav, theme switch, global state bootstrap (user session), and the Capacitor bridge adapter (see Phase 5).
 29. Shell bootstraps a shared Apollo `ApolloClient` instance (injected into each MF via props or `window`).
 30. **Verify:** `nx serve shell` → `curl` the SSR HTML shows server-rendered markup for all three MFs; browser DevTools shows each hydrated (no full re-render flash); Lighthouse SSR pass.
+
+**References:** `apps/shell/README.md` (created in this phase).
 
 ### Phase 4 — NestJS micro-services + gateway + DB (parallel with Phase 3, depends on Phase 1 + 1.5)
 31. `nx generate @nx/nest:application` for `catalog-svc`, `cart-svc`, `user-svc`; each:
@@ -128,17 +164,23 @@ Each MF consumes the **shared GraphQL client** (`libs/shared/contracts`) for typ
 34. Docker Compose (`docker-compose.yml`): PostgreSQL + pgAdmin for local dev.
 35. **Verify:** `nx serve` each service; GraphQL Playground shows correct schema; gateway federation resolves cross-service queries; `/health` returns all green; Prisma migrations applied; a contract test (GraphQL query/response validation) passes.
 
+**References:** `libs/server/shared/README.md`, `libs/server/catalog-svc/README.md`, `libs/server/cart-svc/README.md`, `libs/server/user-svc/README.md`, `apps/api-gateway/README.md` (created in this phase).
+
 ### Phase 5 — Capacitor hybrid mobile (depends on Phase 3)
 36. Create `apps/mobile` Capacitor project, configure the Android and iOS platforms, and keep the web output under `apps/mobile/web`.
 37. Build shell (`nx build shell`) → copy or sync the output to `apps/mobile/web`; configure Capacitor's `webDir` and run `cap sync`.
 38. Add native plugins as needed (for example, `@capacitor/camera` for a "scan product" demo in catalog MF) behind the **Capacitor bridge adapter** so the web code detects Capacitor and falls back to Web APIs in the browser.
 39. **Verify:** `cap build android` / `cap build ios` produces an app; run on an emulator; the native plugin call works; offline/online fallback is sane.
 
+**References:** `apps/mobile/README.md` (created in this phase).
+
 ### Phase 6 — DX, docs, CI (polish, depends on all above)
 40. Root `README.md`: architecture diagram, how to run each part, how to add a new MF, how to run DB migrations.
 41. Nx targets: `serve:all` (shell + 3 services + DB via `concurrently`), `build:all`, `test:all`, `lint:all`, `typecheck`, `db:migrate`, `db:seed`, `db:studio`.
 42. CI workflow (GitHub Actions): install (pnpm) → lint → typecheck → test → build → (optional) Capacitor Android build.
 43. **Verify:** fresh clone → `pnpm i` → `pnpm nx serve:all` → open shell in browser and in a Capacitor emulator.
+
+**References:** `microfrontend/README.md` (root, created in this phase).
 
 ## Relevant files (to be created)
 - `microfrontend/nx.json`, `package.json`, `pnpm-workspace.yaml`, `tsconfig.base.json` — workspace config

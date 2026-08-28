@@ -5,6 +5,31 @@ Status legend: `⬜ pending` → `🔄 in-progress` → `✅ done` (after git co
 
 Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (Nx + pnpm monorepo)
 
+## Documentation tracking (applies to ALL phases)
+
+> **Rule:** Every phase that creates or substantially changes a module MUST add or
+> update that module's `README.md` **before** its commit step is marked ✅. The
+> README is the canonical knowledge reference (after `plan.md`) so future work
+> doesn't re-investigate the codebase. Status mirrors the phase status.
+
+| Module README | Phase | Status |
+| --- | --- | --- |
+| `libs/shared/contracts/README.md` | 1 | ✅ |
+| `libs/shared/event-bus/README.md` | 1 | ✅ |
+| `libs/shared/design-tokens/README.md` | 1 | ✅ |
+| `libs/shared/db/README.md` | 1.5 | ✅ |
+| `libs/mf/catalog/README.md` | 2 | ✅ |
+| `libs/mf/cart/README.md` | 2 | ✅ |
+| `libs/mf/user/README.md` | 2 | ✅ |
+| `apps/shell/README.md` | 3 | ⬜ |
+| `libs/server/shared/README.md` | 4 | ⬜ |
+| `libs/server/catalog-svc/README.md` | 4 | ⬜ |
+| `libs/server/cart-svc/README.md` | 4 | ⬜ |
+| `libs/server/user-svc/README.md` | 4 | ⬜ |
+| `apps/api-gateway/README.md` | 4 | ⬜ |
+| `apps/mobile/README.md` | 5 | ⬜ |
+| `microfrontend/README.md` (root) | 6 | ⬜ |
+
 ## Phase 0 — Monorepo scaffolding
 - [x] 0.1 Environment check (node 22 / pnpm 11 / git / docker) — ✅ done (2026-08-24)
 - [x] 0.2 `git init` at `d:\workspace` + `.gitignore` + initial commit — ✅ done (commit 1155874)
@@ -49,6 +74,7 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 - [ ] 3.4 Shared ApolloClient bootstrap injected into MFs
 - [ ] 3.5 Verify: `nx serve shell` → curl shows server-rendered markup for all 3 MFs
 - [ ] 3.6 Commit Phase 3
+- [ ] 3.7 Documentation: `apps/shell/README.md` (SSR composition, routes, Apollo bootstrap, run/verify) — ⬜ pending (required before 3.6 ✅)
 
 ## Phase 4 — NestJS micro-services + gateway
 - [ ] 4.1 `catalog-svc` (NestJS + GraphQL + Prisma)
@@ -58,6 +84,7 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 - [ ] 4.5 `api-gateway` (Apollo Federation gateway, CORS, JWT stub, `/health` aggregate)
 - [ ] 4.6 Verify: services serve GraphQL; gateway federates cross-service query; `/health` green; contract test
 - [ ] 4.7 Commit Phase 4
+- [ ] 4.8 Documentation: `libs/server/shared`, `catalog-svc`, `cart-svc`, `user-svc`, `apps/api-gateway` READMEs — ⬜ pending (required before 4.7 ✅)
 
 ## Phase 5 — Capacitor hybrid mobile
 - [ ] 5.1 `apps/mobile` Capacitor project (webDir = shell build output)
@@ -65,6 +92,7 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 - [ ] 5.3 Bridge adapter (Capacitor detection + Web-API fallback) + `@capacitor/camera` demo
 - [ ] 5.4 Verify: `cap sync` ok; `cap build android` (requires Android SDK — note if absent)
 - [ ] 5.5 Commit Phase 5
+- [ ] 5.6 Documentation: `apps/mobile/README.md` (Capacitor setup, bridge adapter, sync/build) — ⬜ pending (required before 5.5 ✅)
 
 ## Phase 6 — DX, docs, CI
 - [ ] 6.1 Root `README.md` (architecture, run instructions, add-MF guide, DB guide)
@@ -72,6 +100,7 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 - [ ] 6.3 GitHub Actions CI (lint → typecheck → test → build)
 - [ ] 6.4 Final end-to-end verification (per plan §Verification)
 - [ ] 6.5 Commit Phase 6
+- [ ] 6.6 Documentation: root `microfrontend/README.md` (architecture, run guide, add-MF guide, DB migrations) — ⬜ pending (required before 6.5 ✅; authored as 6.1)
 
 ## Notes / blockers
 - **✅ VUE USER MF (2C) RESOLVED (2026-08-27):** `nx build/test/lint user-mf` all green (10/10 tests).
