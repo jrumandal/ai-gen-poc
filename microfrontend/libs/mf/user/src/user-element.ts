@@ -1,6 +1,6 @@
 import { createApp, type App } from 'vue';
 import { UserPanel, type UserPanelProps } from './lib/user-panel';
-import type { User, LoginInput, UpdateProfileInput } from '@shared/contracts';
+import type { User, LoginInput, UpdateProfileInput, MfApolloClient } from '@shared/contracts';
 import type { EventBus, MFEventMap } from '@shared/event-bus';
 
 /**
@@ -17,6 +17,7 @@ export class UserElement extends HTMLElement {
 
   private _user: User | null = null;
   private _eventBus: EventBus<MFEventMap> | null = null;
+  private _apolloClient: MfApolloClient | null = null;
   private _onSignIn?: (input: LoginInput) => void;
   private _onSignOut?: () => void;
   private _onUpdateProfile?: (input: UpdateProfileInput) => void;
@@ -39,6 +40,15 @@ export class UserElement extends HTMLElement {
   }
   set eventBus(value: EventBus<MFEventMap> | null) {
     this._eventBus = value;
+    this.refresh();
+  }
+
+  /** Shared Apollo client for typed GraphQL queries/mutations. */
+  get apolloClient(): MfApolloClient | null {
+    return this._apolloClient;
+  }
+  set apolloClient(value: MfApolloClient | null) {
+    this._apolloClient = value;
     this.refresh();
   }
 
@@ -103,6 +113,7 @@ export class UserElement extends HTMLElement {
     return {
       user: this._user,
       eventBus: this._eventBus,
+      apolloClient: this._apolloClient,
       onSignIn: this._onSignIn,
       onSignOut: this._onSignOut,
       onUpdateProfile: this._onUpdateProfile,

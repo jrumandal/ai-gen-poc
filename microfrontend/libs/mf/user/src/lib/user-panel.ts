@@ -1,5 +1,5 @@
 import { defineComponent, h, ref, computed, type PropType } from 'vue';
-import type { User, Address, LoginInput, UpdateProfileInput } from '@shared/contracts';
+import type { User, Address, LoginInput, UpdateProfileInput, MfApolloClient } from '@shared/contracts';
 import { cssVar, Tokens } from '@shared/design-tokens';
 import type { EventBus, MFEventMap } from '@shared/event-bus';
 import { UserEvent } from '@shared/event-bus';
@@ -17,6 +17,8 @@ export interface UserPanelProps {
   user: User | null;
   /** Shared event bus for cross-MF events (optional). */
   eventBus?: EventBus<MFEventMap> | null;
+  /** Shared Apollo client for typed GraphQL queries/mutations (optional). */
+  apolloClient?: MfApolloClient | null;
   /** Called when the user submits the sign-in form (host performs the mutation). */
   onSignIn?: (input: LoginInput) => void;
   /** Called when the user signs out (host performs the mutation). */
@@ -147,6 +149,11 @@ export const UserPanel = defineComponent({
     user: { type: Object as PropType<User | null>, required: true },
     eventBus: {
       type: Object as PropType<EventBus<MFEventMap> | null>,
+      required: false,
+      default: null,
+    },
+    apolloClient: {
+      type: Object as PropType<MfApolloClient | null>,
       required: false,
       default: null,
     },

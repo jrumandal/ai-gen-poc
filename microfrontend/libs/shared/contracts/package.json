@@ -5,6 +5,7 @@
   "main": "./src/index.js",
   "types": "./src/index.d.ts",
   "dependencies": {
+    "@apollo/client": "^4.2.12",
     "openapi-fetch": "^0.17.0",
     "tslib": "^2.3.0"
   }

@@ -1,0 +1,33 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "emitDecoratorMetadata": false,
+    "module": "preserve",
+    "jsx": "react-jsx",
+    "paths": {
+      "@mf/catalog": ["libs/mf/catalog/src/index.ts"],
+      "@mf/cart": ["libs/mf/cart/src/index.ts"],
+      "@mf/user": ["libs/mf/user/src/index.ts"],
+      "@shared/contracts": ["libs/shared/contracts/src/index.ts"],
+      "@shared/event-bus": ["libs/shared/event-bus/src/index.ts"],
+      "@shared/design-tokens": ["libs/shared/design-tokens/src/index.ts"]
+    }
+  },
+  "angularCompilerOptions": {
+    "enableI18nLegacyMessageIdFormat": false,
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true,
+    "typeCheckHostBindings": true,
+    "strictTemplates": true
+  },
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ]
+}

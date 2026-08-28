@@ -21,7 +21,7 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 | `libs/mf/catalog/README.md` | 2 | ✅ |
 | `libs/mf/cart/README.md` | 2 | ✅ |
 | `libs/mf/user/README.md` | 2 | ✅ |
-| `apps/shell/README.md` | 3 | ⬜ |
+| `apps/shell/README.md` | 3 | ✅ |
 | `libs/server/shared/README.md` | 4 | ⬜ |
 | `libs/server/catalog-svc/README.md` | 4 | ⬜ |
 | `libs/server/cart-svc/README.md` | 4 | ⬜ |
@@ -68,13 +68,13 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 - [x] 2.5 Commit Phase 2 — ✅ done (2026-08-27; commit 41d173b "feat(mf): Phase 2 — Angular/React/Vue micro-frontends as Web Components"; 52 files, 4015 insertions)
 
 ## Phase 3 — Shell (Angular SSR) + composition
-- [ ] 3.1 Shell app `apps/shell` (Angular + `@angular/ssr` Express adapter)
-- [ ] 3.2 Register 3 custom elements; routes `/catalog`, `/cart`, `/account`; top nav + theme
-- [ ] 3.3 SSR composition: server calls each MF `ssr.render(props)`, injects markup; client hydrates
-- [ ] 3.4 Shared ApolloClient bootstrap injected into MFs
-- [ ] 3.5 Verify: `nx serve shell` → curl shows server-rendered markup for all 3 MFs
+- [x] 3.1 Shell app `apps/shell` (Angular + `@angular/ssr` Express adapter) — ✅ done (2026-08-28; `@nx/angular:application apps/shell --ssr`; `@angular/build:application` + Express `AngularNodeAppEngine` adapter; routing + Jest enabled)
+- [x] 3.2 Register 3 custom elements; routes `/catalog`, `/cart`, `/account`; top nav + theme — ✅ done (2026-08-28; `mf-client-bootstrap.ts` registers 3 elements + attaches shared event bus; `app.routes.ts` 3 routes + redirect; `app.html` top nav + theme toggle; `app.spec.ts` 4/4 ✅)
+- [x] 3.3 SSR composition: server calls each MF `ssr.render(props)`, injects markup; client hydrates — ✅ done (2026-08-28; `mf-ssr.server.ts` `renderMfSsrHtml()` (cached `Promise.all` of 3 renders) → `provideMfSsrHtml` → pages inject via `[innerHTML]`; **SSRF host-allowlist fixed** by passing `allowedHosts` to `AngularNodeAppEngine` ctor (see README); verified SSR HTML for all 3 MFs)
+- [x] 3.4 Shared ApolloClient bootstrap injected into MFs — ✅ done (2026-08-28; `@shared/contracts` owns `MfApolloClient` type + `createSharedApolloClient(uri)` factory (`src/apollo.ts`, `@apollo/client ^4.2.12` dep); shell `mf-client-bootstrap.ts` creates the singleton (`GATEWAY_URI` env or `http://localhost:4200/graphql`) and injects it via each MF's `hydrate({ eventBus, apolloClient })`; all 3 MFs accept + store `apolloClient` (type-only, erased at runtime) — catalog `@Input`, cart element prop, user element prop; all MFs + shell rebuilt ✅; SSR regression re-verified on :4100 (all 3 MFs server-render); `cache-and-network` factory confirmed in client bundle)
+- [x] 3.5 Verify: `nx serve shell` → curl shows server-rendered markup for all 3 MFs — ✅ done (2026-08-28; verified via production SSR server `node dist/apps/shell/server/server.mjs` on :4100; `/catalog`→`catalog-mf`+Mechanical Keyboard+USB-C Hub, `/cart`→`cart-mf`+USD 149.99, `/account`→`user-mf`+Ada Lovelace+Analytical Engine; **no** "Falling back to client side rendering" in log)
 - [ ] 3.6 Commit Phase 3
-- [ ] 3.7 Documentation: `apps/shell/README.md` (SSR composition, routes, Apollo bootstrap, run/verify) — ⬜ pending (required before 3.6 ✅)
+- [x] 3.7 Documentation: `apps/shell/README.md` (SSR composition, routes, Apollo bootstrap, run/verify) — ✅ done (2026-08-28; covers SSR composition flow, SSRF host-allowlist fix, client bootstrap, shared Apollo client, routes, build/run/verify)
 
 ## Phase 4 — NestJS micro-services + gateway
 - [ ] 4.1 `catalog-svc` (NestJS + GraphQL + Prisma)

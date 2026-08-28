@@ -17,6 +17,7 @@ import {
 import type {
   Category,
   Product,
+  MfApolloClient,
 } from '@shared/contracts';
 
 /**
@@ -153,6 +154,13 @@ export class CatalogComponent {
    * react. The component never imports another MF — only this shared contract.
    */
   @Input() eventBus: EventBus<MFEventMap> | null = null;
+
+  /**
+   * Optional shared Apollo client. When present, the component can issue typed
+   * GraphQL queries/mutations against the gateway (e.g. product queries,
+   * category browse) instead of relying solely on injected props.
+   */
+  @Input() apolloClient: MfApolloClient | null = null;
 
   /** Fired (as a DOM `Event`) when a product card is activated. */
   @Output() productSelected = new EventEmitter<Product>();

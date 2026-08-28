@@ -1,6 +1,6 @@
 import { createRoot, hydrateRoot, type Root } from 'react-dom/client';
 import { Cart, type CartProps } from './lib/cart';
-import type { Cart as CartModel } from '@shared/contracts';
+import type { Cart as CartModel, MfApolloClient } from '@shared/contracts';
 import type { EventBus, MFEventMap } from '@shared/event-bus';
 
 /**
@@ -25,6 +25,7 @@ export class CartElement extends HTMLElement {
   private root: Root | null = null;
   private _cart: CartModel | null = null;
   private _eventBus: EventBus<MFEventMap> | null = null;
+  private _apolloClient: MfApolloClient | null = null;
   private _onAddItem?: (input: { productId: string; quantity: number }) => void;
   private _onRemoveItem?: (itemId: string) => void;
   private _onUpdateQuantity?: (itemId: string, quantity: number) => void;
@@ -46,6 +47,15 @@ export class CartElement extends HTMLElement {
   }
   get eventBus(): EventBus<MFEventMap> | null {
     return this._eventBus;
+  }
+
+  /** The shared Apollo client for typed GraphQL queries/mutations. */
+  set apolloClient(value: MfApolloClient | null) {
+    this._apolloClient = value;
+    this.render();
+  }
+  get apolloClient(): MfApolloClient | null {
+    return this._apolloClient;
   }
 
   set onAddItem(value: ((input: { productId: string; quantity: number }) => void) | undefined) {
@@ -110,6 +120,7 @@ export class CartElement extends HTMLElement {
         itemCount: 0,
       },
       eventBus: this.eventBus,
+      apolloClient: this.apolloClient,
       onAddItem: this.onAddItem,
       onRemoveItem: this.onRemoveItem,
       onUpdateQuantity: this.onUpdateQuantity,

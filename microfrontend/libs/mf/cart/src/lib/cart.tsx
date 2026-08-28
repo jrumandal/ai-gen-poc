@@ -1,5 +1,5 @@
 import type { CSSProperties } from 'react';
-import type { Cart, CartItem, Money } from '@shared/contracts';
+import type { Cart, CartItem, Money, MfApolloClient } from '@shared/contracts';
 import { cssVar, Tokens } from '@shared/design-tokens';
 import type { EventBus, MFEventMap } from '@shared/event-bus';
 import { CartEvent } from '@shared/event-bus';
@@ -16,6 +16,8 @@ export interface CartProps {
   cart: Cart;
   /** Shared event bus for cross-MF events (optional). */
   eventBus?: EventBus<MFEventMap> | null;
+  /** Shared Apollo client for typed GraphQL queries/mutations (optional). */
+  apolloClient?: MfApolloClient | null;
   /** Called when the user requests to add an item (host performs the mutation). */
   onAddItem?: (input: { productId: string; quantity: number }) => void;
   /** Called when the user requests to remove an item (host performs the mutation). */

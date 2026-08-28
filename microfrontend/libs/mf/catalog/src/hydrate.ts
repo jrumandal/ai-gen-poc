@@ -12,6 +12,7 @@
  * the component's initial state matches the server-rendered output.
  */
 import type { EventBus, MFEventMap } from '@shared/event-bus';
+import type { MfApolloClient } from '@shared/contracts';
 import { register } from './register';
 
 /**
@@ -19,22 +20,32 @@ import { register } from './register';
  *
  * `register()` is asynchronous (it builds the Angular application injector),
  * so this returns a promise that resolves once the element is registered and
- * the event bus is attached.
+ * the shared services are attached.
  *
  * @param options Optional hydration options.
  * @param options.eventBus Shared event bus to attach to the element.
+ * @param options.apolloClient Shared Apollo client to attach to the element.
  */
 export async function hydrate(options?: {
   eventBus?: EventBus<MFEventMap> | null;
+  apolloClient?: MfApolloClient | null;
 }): Promise<void> {
   await register();
 
-  // Attach the event bus to any existing `<catalog-mf>` elements on the page.
-  if (options?.eventBus && typeof document !== 'undefined') {
+  // Attach the shared services to any existing `<catalog-mf>` elements.
+  if (typeof document !== 'undefined') {
     const elements = document.querySelectorAll('catalog-mf');
     elements.forEach((el) => {
-      (el as unknown as { eventBus: EventBus<MFEventMap> | null }).eventBus =
-        options.eventBus ?? null;
+      const target = el as unknown as {
+        eventBus: EventBus<MFEventMap> | null;
+        apolloClient: MfApolloClient | null;
+      };
+      if (options?.eventBus) {
+        target.eventBus = options.eventBus;
+      }
+      if (options?.apolloClient) {
+        target.apolloClient = options.apolloClient;
+      }
     });
   }
 }
