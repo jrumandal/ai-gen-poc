@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "type": "module",
   "dependencies": {
+    "@shared/bridge": "workspace:*",
     "@shared/contracts": "workspace:*",
     "@shared/design-tokens": "workspace:*",
     "@shared/event-bus": "workspace:*",

@@ -1,0 +1,54 @@
+{
+  "name": "mobile",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/mobile",
+  "tags": ["app"],
+  "targets": {
+    "sync": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/mobile",
+        "command": "npx cap sync"
+      }
+    },
+    "build-web": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["shell:build"],
+      "options": {
+        "cwd": "apps/mobile",
+        "command": "node ../../scripts/sync-mobile-web.mjs && npx cap sync"
+      }
+    },
+    "build-android": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["sync"],
+      "options": {
+        "cwd": "apps/mobile",
+        "command": "npx cap build android"
+      }
+    },
+    "build-ios": {
+      "executor": "nx:run-commands",
+      "dependsOn": ["sync"],
+      "options": {
+        "cwd": "apps/mobile",
+        "command": "npx cap build ios"
+      }
+    },
+    "open-android": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/mobile",
+        "command": "npx cap open android"
+      }
+    },
+    "open-ios": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/mobile",
+        "command": "npx cap open ios"
+      }
+    }
+  }
+}

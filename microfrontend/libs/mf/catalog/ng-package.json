@@ -5,6 +5,7 @@
     "entryFile": "src/index.ts"
   },
   "allowedNonPeerDependencies": [
+    "@shared/bridge",
     "@shared/contracts",
     "@shared/design-tokens",
     "@shared/event-bus"

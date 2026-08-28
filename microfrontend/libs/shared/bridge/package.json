@@ -1,0 +1,12 @@
+{
+  "name": "@shared/bridge",
+  "version": "0.0.1",
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "dependencies": {
+    "@capacitor/core": "8.5.0",
+    "@capacitor/camera": "8.2.3",
+    "tslib": "^2.3.0"
+  }
+}

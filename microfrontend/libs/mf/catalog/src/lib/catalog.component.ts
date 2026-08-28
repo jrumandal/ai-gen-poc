@@ -19,6 +19,10 @@ import type {
   Product,
   MfApolloClient,
 } from '@shared/contracts';
+import {
+  getBridgeAdapter,
+  type ScanResult,
+} from '@shared/bridge';
 
 /**
  * Injection token carrying the initial SSR props for the catalog MF.
@@ -59,7 +63,34 @@ export const CATALOG_SSR_PROPS = new InjectionToken<{
         <span class="catalog__count" [style.color]="colorSecondary">
           {{ products.length }} product{{ products.length === 1 ? '' : 's' }}
         </span>
+        <button
+          type="button"
+          class="catalog__scan"
+          [style.background]="brand"
+          [style.color]="inverse"
+          [disabled]="scanning"
+          (click)="onScanProduct()"
+        >
+          {{ scanning ? 'Scanning…' : 'Scan product' }}
+        </button>
       </header>
+
+      @if (scanResult) {
+        <div class="catalog__scan-result" [style.borderColor]="border">
+          <img
+            class="catalog__scan-image"
+            [src]="scanResult.image"
+            alt="Scanned product"
+          />
+          <p class="catalog__scan-source" [style.color]="colorSecondary">
+            Captured via {{ scanResult.source === 'capacitor' ? 'native camera' : 'web camera' }}
+          </p>
+        </div>
+      }
+
+      @if (scanError) {
+        <p class="catalog__scan-error" [style.color]="danger">{{ scanError }}</p>
+      }
 
       @if (categories.length) {
         <div class="catalog__categories">
@@ -170,6 +201,13 @@ export class CatalogComponent {
   /** Currently selected category slug, or `null` for "all". */
   activeCategory: string | null = null;
 
+  /** True while a camera capture is in flight (disables the scan button). */
+  scanning = false;
+  /** The most recent successful capture, or `null` when none yet. */
+  scanResult: ScanResult | null = null;
+  /** A human-readable error from the last failed capture, or `null`. */
+  scanError: string | null = null;
+
   // Design tokens resolved to `var(--token)` strings once for the template.
   readonly colorPrimary = cssVar(Tokens.color.textPrimary);
   readonly colorSecondary = cssVar(Tokens.color.textSecondary);
@@ -213,5 +251,28 @@ export class CatalogComponent {
       productId: product.id,
       source: 'catalog-mf',
     });
+  }
+
+  /**
+   * "Scan product" demo: capture an image through the shared bridge adapter.
+   *
+   * The adapter transparently picks the native Capacitor camera when running
+   * inside the mobile app, and falls back to the Web `getUserMedia` API in a
+   * plain browser. The captured image (a `data:` URL) is shown inline so the
+   * demo is visible in both environments.
+   */
+  async onScanProduct(): Promise<void> {
+    if (this.scanning) return;
+    this.scanning = true;
+    this.scanError = null;
+    try {
+      this.scanResult = await getBridgeAdapter().scanProduct();
+    } catch (err) {
+      this.scanResult = null;
+      this.scanError =
+        err instanceof Error ? err.message : 'Camera capture failed.';
+    } finally {
+      this.scanning = false;
+    }
   }
 }

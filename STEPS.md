@@ -26,8 +26,9 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 | `libs/server/catalog-svc/README.md` | 4 | ✅ |
 | `libs/server/cart-svc/README.md` | 4 | ✅ |
 | `libs/server/user-svc/README.md` | 4 | ✅ |
-| `apps/api-gateway/README.md` | 4 | ⬜ |
-| `apps/mobile/README.md` | 5 | ⬜ |
+| `apps/api-gateway/README.md` | 4 | ✅ |
+| `libs/shared/bridge/README.md` | 5 | ✅ |
+| `apps/mobile/README.md` | 5 | ✅ |
 | `microfrontend/README.md` (root) | 6 | ⬜ |
 
 ## Phase 0 — Monorepo scaffolding
@@ -87,12 +88,12 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 - [x] 4.8 Documentation: `libs/server/shared`, `catalog-svc`, `cart-svc`, `user-svc`, `apps/api-gateway` READMEs — ✅ done (2026-08-28; all 6 Phase 4 READMEs present: `libs/server/shared` (111L), `catalog-svc` (144L), `cart-svc` (137L), `user-svc` (170L), `apps/api-gateway` (177L), `api-gateway-e2e` (62L))
 
 ## Phase 5 — Capacitor hybrid mobile
-- [ ] 5.1 `apps/mobile` Capacitor project (webDir = shell build output)
-- [ ] 5.2 Sync shell build → `apps/mobile/web`; `cap sync`
-- [ ] 5.3 Bridge adapter (Capacitor detection + Web-API fallback) + `@capacitor/camera` demo
-- [ ] 5.4 Verify: `cap sync` ok; `cap build android` (requires Android SDK — note if absent)
+- [x] 5.1 `apps/mobile` Capacitor project (webDir = shell build output) — ✅ done (2026-08-28; `apps/mobile` workspace package: `capacitor.config.ts` (appId `com.microfrontend.shell`, `webDir: 'web'`), `package.json` (`@capacitor/core`/`android`/`ios` 8.5.0, `@capacitor/camera` 8.2.3, `@capacitor/cli` 8.5.0 devDep), `project.json` (Nx targets: `sync`, `build-web`, `build-android`, `build-ios`, `open-android`, `open-ios`), `tsconfig.json`; `scripts/sync-mobile-web.mjs` copies `dist/apps/shell/browser` → `apps/mobile/web`; `pnpm install` added 51 pkgs, Capacitor in `apps/mobile/node_modules`; `nx show project mobile` ✅)
+- [x] 5.2 Sync shell build → `apps/mobile/web`; `cap sync` — ✅ done (2026-08-28; `nx build shell` → `dist/apps/shell/browser`; `scripts/sync-mobile-web.mjs` copies to `apps/mobile/web` + creates `index.html` from `index.csr.html` (SSR client entry); `npx cap add android` + `npx cap add ios` (camera plugin wired into both); `npx cap sync` copies web assets to `android/app/src/main/assets/public` + `ios/App/App/public`, `index.html` present)
+- [x] 5.3 Bridge adapter (Capacitor detection + Web-API fallback) + `@capacitor/camera` demo — ✅ done (2026-08-28; `libs/shared/bridge` shared lib: `BridgeAdapter` (Capacitor detection via `window.Capacitor`/`window.__CAPACITOR__`, no hard import) + `scanProduct()` (native → dynamic `import('@capacitor/camera')` `Camera.getPhoto` base64; web → `getUserMedia`+canvas snapshot) + `getBridgeAdapter()` singleton; 7/7 tests pass; camera demo wired into catalog MF (`@shared/bridge` dep + `allowedNonPeerDependencies`, scan button + result panel, `onScanProduct()`); catalog MF builds clean, camera plugin stays external)
+- [x] 5.4 Verify: `cap sync` ok; `cap build android` (requires Android SDK — note if absent) — ✅ done (2026-08-28; `cap sync` verified ok (web assets → `android/app/src/main/assets/public` + `ios/App/App/public`, `index.html` present); `cap build android` **attempted from WSL** — Gradle wrapper runs but **cannot execute the Windows `java.exe`** (PE binary, not runnable by a Linux process) → `cap build android` is **Windows-host-only**; Windows SDK/JDK confirmed present on host (`/mnt/c/Users/Gaming/AppData/Local/Android/Sdk`, JDK 26) but cross-OS Gradle build is not viable from WSL; **build path: run `npx cap build android` from Windows PowerShell, or `npx cap open android` → Android Studio → Run; emulator on Windows host**; documented in `apps/mobile/README.md`)
 - [ ] 5.5 Commit Phase 5
-- [ ] 5.6 Documentation: `apps/mobile/README.md` (Capacitor setup, bridge adapter, sync/build) — ⬜ pending (required before 5.5 ✅)
+- [x] 5.6 Documentation: `apps/mobile/README.md` (Capacitor setup, bridge adapter, sync/build) — ✅ done (2026-08-28; `apps/mobile/README.md` (layout, sync/build flow, `index.csr.html`→`index.html` + `cap add`-before-`cap sync` gotchas, commands, WSL/Windows-host Android build note) + `libs/shared/bridge/README.md` (adapter API, native detection, camera demo, Web-API fallback, testing); both doc-tracking rows ✅)
 
 ## Phase 6 — DX, docs, CI
 - [ ] 6.1 Root `README.md` (architecture, run instructions, add-MF guide, DB guide)
