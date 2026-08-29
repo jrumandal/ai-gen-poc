@@ -6,8 +6,11 @@
   "scripts": {
     "graph": "nx graph",
     "lint": "nx run-many -t lint",
+    "lint:all": "nx run-many -t lint --exclude @microfrontend/source",
     "typecheck": "nx run-many -t typecheck",
     "test": "nx run-many -t test",
+    "test:all": "nx run-many -t test --exclude @microfrontend/source",
+    "build:all": "nx run-many -t build --exclude @microfrontend/source",
     "format": "prettier --write .",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
