@@ -43,6 +43,11 @@ export class GatewayService implements OnModuleInit {
   }
 
   async onModuleInit() {
+    // Idempotent: main.ts may build the schema eagerly (before the NestJS
+    // router is set up) and the lifecycle call during app.listen() then no-ops.
+    if (this._schema) {
+      return;
+    }
     const services = this.resolveServices();
     this.logger.log(`Stitching ${services.length} service schemas...`);
 

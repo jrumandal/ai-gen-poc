@@ -29,7 +29,7 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 | `apps/api-gateway/README.md` | 4 | ✅ |
 | `libs/shared/bridge/README.md` | 5 | ✅ |
 | `apps/mobile/README.md` | 5 | ✅ |
-| `microfrontend/README.md` (root) | 6 | 🔄 in-progress (6.1/6.6) |
+| `microfrontend/README.md` (root) | 6 | ✅ |
 
 ## Phase 0 — Monorepo scaffolding
 - [x] 0.1 Environment check (node 22 / pnpm 11 / git / docker) — ✅ done (2026-08-24)
@@ -98,8 +98,8 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 ## Phase 6 — DX, docs, CI
 - [x] 6.1 Root `README.md` (architecture, run instructions, add-MF guide, DB guide) — ✅ done (2026-08-28; commit fdf60e9 "docs(root): Phase 6.1/6.6 — root README"; replaced Nx boilerplate with reference-architecture README: architecture diagram, monorepo layout, ports table, quick start, common commands, adding-a-new-MF guide, database guide, mobile notes, documentation map)
 - [x] 6.2 Nx targets: `serve:all`, `build:all`, `test:all`, `lint:all`, `typecheck`, `db:migrate`, `db:seed`, `db:studio` — ✅ done (2026-08-28; commit 75d857f "feat(dx): Phase 6.2 — aggregate Nx targets + repo-wide typecheck"; `scripts/serve-all.mjs` orchestrates DB + 3 services + gateway + shell with port-waiting & teardown; `scripts/typecheck.mjs` runs tsc --noEmit over all 17 projects (concurrency 4); typecheck 17/17 PASS; runtime bug fixes committed separately at 0af0bbc)
-- [ ] 6.3 GitHub Actions CI (lint → typecheck → test → build) — 🔄 in progress (2026-08-29; `.github/workflows/ci.yml` created: `ci` job = install → lint → typecheck → test → build on Node 22 + pnpm 11.24.0, `NX_DAEMON=false`; optional `android` job (JDK 17 + Android SDK 36) gated to `workflow_dispatch`; fixed `pnpm-workspace.yaml` `allowBuilds` placeholders → real booleans so build scripts run in fresh CI installs)
-- [ ] 6.4 Final end-to-end verification (per plan §Verification)
+- [x] 6.3 GitHub Actions CI (lint → typecheck → test → build) — ✅ done (2026-08-29; commit 404696c "ci: Phase 6.3 — GitHub Actions CI workflow + pnpm allowBuilds fix"; `.github/workflows/ci.yml`: `ci` job = install → lint → typecheck → test → build on Node 22 + pnpm 11.24.0, `NX_DAEMON=false`; optional `android` job (JDK 17 + Android SDK 36) gated to `workflow_dispatch`; fixed `pnpm-workspace.yaml` `allowBuilds` placeholders → real booleans so build scripts run in fresh CI installs)
+- [x] 6.4 Final end-to-end verification (per plan §Verification) — ✅ done (2026-08-29; full stack verified live: 3 services healthy on 4001/4002/4003; gateway `/health` all 3 up + cross-domain stitched GraphQL query returns 4 products / 3 categories / `me` (Demo User); shell SSR on 4300 returns 302→200 with real HTML — `/` → `<catalog-mf>`, `/cart` → `<cart-mf>`, `/account` → `<user-mf>`; fixed gateway bootstrap (eager `onModuleInit` + `/graphql` before `app.listen`) and shell SSR bridge/vue resolution (`externalDependencies` + root `@shared/bridge` dep + bridge `main`→dist + direct imports); no residual errors in shell log)
 - [ ] 6.5 Commit Phase 6
 - [x] 6.6 Documentation: root `microfrontend/README.md` (architecture, run guide, add-MF guide, DB migrations) — ✅ done (2026-08-28; commit fdf60e9; root README authored as 6.1, tracked here per doc-tracking table)
 

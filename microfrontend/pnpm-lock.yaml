@@ -35,6 +35,9 @@ importers:
       '@angular/platform-server':
         specifier: ^20.3.29
         version: 20.3.29(@angular/common@20.3.29(@angular/core@20.3.29(@angular/compiler@20.3.29)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/compiler@20.3.29)(@angular/core@20.3.29(@angular/compiler@20.3.29)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@20.3.29(@angular/common@20.3.29(@angular/core@20.3.29(@angular/compiler@20.3.29)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.29(@angular/compiler@20.3.29)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
+      '@angular/router':
+        specifier: 20.3.29
+        version: 20.3.29(@angular/common@20.3.29(@angular/core@20.3.29(@angular/compiler@20.3.29)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.29(@angular/compiler@20.3.29)(rxjs@7.8.2)(zone.js@0.15.1))(@angular/platform-browser@20.3.29(@angular/common@20.3.29(@angular/core@20.3.29(@angular/compiler@20.3.29)(rxjs@7.8.2)(zone.js@0.15.1))(rxjs@7.8.2))(@angular/core@20.3.29(@angular/compiler@20.3.29)(rxjs@7.8.2)(zone.js@0.15.1)))(rxjs@7.8.2)
       '@angular/ssr':
         specifier: ~20.3.0
         version: 20.3.35(ab8aaac7ba0da3874ec1084efbb7bcb0)
@@ -71,6 +74,9 @@ importers:
       '@prisma/client':
         specifier: ^6.19.3
         version: 6.19.3(prisma@6.19.3(typescript@5.9.3))(typescript@5.9.3)
+      '@shared/bridge':
+        specifier: workspace:*
+        version: link:libs/shared/bridge
       '@types/react':
         specifier: ^19.2.18
         version: 19.2.18
@@ -386,6 +392,9 @@ importers:
       '@mf/user':
         specifier: workspace:*
         version: link:../../libs/mf/user
+      '@shared/bridge':
+        specifier: workspace:*
+        version: link:../../libs/shared/bridge
       '@shared/contracts':
         specifier: workspace:*
         version: link:../../libs/shared/contracts

@@ -17,7 +17,20 @@ import type { ApplicationConfig } from '@angular/core';
 import { render as catalogRender, type CatalogProps } from '@mf/catalog';
 import { render as cartRender, type CartProps } from '@mf/cart';
 import { render as userRender, type UserPanelProps } from '@mf/user';
+import { getBridgeAdapter } from '@shared/bridge';
 import { MF_SSR_HTML, type MfSsrHtml } from './mf-ssr-token';
+
+/**
+ * Returns the shared bridge adapter instance.
+ *
+ * This is a **direct** dependency of the shell (not just a transitive
+ * dependency of `@mf/catalog`) so that Vite bundles it from source during
+ * SSR rather than pre-bundling it with esbuild (which fails on the
+ * source-only TypeScript package). See `plan.md` Phase 6.4.
+ */
+export function getSharedBridgeAdapter() {
+  return getBridgeAdapter();
+}
 
 /* ------------------------------------------------------------------ */
 /* Sample props                                                        */

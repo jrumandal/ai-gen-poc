@@ -39,14 +39,14 @@
       "@server/shared": [
         "./libs/server/shared/src/index.ts"
       ],
-      "@server/shared": [
-        "./libs/server/shared/src/index.ts"
-      ],
       "@server/api-gateway": [
         "./apps/api-gateway/src/app/gateway/gateway.service.ts"
       ],
       "@shared/contracts": [
         "./libs/shared/contracts/src/index.ts"
+      ],
+      "@shared/bridge": [
+        "./libs/shared/bridge/src/index.ts"
       ],
       "@microfrontend/shared": [
         "./libs/server/shared/src/index.ts"

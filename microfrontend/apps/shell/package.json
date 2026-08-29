@@ -13,6 +13,7 @@
     "@mf/cart": "workspace:*",
     "@mf/catalog": "workspace:*",
     "@mf/user": "workspace:*",
+    "@shared/bridge": "workspace:*",
     "@shared/contracts": "workspace:*",
     "@shared/design-tokens": "workspace:*",
     "@shared/event-bus": "workspace:*",

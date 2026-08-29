@@ -2,8 +2,8 @@
   "name": "@shared/bridge",
   "version": "0.0.1",
   "type": "commonjs",
-  "main": "./src/index.js",
-  "types": "./src/index.d.ts",
+  "main": "../../../dist/libs/shared/bridge/src/index.js",
+  "types": "./src/index.ts",
   "dependencies": {
     "@capacitor/core": "8.5.0",
     "@capacitor/camera": "8.2.3",

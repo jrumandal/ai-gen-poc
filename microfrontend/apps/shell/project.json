@@ -27,6 +27,7 @@
           "entry": "apps/shell/src/server.ts"
         },
         "outputMode": "server",
+        "externalDependencies": ["@shared/bridge", "vue", "@vue/server-renderer"],
         "security": {
           "allowedHosts": ["localhost", "127.0.0.1"]
         }

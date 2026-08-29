@@ -15,6 +15,12 @@ async function bootstrap() {
   app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalInterceptors(new LoggingInterceptor());
 
+  // Build the stitched schema eagerly, BEFORE the NestJS router is set up.
+  // NestFactory.create() does not await OnModuleInit, so we trigger it here.
+  // (onModuleInit is idempotent, so the later lifecycle call is a no-op.)
+  const gatewayService = app.get(GatewayService);
+  await gatewayService.onModuleInit();
+
   // Swagger
   const config = new DocumentBuilder()
     .setTitle('API Gateway')
@@ -25,10 +31,11 @@ async function bootstrap() {
   SwaggerModule.setup('api-docs', app, document);
 
   // Apollo Server with stitched schema
-  const gatewayService = app.get(GatewayService);
   const apolloServer = new ApolloServer({ schema: gatewayService.schema });
   await apolloServer.start();
 
+  // Register /graphql BEFORE app.listen() so the NestJS router (and its 404
+  // handler) does not swallow the request.
   const expressApp = app.getHttpAdapter().getInstance();
   expressApp.use('/graphql', json(), expressMiddleware(apolloServer));
 

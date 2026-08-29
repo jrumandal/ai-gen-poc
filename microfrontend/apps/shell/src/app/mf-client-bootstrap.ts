@@ -25,9 +25,11 @@ import {
   createSharedApolloClient,
   type MfApolloClient,
 } from '@shared/contracts';
+import { getBridgeAdapter } from '@shared/bridge';
 
 let _eventBus: EventBus<MFEventMap> | null = null;
 let _apolloClient: MfApolloClient | null = null;
+let _bridgeAdapter: ReturnType<typeof getBridgeAdapter> | null = null;
 
 /** Returns the shared event bus instance (created lazily). */
 export function getSharedEventBus(): EventBus<MFEventMap> {
@@ -35,6 +37,21 @@ export function getSharedEventBus(): EventBus<MFEventMap> {
     _eventBus = new EventBus<MFEventMap>();
   }
   return _eventBus;
+}
+
+/**
+ * Returns the shared bridge adapter instance (created lazily).
+ *
+ * This is a **direct** dependency of the shell (not just a transitive
+ * dependency of `@mf/catalog`) so that Vite bundles it from source during
+ * SSR rather than pre-bundling it with esbuild (which fails on the
+ * source-only TypeScript package). See `plan.md` Phase 6.4.
+ */
+export function getSharedBridgeAdapter() {
+  if (!_bridgeAdapter) {
+    _bridgeAdapter = getBridgeAdapter();
+  }
+  return _bridgeAdapter;
 }
 
 /**
