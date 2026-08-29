@@ -29,7 +29,7 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 | `apps/api-gateway/README.md` | 4 | ✅ |
 | `libs/shared/bridge/README.md` | 5 | ✅ |
 | `apps/mobile/README.md` | 5 | ✅ |
-| `microfrontend/README.md` (root) | 6 | ⬜ |
+| `microfrontend/README.md` (root) | 6 | 🔄 in-progress (6.1/6.6) |
 
 ## Phase 0 — Monorepo scaffolding
 - [x] 0.1 Environment check (node 22 / pnpm 11 / git / docker) — ✅ done (2026-08-24)
@@ -96,12 +96,12 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 - [x] 5.6 Documentation: `apps/mobile/README.md` (Capacitor setup, bridge adapter, sync/build) — ✅ done (2026-08-28; `apps/mobile/README.md` (layout, sync/build flow, `index.csr.html`→`index.html` + `cap add`-before-`cap sync` gotchas, commands, WSL/Windows-host Android build note) + `libs/shared/bridge/README.md` (adapter API, native detection, camera demo, Web-API fallback, testing); both doc-tracking rows ✅)
 
 ## Phase 6 — DX, docs, CI
-- [ ] 6.1 Root `README.md` (architecture, run instructions, add-MF guide, DB guide)
-- [ ] 6.2 Nx targets: `serve:all`, `build:all`, `test:all`, `lint:all`, `typecheck`, `db:migrate`, `db:seed`, `db:studio`
+- [ ] 6.1 Root `README.md` (architecture, run instructions, add-MF guide, DB guide) — 🔄 in-progress (authored as 6.6)
+- [x] 6.2 Nx targets: `serve:all`, `build:all`, `test:all`, `lint:all`, `typecheck`, `db:migrate`, `db:seed`, `db:studio` — ✅ done (2026-08-28; commit 75d857f "feat(dx): Phase 6.2 — aggregate Nx targets + repo-wide typecheck"; `scripts/serve-all.mjs` orchestrates DB + 3 services + gateway + shell with port-waiting & teardown; `scripts/typecheck.mjs` runs tsc --noEmit over all 17 projects (concurrency 4); typecheck 17/17 PASS; runtime bug fixes committed separately at 0af0bbc)
 - [ ] 6.3 GitHub Actions CI (lint → typecheck → test → build)
 - [ ] 6.4 Final end-to-end verification (per plan §Verification)
 - [ ] 6.5 Commit Phase 6
-- [ ] 6.6 Documentation: root `microfrontend/README.md` (architecture, run guide, add-MF guide, DB migrations) — ⬜ pending (required before 6.5 ✅; authored as 6.1)
+- [ ] 6.6 Documentation: root `microfrontend/README.md` (architecture, run guide, add-MF guide, DB migrations) — 🔄 in-progress (required before 6.5 ✅; authored as 6.1)
 
 ## Notes / blockers
 - **✅ VUE USER MF (2C) RESOLVED (2026-08-27):** `nx build/test/lint user-mf` all green (10/10 tests).
