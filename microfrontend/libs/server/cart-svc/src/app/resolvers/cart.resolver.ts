@@ -1,5 +1,5 @@
 import { Args, Mutation, Query } from '@nestjs/graphql';
-import { NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@server/shared';
 import { AddItemInput } from '../dto/add-item.input';
 import { Cart } from '../dto/cart.type';
@@ -38,6 +38,7 @@ type CartRow = {
   items: CartItemRow[];
 };
 
+@Injectable()
 export class CartResolver {
   constructor(private readonly prisma: PrismaService) {}
 

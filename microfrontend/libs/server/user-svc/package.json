@@ -15,6 +15,7 @@
     "@nestjs/terminus": "^10.3.0",
     "@server/shared": "workspace:*",
     "@apollo/server": "^4.13.0",
+    "@as-integrations/express5": "^1.1.2",
     "graphql": "^16.14.2",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",

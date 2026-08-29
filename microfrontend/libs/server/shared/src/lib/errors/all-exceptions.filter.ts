@@ -36,16 +36,25 @@ export class AllExceptionsFilter implements ExceptionFilter {
         : ((body as { message?: unknown }).message ?? 'Internal server error');
 
     this.logger.error(
-      `${request.method ?? 'UNKNOWN'} ${request.url ?? '/'} -> ${status}`,
+      `${request?.method ?? 'UNKNOWN'} ${request?.url ?? '/'} -> ${status}`,
       exception instanceof Error ? exception.stack : undefined,
     );
 
-    response.status(status).json({
-      statusCode: status,
-      error: message,
-      message,
-      path: request.url ?? '/',
-      timestamp: new Date().toISOString(),
-    });
+    // In the GraphQL context `getResponse()` is not an Express response, so
+    // guard before using the Express API. When it is unavailable we have
+    // already logged the error above; the GraphQL layer will surface its own
+    // error envelope to the client.
+    if (
+      typeof response?.status === 'function' &&
+      typeof response?.json === 'function'
+    ) {
+      response.status(status).json({
+        statusCode: status,
+        error: message,
+        message,
+        path: request?.url ?? '/',
+        timestamp: new Date().toISOString(),
+      });
+    }
   }
 }

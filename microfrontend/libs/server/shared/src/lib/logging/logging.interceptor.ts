@@ -25,8 +25,10 @@ export class LoggingInterceptor implements NestInterceptor {
       method?: string;
       url?: string;
     }>();
-    const method = request.method ?? 'UNKNOWN';
-    const url = request.url ?? '/';
+    // In the GraphQL context `getRequest()` can return `undefined`, so guard
+    // with optional chaining (same class of bug as `AllExceptionsFilter`).
+    const method = request?.method ?? 'UNKNOWN';
+    const url = request?.url ?? '/';
     const startedAt = Date.now();
 
     this.logger.log(`${method} ${url}`);

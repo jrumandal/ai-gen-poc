@@ -1,6 +1,10 @@
 import { createHash, randomUUID } from 'node:crypto';
 import { Args, Mutation, Query } from '@nestjs/graphql';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '@server/shared';
 import { LoginInput } from '../dto/login.input';
 import { UpdateProfileInput } from '../dto/update-profile.input';
@@ -58,6 +62,7 @@ type OrderRow = {
 /** The seeded demo account used as the "current user" stub. */
 const DEMO_EMAIL = 'demo@example.com';
 
+@Injectable()
 export class UserResolver {
   constructor(private readonly prisma: PrismaService) {}
 

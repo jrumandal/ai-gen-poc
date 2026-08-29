@@ -1,4 +1,5 @@
 import { Args, Query } from '@nestjs/graphql';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@server/shared';
 import { Category } from '../dto/category.type';
 import { Product } from '../dto/product.type';
@@ -25,6 +26,7 @@ type CategoryRow = {
   children?: CategoryRow[];
 };
 
+@Injectable()
 export class CatalogResolver {
   constructor(private readonly prisma: PrismaService) {}
 
