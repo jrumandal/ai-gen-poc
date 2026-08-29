@@ -9,6 +9,63 @@
         "config": ".verdaccio/config.yml",
         "storage": "tmp/local-registry/storage"
       }
+    },
+    "serve:all": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node scripts/serve-all.mjs",
+        "cwd": ".",
+        "parallel": false
+      }
+    },
+    "build:all": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nx run-many -t build --exclude @microfrontend/source",
+        "cwd": "."
+      }
+    },
+    "test:all": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nx run-many -t test --exclude @microfrontend/source",
+        "cwd": "."
+      }
+    },
+    "lint:all": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nx run-many -t lint --exclude @microfrontend/source",
+        "cwd": "."
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node scripts/typecheck.mjs",
+        "cwd": "."
+      }
+    },
+    "db:migrate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prisma migrate dev",
+        "cwd": "."
+      }
+    },
+    "db:seed": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prisma db seed",
+        "cwd": "."
+      }
+    },
+    "db:studio": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prisma studio",
+        "cwd": "."
+      }
     }
   }
 }

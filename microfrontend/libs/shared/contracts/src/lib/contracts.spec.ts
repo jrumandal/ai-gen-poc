@@ -37,7 +37,7 @@ describe('@shared/contracts public API', () => {
   it('exposes the expected OpenAPI path keys', () => {
     expectType<
       Equals<
-        keyof typeof catalog.paths,
+        keyof catalog.paths,
         | '/catalog/products'
         | '/catalog/products/{productId}'
         | '/catalog/categories'
@@ -45,12 +45,12 @@ describe('@shared/contracts public API', () => {
     >();
     expectType<
       Equals<
-        keyof typeof cart.paths,
+        keyof cart.paths,
         '/cart/{cartId}' | '/cart/{cartId}/items' | '/cart/{cartId}/items/{itemId}'
       >
     >();
     expectType<
-      Equals<keyof typeof user.paths, '/user/me' | '/user/orders' | '/user/login'>
+      Equals<keyof user.paths, '/user/me' | '/user/orders' | '/user/login'>
     >();
   });
 

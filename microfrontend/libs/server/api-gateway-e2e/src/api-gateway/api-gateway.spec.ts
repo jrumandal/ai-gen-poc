@@ -54,14 +54,19 @@ describe('api-gateway stitching (e2e)', () => {
     });
 
     expect(result.errors).toBeUndefined();
-    expect(result.data?.products).toHaveLength(2);
-    expect(result.data?.products[0]).toEqual({
+    const d = result.data as {
+      products: Array<{ id: string; name: string; price: { amount: number; currency: string } }>;
+      cart: { items: unknown[] };
+      me: { id: string; email: string; name: string };
+    };
+    expect(d.products).toHaveLength(2);
+    expect(d.products[0]).toEqual({
       id: 'p1',
       name: 'Widget',
       price: { amount: 1000, currency: 'USD' },
     });
-    expect(result.data?.cart?.items).toHaveLength(1);
-    expect(result.data?.me).toEqual({ id: 'u1', email: 'alice@example.com', name: 'Alice' });
+    expect(d.cart.items).toHaveLength(1);
+    expect(d.me).toEqual({ id: 'u1', email: 'alice@example.com', name: 'Alice' });
   });
 
   it('resolves a single product by id', async () => {
@@ -82,7 +87,10 @@ describe('api-gateway stitching (e2e)', () => {
     });
 
     expect(result.errors).toBeUndefined();
-    expect(result.data?.product).toEqual({
+    const d = result.data as {
+      product: { id: string; name: string; price: { amount: number; currency: string } };
+    };
+    expect(d.product).toEqual({
       id: 'p2',
       name: 'Gadget',
       price: { amount: 2500, currency: 'USD' },
