@@ -1,4 +1,4 @@
-import { Args, Query } from '@nestjs/graphql';
+import { Args, ID, Query } from '@nestjs/graphql';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@server/shared';
 import { Category } from '../dto/category.type';
@@ -62,7 +62,7 @@ export class CatalogResolver {
     nullable: true,
     description: 'Fetch a single product by id.',
   })
-  async product(@Args('id') id: string): Promise<Product | null> {
+  async product(@Args('id', { type: () => ID }) id: string): Promise<Product | null> {
     const row = await this.prisma.product.findUnique({
       where: { id },
       include: {

@@ -1,20 +1,23 @@
 /**
  * Account (user) page component.
  *
- * Hosts the `<user-mf>` custom element. On the server, the component binds
- * the pre-rendered SSR markup (from `MfSsrService`) into the element via
- * `[innerHTML]`. On the client, the element self-hydrates via its
- * `connectedCallback` → `hasSSRContent()` → `hydrate()` pattern.
+ * Hosts the `<user-mf>` custom element. On the server, the component injects
+ * the pre-rendered SSR markup (from `MfSsrService`) into the element via the
+ * `mfSsrHtml` directive. On the client, the element self-hydrates via its
+ * `connectedCallback` → `hasSSRContent()` → `hydrate()` pattern, and the
+ * directive leaves the element's light-DOM content untouched.
  */
 import { Component, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
 import { MfSsrService } from './mf-ssr.service';
+import { MfSsrHtmlDirective } from './mf-ssr-html.directive';
 
 @Component({
   selector: 'app-account-page',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  imports: [MfSsrHtmlDirective],
   template: `
     <h1>Account</h1>
-    <user-mf [innerHTML]="ssrHtml"></user-mf>
+    <user-mf [mfSsrHtml]="ssrHtml"></user-mf>
   `,
   styles: [
     `

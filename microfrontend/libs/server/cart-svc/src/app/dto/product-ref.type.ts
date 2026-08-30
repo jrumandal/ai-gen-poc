@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 /**
  * A lightweight product reference embedded in a cart item.
@@ -9,7 +9,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
  */
 @ObjectType()
 export class ProductRef {
-  @Field(() => String)
+  @Field(() => ID)
   id!: string;
 
   @Field(() => String)

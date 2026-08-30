@@ -1,0 +1,154 @@
+# =============================================================================
+# microfrontend — WEB deployment (local Docker Desktop)
+#
+# Runs the full web stack as containers, reusing the EXISTING Postgres
+# container (`mf-postgres`, project `microfrontend-db`) over its external
+# network. The browser reaches the app at:
+#
+#   http://localhost:4000          -> Angular SSR shell (catalog / cart / account)
+#   http://localhost:4200/graphql  -> GraphQL gateway (stitched catalog+cart+user)
+#
+# The shell's browser-side Apollo client defaults to `http://localhost:4200/graphql`
+# (see apps/shell/src/app/mf-client-bootstrap.ts), so exposing the gateway on
+# host port 4200 is what makes the deployed web app work end-to-end.
+#
+# Usage (from the microfrontend/ dir, via Docker Desktop's docker CLI):
+#   docker compose -f docker-compose.web.yml up --build -d
+#   docker compose -f docker-compose.web.yml ps
+#   docker compose -f docker-compose.web.yml logs -f api-gateway
+# =============================================================================
+
+name: microfrontend-web
+
+# The Postgres container lives in the `microfrontend-db` project, so we attach
+# to its (external) network to reach it by the service alias `postgres`.
+networks:
+  db:
+    external: true
+    name: microfrontend-db_default
+
+services:
+  # ---------------------------------------------------------------------------
+  # catalog-svc — NestJS + GraphQL + Prisma (products, categories)
+  # ---------------------------------------------------------------------------
+  catalog-svc:
+    image: microfrontend-web:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["node", "dist/libs/server/catalog-svc/main.js"]
+    environment:
+      NODE_ENV: production
+      PORT: "4001"
+      DATABASE_URL: "postgresql://mf:mf@postgres:5432/microfrontend?schema=public"
+      PRISMA_CLIENT_ENGINE_TYPE: binary
+    networks: [db]
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:4001/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ---------------------------------------------------------------------------
+  # cart-svc — NestJS + GraphQL + Prisma (orders, cart)
+  # ---------------------------------------------------------------------------
+  cart-svc:
+    image: microfrontend-web:latest
+    command: ["node", "dist/libs/server/cart-svc/main.js"]
+    environment:
+      NODE_ENV: production
+      PORT: "4002"
+      DATABASE_URL: "postgresql://mf:mf@postgres:5432/microfrontend?schema=public"
+      PRISMA_CLIENT_ENGINE_TYPE: binary
+    networks: [db]
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:4002/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ---------------------------------------------------------------------------
+  # user-svc — NestJS + GraphQL + Prisma (users, me)
+  # ---------------------------------------------------------------------------
+  user-svc:
+    image: microfrontend-web:latest
+    command: ["node", "dist/libs/server/user-svc/main.js"]
+    environment:
+      NODE_ENV: production
+      PORT: "4003"
+      DATABASE_URL: "postgresql://mf:mf@postgres:5432/microfrontend?schema=public"
+      PRISMA_CLIENT_ENGINE_TYPE: binary
+    networks: [db]
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:4003/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ---------------------------------------------------------------------------
+  # api-gateway — GraphQL gateway that stitches the three services.
+  # MUST start only after all three services are healthy (it introspects them
+  # on boot and throws if any is unreachable).
+  # ---------------------------------------------------------------------------
+  api-gateway:
+    image: microfrontend-web:latest
+    command: ["node", "dist/apps/api-gateway/main.js"]
+    environment:
+      NODE_ENV: production
+      PORT: "4200"
+      # The gateway imports @server/shared, which instantiates a PrismaService
+      # (PrismaClient) at module init. That requires DATABASE_URL to be present
+      # even though the gateway itself never queries the DB.
+      DATABASE_URL: "postgresql://mf:mf@postgres:5432/microfrontend?schema=public"
+      PRISMA_CLIENT_ENGINE_TYPE: binary
+      # Point the gateway at the three services by their compose service names
+      # (resolvable on the shared network). Overrides the localhost defaults.
+      GATEWAY_SERVICES: "http://catalog-svc:4001/graphql,http://cart-svc:4002/graphql,http://user-svc:4003/graphql"
+    networks: [db]
+    ports:
+      - "4200:4200"
+    depends_on:
+      catalog-svc:
+        condition: service_healthy
+      cart-svc:
+        condition: service_healthy
+      user-svc:
+        condition: service_healthy
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:4200/api-docs').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+  # ---------------------------------------------------------------------------
+  # shell — Angular SSR server (serves the micro-frontend web app).
+  # SSR uses static sample data, so it does not call the gateway server-side;
+  # the browser talks to the gateway at http://localhost:4200/graphql.
+  # ---------------------------------------------------------------------------
+  shell:
+    image: microfrontend-web:latest
+    command: ["node", "dist/apps/shell/server/server.mjs"]
+    environment:
+      NODE_ENV: production
+      PORT: "4000"
+    networks: [db]
+    ports:
+      - "4000:4000"
+    depends_on:
+      api-gateway:
+        condition: service_started
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:4000/catalog').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s

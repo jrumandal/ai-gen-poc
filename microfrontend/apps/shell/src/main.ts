@@ -1,7 +1,7 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { appConfig } from './app/app.config';
 import { App } from './app/app';
-import { registerMfElements, attachMfSharedServices } from './app/mf-client-bootstrap';
+import { registerMfElements, attachMfSharedServices, loadMfData } from './app/mf-client-bootstrap';
 
 /**
  * Client bootstrap.
@@ -16,4 +16,5 @@ import { registerMfElements, attachMfSharedServices } from './app/mf-client-boot
   await registerMfElements();
   await bootstrapApplication(App, appConfig);
   await attachMfSharedServices();
+  await loadMfData();
 })().catch((err) => console.error(err));

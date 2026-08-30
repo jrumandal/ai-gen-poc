@@ -1,4 +1,4 @@
-import { Field, InputType, Int } from '@nestjs/graphql';
+import { Field, ID, InputType, Int } from '@nestjs/graphql';
 
 /**
  * Input for adding (or incrementing) a product in a cart.
@@ -7,7 +7,7 @@ import { Field, InputType, Int } from '@nestjs/graphql';
  */
 @InputType()
 export class AddItemInput {
-  @Field(() => String)
+  @Field(() => ID)
   productId!: string;
 
   @Field(() => Int)

@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 
 /**
  * A product category (supports a single level of nesting via `parentId`).
@@ -7,7 +7,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
  */
 @ObjectType()
 export class Category {
-  @Field(() => String)
+  @Field(() => ID)
   id!: string;
 
   @Field(() => String)
@@ -16,7 +16,7 @@ export class Category {
   @Field(() => String)
   slug!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field(() => ID, { nullable: true })
   parentId?: string | null;
 
   @Field(() => [Category])

@@ -1,0 +1,18 @@
+# Keep the Docker build context small: the image installs + builds from source,
+# so the host's node_modules / dist / native build trees are not needed.
+node_modules
+**/node_modules
+dist
+.git
+.gitignore
+apps/mobile/android
+apps/mobile/ios
+apps/mobile/web
+*.log
+.env
+.env.*
+coverage
+**/coverage
+.turbo
+.nx
+**/.nx

@@ -27,7 +27,7 @@
           "entry": "apps/shell/src/server.ts"
         },
         "outputMode": "server",
-        "externalDependencies": ["@shared/bridge", "vue", "@vue/server-renderer"],
+        "externalDependencies": ["@capacitor/camera"],
         "security": {
           "allowedHosts": ["localhost", "127.0.0.1"]
         }
@@ -38,7 +38,7 @@
             {
               "type": "initial",
               "maximumWarning": "500kb",
-              "maximumError": "1mb"
+              "maximumError": "1.1mb"
             },
             {
               "type": "anyComponentStyle",

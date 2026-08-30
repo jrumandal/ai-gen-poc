@@ -1,4 +1,4 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 import { Money } from './money.type';
 import { ProductRef } from './product-ref.type';
 
@@ -10,10 +10,10 @@ import { ProductRef } from './product-ref.type';
  */
 @ObjectType()
 export class CartItem {
-  @Field(() => String)
+  @Field(() => ID)
   id!: string;
 
-  @Field(() => String)
+  @Field(() => ID)
   productId!: string;
 
   @Field(() => Int)

@@ -1,4 +1,4 @@
-import { Args, Mutation, Query } from '@nestjs/graphql';
+import { Args, ID, Mutation, Query } from '@nestjs/graphql';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@server/shared';
 import { AddItemInput } from '../dto/add-item.input';
@@ -49,9 +49,28 @@ export class CartResolver {
     nullable: true,
     description: 'Fetch a cart by id.',
   })
-  async cart(@Args('cartId') cartId: string): Promise<Cart | null> {
+  async cart(@Args('cartId', { type: () => ID }) cartId: string): Promise<Cart | null> {
     const row = await this.prisma.cart.findUnique({
       where: { id: cartId },
+      include: { items: { include: { product: true } } },
+    });
+
+    return row ? this.toCart(row) : null;
+  }
+
+  /**
+   * Fetch the cart owned by a user (or null if the user has no cart).
+   *
+   * This lets the storefront resolve the active cart from the signed-in user
+   * (e.g. `me { id }` → `cartForUser(userId)`) without hard-coding a cart id.
+   */
+  @Query(() => Cart, {
+    nullable: true,
+    description: 'Fetch the cart owned by a user.',
+  })
+  async cartForUser(@Args('userId', { type: () => ID }) userId: string): Promise<Cart | null> {
+    const row = await this.prisma.cart.findFirst({
+      where: { userId },
       include: { items: { include: { product: true } } },
     });
 
@@ -63,7 +82,7 @@ export class CartResolver {
    */
   @Mutation(() => Cart, { description: 'Add a product to a cart.' })
   async addItemToCart(
-    @Args('cartId') cartId: string,
+    @Args('cartId', { type: () => ID }) cartId: string,
     @Args('input') input: AddItemInput,
   ): Promise<Cart> {
     await this.ensureCart(cartId);
@@ -98,8 +117,8 @@ export class CartResolver {
    */
   @Mutation(() => Cart, { description: 'Update a cart line item quantity.' })
   async updateCartItem(
-    @Args('cartId') cartId: string,
-    @Args('itemId') itemId: string,
+    @Args('cartId', { type: () => ID }) cartId: string,
+    @Args('itemId', { type: () => ID }) itemId: string,
     @Args('input') input: UpdateItemInput,
   ): Promise<Cart> {
     await this.ensureCart(cartId);
@@ -117,8 +136,8 @@ export class CartResolver {
    */
   @Mutation(() => Cart, { description: 'Remove a line item from a cart.' })
   async removeItemFromCart(
-    @Args('cartId') cartId: string,
-    @Args('itemId') itemId: string,
+    @Args('cartId', { type: () => ID }) cartId: string,
+    @Args('itemId', { type: () => ID }) itemId: string,
   ): Promise<Cart> {
     await this.ensureCart(cartId);
 
@@ -131,7 +150,7 @@ export class CartResolver {
    * Remove all line items from a cart.
    */
   @Mutation(() => Cart, { description: 'Clear all line items from a cart.' })
-  async clearCart(@Args('cartId') cartId: string): Promise<Cart> {
+  async clearCart(@Args('cartId', { type: () => ID }) cartId: string): Promise<Cart> {
     await this.ensureCart(cartId);
 
     await this.prisma.cartItem.deleteMany({ where: { cartId } });

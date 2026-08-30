@@ -1,20 +1,23 @@
 /**
  * Cart page component.
  *
- * Hosts the `<cart-mf>` custom element. On the server, the component binds
- * the pre-rendered SSR markup (from `MfSsrService`) into the element via
- * `[innerHTML]`. On the client, the element self-hydrates via its
- * `connectedCallback` → `hasSSRContent()` → `hydrate()` pattern.
+ * Hosts the `<cart-mf>` custom element. On the server, the component injects
+ * the pre-rendered SSR markup (from `MfSsrService`) into the element via the
+ * `mfSsrHtml` directive. On the client, the element self-hydrates via its
+ * `connectedCallback` → `hasSSRContent()` → `hydrate()` pattern, and the
+ * directive leaves the element's light-DOM content untouched.
  */
 import { Component, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
 import { MfSsrService } from './mf-ssr.service';
+import { MfSsrHtmlDirective } from './mf-ssr-html.directive';
 
 @Component({
   selector: 'app-cart-page',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  imports: [MfSsrHtmlDirective],
   template: `
     <h1>Cart</h1>
-    <cart-mf [innerHTML]="ssrHtml"></cart-mf>
+    <cart-mf [mfSsrHtml]="ssrHtml"></cart-mf>
   `,
   styles: [
     `
