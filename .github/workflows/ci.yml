@@ -6,7 +6,7 @@
 # Runtime pinning: the repo has NO `packageManager` field and NO `.nvmrc`,
 # so Node + pnpm are pinned explicitly here (Node 22, pnpm 11.24.0).
 #
-# The optional Capacitor Android build is a separate job (needs JDK 17 +
+# The optional Capacitor Android build is a separate job (needs JDK 21 +
 # Android SDK 36) and only runs on manual `workflow_dispatch`, since it is
 # not part of the standard dev flow (which builds Android on the Windows host).
 
@@ -62,7 +62,7 @@ jobs:
         run: pnpm build:all
 
   # Optional: build the Capacitor Android app.
-  # Requires JDK 17 (AGP 8.13.0) + Android SDK 36 (compileSdk 36).
+  # Requires JDK 21 (capacitor-camera) + Android SDK 36 (compileSdk 36).
   # Runs only on manual dispatch to keep the default pipeline fast.
   android:
     name: Capacitor Android build (optional)
@@ -88,11 +88,11 @@ jobs:
           cache: pnpm
           cache-dependency-path: microfrontend/pnpm-lock.yaml
 
-      - name: Setup JDK 17
+      - name: Setup JDK 21
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: 21
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3

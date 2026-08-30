@@ -57,6 +57,8 @@ const build = [
       "**/coverage",
       "**/.nx",
       "**/web",
+      "**/android",
+      "**/ios",
       "**/eslint.config.*",
     ],
   },

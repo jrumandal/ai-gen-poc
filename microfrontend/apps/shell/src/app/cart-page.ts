@@ -17,7 +17,7 @@ import { MfSsrHtmlDirective } from './mf-ssr-html.directive';
   imports: [MfSsrHtmlDirective],
   template: `
     <h1>Cart</h1>
-    <cart-mf [mfSsrHtml]="ssrHtml"></cart-mf>
+    <cart-mf [appMfSsrHtml]="ssrHtml"></cart-mf>
   `,
   styles: [
     `

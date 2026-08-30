@@ -7,23 +7,19 @@
  * rendering on the client (where the bound value is empty).
  *
  * Usage:
- *   <catalog-mf [mfSsrHtml]="ssrHtml"></catalog-mf>
+ *   <catalog-mf [appMfSsrHtml]="ssrHtml"></catalog-mf>
  */
-import { Directive, ElementRef, Input } from '@angular/core';
+import { Directive, ElementRef, Input, inject } from '@angular/core';
 
 @Directive({
-  selector: '[mfSsrHtml]',
+  selector: '[appMfSsrHtml]',
   standalone: true,
 })
 export class MfSsrHtmlDirective {
-  private readonly el: HTMLElement;
-
-  constructor(ref: ElementRef<HTMLElement>) {
-    this.el = ref.nativeElement;
-  }
+  private readonly el: HTMLElement = inject(ElementRef<HTMLElement>).nativeElement;
 
   @Input()
-  set mfSsrHtml(html: string | null | undefined) {
+  set appMfSsrHtml(html: string | null | undefined) {
     // Only set innerHTML when we have actual content (server-side SSR).
     // On the client, html is empty/null, so we leave the element's
     // light-DOM content (rendered by the MF) untouched.

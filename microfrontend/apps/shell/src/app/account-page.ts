@@ -17,7 +17,7 @@ import { MfSsrHtmlDirective } from './mf-ssr-html.directive';
   imports: [MfSsrHtmlDirective],
   template: `
     <h1>Account</h1>
-    <user-mf [mfSsrHtml]="ssrHtml"></user-mf>
+    <user-mf [appMfSsrHtml]="ssrHtml"></user-mf>
   `,
   styles: [
     `

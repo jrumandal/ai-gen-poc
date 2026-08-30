@@ -17,7 +17,7 @@ import { MfSsrHtmlDirective } from './mf-ssr-html.directive';
   imports: [MfSsrHtmlDirective],
   template: `
     <h1>Catalog</h1>
-    <catalog-mf [mfSsrHtml]="ssrHtml"></catalog-mf>
+    <catalog-mf [appMfSsrHtml]="ssrHtml"></catalog-mf>
   `,
   styles: [
     `
