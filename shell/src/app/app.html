@@ -1,0 +1,22 @@
+<header class="shell-header">
+  <div class="shell-header__inner">
+    <a class="shell-brand" routerLink="/catalog">{{ title }}</a>
+    <nav class="shell-nav" aria-label="Primary">
+      <a routerLink="/catalog" routerLinkActive="active">Catalog</a>
+      <a routerLink="/cart" routerLinkActive="active">Cart</a>
+      <a routerLink="/account" routerLinkActive="active">Account</a>
+    </nav>
+    <button
+      type="button"
+      class="shell-theme-toggle"
+      (click)="toggleTheme()"
+      [attr.aria-label]="'Switch to ' + (theme() === 'light' ? 'dark' : 'light') + ' theme'"
+    >
+      {{ theme() === 'light' ? '🌙' : '☀️' }}
+    </button>
+  </div>
+</header>
+
+<main class="shell-main">
+  <router-outlet></router-outlet>
+</main>

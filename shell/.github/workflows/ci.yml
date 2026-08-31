@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  ci:
+    name: Lint, typecheck, test, build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout shell
+        uses: actions/checkout@v4
+
+      - name: Checkout shared (sibling workspace)
+        uses: actions/checkout@v4
+        with:
+          repository: jrumandal/shared
+          path: ../shared
+
+      - name: Checkout cart (sibling workspace)
+        uses: actions/checkout@v4
+        with:
+          repository: jrumandal/cart
+          path: ../cart
+
+      - name: Checkout catalog (sibling workspace)
+        uses: actions/checkout@v4
+        with:
+          repository: jrumandal/catalog
+          path: ../catalog
+
+      - name: Checkout user (sibling workspace)
+        uses: actions/checkout@v4
+        with:
+          repository: jrumandal/user
+          path: ../user
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.24.0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Link sibling packages into a workspace
+        run: |
+          cd ..
+          printf 'packages:\n  - shared/packages/*\n  - cart\n  - catalog\n  - user\n  - shell\n' > pnpm-workspace.yaml
+          printf '{"name":"mf-ci","private":true,"packageManager":"pnpm@11.24.0"}\n' > package.json
+          cd shell
+
+      - name: Install
+        run: pnpm install
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build

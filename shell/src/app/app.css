@@ -1,0 +1,77 @@
+/* ===========================================================================
+   Shell global styles (nav, layout, theme). Design tokens are imported in
+   styles.css.
+   =========================================================================== */
+
+.shell-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.shell-header__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  max-width: var(--layout-max-width);
+  margin: 0 auto;
+  padding: var(--space-3) var(--space-5);
+}
+
+.shell-brand {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-brand-600);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.shell-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-left: auto;
+}
+
+.shell-nav a {
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-weight: var(--font-weight-medium);
+  transition:
+    background var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+
+.shell-nav a:hover {
+  background: var(--color-surface-subtle);
+  color: var(--color-text-primary);
+}
+
+.shell-nav a.active {
+  background: var(--color-brand-50);
+  color: var(--color-brand-700);
+}
+
+.shell-theme-toggle {
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  border-radius: var(--radius-full);
+  padding: var(--space-1) var(--space-2);
+  cursor: pointer;
+  font-size: var(--font-size-md);
+  line-height: 1;
+  transition: background var(--duration-fast) var(--ease-standard);
+}
+
+.shell-theme-toggle:hover {
+  background: var(--color-surface-subtle);
+}
+
+.shell-main {
+  min-height: calc(100vh - 64px);
+}
