@@ -1,0 +1,25 @@
+# Top-level local development workspace.
+#
+# This links the separate repos together for LOCAL development and local CI
+# validation, so `@shared/*` and `@mf/*` resolve to the local source instead of
+# a remote registry. Each repo still keeps its own package.json, toolchain, and
+# CI workflow — this file is only a local-dev convenience.
+#
+# When a real registry (npmjs.com or a working GitHub Packages account) is
+# available, consumers can drop the `workspace:*` protocol and install the
+# published versions instead.
+packages:
+  - 'shared/packages/*'
+  - 'cart'
+  - 'catalog'
+  - 'user'
+  - 'shell'
+  - 'gateway'
+  - 'services'
+  - 'mobile'
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+  lmdb: true
+  msgpackr-extract: true
+  unrs-resolver: true
