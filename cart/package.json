@@ -1,0 +1,46 @@
+{
+  "name": "@mf/cart",
+  "version": "0.0.1",
+  "description": "Cart micro-frontend (React 19) — source-only ESM web component `mf-cart`.",
+  "private": false,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "build": "node -e \"console.log('@mf/cart is source-only (no build step).')\"",
+    "publish": "node scripts/publish.mjs"
+  },
+  "dependencies": {
+    "@shared/contracts": "workspace:*",
+    "@shared/design-tokens": "workspace:*",
+    "@shared/event-bus": "workspace:*",
+    "tslib": "^2.3.0"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@testing-library/react": "^16.3.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "eslint": "9.39.5",
+    "eslint-plugin-react": "^7.37.0",
+    "jsdom": "^26.1.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "typescript": "5.9.3",
+    "typescript-eslint": "^8.35.0",
+    "vitest": "^3.2.0"
+  }
+}
