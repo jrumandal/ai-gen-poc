@@ -132,8 +132,8 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 > backend → mobile). The `mf-orchestrator` repo holds the cross-repo coordination
 > (release ordering, version bumping, publish fan-out).
 
-- [ ] B.1 `gateway/` repo — NestJS GraphQL gateway (stitched `@graphql-tools/stitch`, `@apollo/server`) — ⬜ pending (port from `microfrontend/apps/api-gateway`; own CI/CD; depends on `@shared/contracts`)
-- [ ] B.2 `services/` repo — NestJS micro-services (catalog/cart/user backends + Prisma) — ⬜ pending (port from `microfrontend/libs/server/*` + `prisma/`; own CI/CD; PostgreSQL via docker-compose)
+- [x] B.1 `server-shared/` + `gateway/` repos — shared NestJS server lib (`@server/shared`: Prisma, config, health, logging, error filter) + GraphQL gateway (`@server/api-gateway`, stitched `@graphql-tools/stitch` + `@apollo/server`) — ✅ done (2026-08-27; ported from `microfrontend/libs/server/shared` + `microfrontend/apps/api-gateway`; each own CI/CD; gateway depends on `@server/shared` via `workspace:*`; both validated: lint/typecheck/test/build ✅)
+- [x] B.2 `catalog-svc/` + `cart-svc/` + `user-svc/` repos — NestJS GraphQL micro-services (catalog/cart/user backends + Prisma) — ✅ done (2026-08-27; ported from `microfrontend/libs/server/*`; each own CI/CD; all depend on `@server/shared` via `workspace:*`; PostgreSQL via Prisma; all validated: lint/typecheck/test/build ✅)
 - [ ] B.3 `mobile/` repo — Capacitor hybrid app (JDK 21, AGP 8.13.0, compileSdk 36) — ⬜ pending (port from `microfrontend/apps/mobile`; consumes shell + `@shared/bridge`)
 - [ ] B.4 `mf-orchestrator/` repo — cross-repo CI/CD coordination (release ordering shared→MFs→shell→backend→mobile, version bumping, publish fan-out to GitHub Packages) — ⬜ pending
 - [ ] B.5 Push all repos to origin + verify per-repo CI green — ⬜ pending (6 local commits `59f1bcd`/`c1d025c`/`965cc2c`/`8912ea4`/`3e1c04f`/`ccf7b18` not yet pushed; **note:** GitHub Packages is unavailable on this free account — `npm publish` → 403 `create_package`, so publish jobs will fail but ci jobs should pass)
