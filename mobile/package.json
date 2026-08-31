@@ -1,0 +1,31 @@
+{
+  "name": "@microfrontend/mobile",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Capacitor hybrid mobile wrapper for the micro-frontend shell (Android + iOS).",
+  "scripts": {
+    "sync": "cap sync",
+    "add:android": "cap add android",
+    "add:ios": "cap add ios",
+    "build-web": "node scripts/sync-mobile-web.mjs",
+    "build-android": "cap build android",
+    "build-ios": "cap build ios",
+    "open-android": "cap open android",
+    "open-ios": "cap open ios"
+  },
+  "dependencies": {
+    "@capacitor/android": "8.5.0",
+    "@capacitor/camera": "8.2.3",
+    "@capacitor/core": "8.5.0",
+    "@capacitor/ios": "8.5.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "8.5.0",
+    "@types/node": "^22.0.0",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@11.24.0"
+}
