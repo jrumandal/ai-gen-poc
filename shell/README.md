@@ -36,6 +36,30 @@ The shell also provides `react`, `react-dom`, `vue`, and
 `@vue/server-renderer` as its **own** dependencies so the MFs' `peerDependencies`
 resolve to a single copy.
 
+## Design system (Tailwind v4 host)
+
+The shell is the **Tailwind v4 host** for the whole platform. The micro-frontends
+emit **Tailwind utility classes** in their markup; the shell generates the
+corresponding CSS and ships it to the browser.
+
+- `postcss.config.json` — enables `@tailwindcss/postcss` (Tailwind v4).
+- `src/styles.css` —
+  - `@import "tailwindcss";` (triggers Tailwind processing);
+  - `@import "@shared/design-tokens/tokens.css";` (the CSS-variable token set);
+  - `@theme inline { … }` — maps every design token into the Tailwind v4 theme
+    namespace (`--color-*`, `--spacing-*`, `--font-*`, `--radius-*`,
+    `--shadow-*`, …) so utilities like `bg-brand-500`, `text-text-primary`,
+    `p-4`, `rounded-md` resolve to the shared CSS variables;
+  - `@source "../../cart/src";` `@source "../../catalog/src";`
+    `@source "../../user/src";` — lets Tailwind scan the sibling MF repos for
+    the utility classes they use;
+  - `@layer base { … }` — global reset + body typography.
+
+Because the tokens are CSS variables, the `[data-theme='dark']` overrides in
+`tokens.css` re-theme the entire UI (including every MF) with a single attribute
+flip — no per-MF CSS.
+
+
 ## Public surface (`src/`)
 
 | File | Purpose |

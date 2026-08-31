@@ -9,13 +9,10 @@ services depend on its packages.
 
 | Package | Description |
 | --- | --- |
-| `@shared/design-system` | Design tokens + Tailwind v4 theme. Owns the `@theme` mapping, `design-system.css`, and typed `tokens.ts`. |
+| `@shared/design-tokens` | Design tokens: typed `Tokens` const + `cssVar()` helper, and `tokens.css` (CSS variables + dark theme). The shell maps these into Tailwind v4 via `@theme inline`. |
 | `@shared/contracts` | Typed API contracts (OpenAPI + GraphQL) shared by clients and services. |
 | `@shared/event-bus` | Framework-agnostic event bus for cross-MF communication. |
 | `@shared/bridge` | Web-component bridge / host utilities used by the shell and MFs. |
-
-> Package code is added in **Phase B**. This repo is scaffolded in **Phase A**
-> with the full CI/CD + publishing infrastructure.
 
 ## Repository layout
 
@@ -30,7 +27,7 @@ shared/
 ├── scripts/publish.mjs        # auto-increment publish to GitHub Packages
 ├── tsconfig.base.json
 └── packages/
-    ├── design-system/
+    ├── design-tokens/
     ├── contracts/
     ├── event-bus/
     └── bridge/
@@ -80,7 +77,7 @@ Other repos install these as versioned dependencies:
 
 ```jsonc
 // package.json
-{ "dependencies": { "@shared/design-system": "^0.0.1" } }
+{ "dependencies": { "@shared/design-tokens": "^0.0.1" } }
 ```
 
 ## Dependency graph
@@ -88,7 +85,7 @@ Other repos install these as versioned dependencies:
 ```
         ┌────────────────────────────┐
         │         shared (this)      │
-        │ design-system · contracts  │
+        │ design-tokens · contracts  │
         │ event-bus · bridge         │
         └──────────────┬─────────────┘
                        │ published to GitHub Packages
