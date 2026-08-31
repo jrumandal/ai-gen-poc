@@ -103,6 +103,41 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 - [x] 6.5 Commit Phase 6 — ✅ done (2026-08-29; commit e570763 "fix: Phase 6.4 — gateway bootstrap + shell SSR bridge/vue resolution"; 11 files: gateway bootstrap fix, shell SSR externalDependencies + bridge direct imports, bridge main→dist, root deps + tsconfig paths, pnpm-lock, STEPS.md)
 - [x] 6.6 Documentation: root `microfrontend/README.md` (architecture, run guide, add-MF guide, DB migrations) — ✅ done (2026-08-28; commit fdf60e9; root README authored as 6.1, tracked here per doc-tracking table)
 
+## Phase A — Multi-repo split (frontend)
+
+> **Context (2026-08-29):** Per the architectural re-design, the monorepo is split into
+> **separate repositories**, each with its own environment (Node/TS/library versions),
+> its own segregated CI/CD pipeline, and independent versioning. The original monorepo
+> at `microfrontend/` is **kept as reference**. Shared packages are distributed as
+> **source-only ESM npm packages** (consumed by the shell's Angular build, which does
+> the bundling). Tag names standardized to `mf-*` (`mf-cart`, `mf-catalog`, `mf-user`).
+>
+> **Distribution model:** `@shared/*` + `@mf/*` are published to GitHub Packages
+> (`npm.pkg.github.com`). Each consumer repo's CI checks out the `shared` repo (and,
+> for the shell, the 3 MF repos) as **siblings** and wires a pnpm workspace so
+> `workspace:*` resolves without a registry — keeping CI self-contained.
+
+- [x] A.1 `shared/` repo — 4 packages (`@shared/design-tokens`, `@shared/event-bus`, `@shared/contracts`, `@shared/bridge`) — ✅ done (2026-08-29; commit `59f1bcd`; all 4 packages source-only ESM, `main`/`types`→`src/index.ts`; lint ✓, typecheck ✓, test ✓ 17/17, build ✓; `contracts` types aligned to reference OpenAPI (`User.address` singular, `Address` shape); `scripts/publish.mjs` + `.github/workflows/ci.yml` (ci + publish jobs))
+- [x] A.2 `cart/` repo — `@mf/cart` (React 19) — ✅ done (2026-08-29; commit `c1d025c`; full faithful port: `register`/`hydrate`/`render` + `cart-element` web component; `mf-cart` tag; lint ✓, typecheck ✓, test ✓ 8/8, build ✓; self-contained CI checks out `shared` sibling)
+- [x] A.3 `catalog/` repo — `@mf/catalog` (Angular 20) — ✅ done (2026-08-29; commit `965cc2c`; full faithful port: `@if`/`@for` control flow, `ViewEncapsulation.None`, design tokens via `cssVar`/`Tokens`, bridge `scanProduct`, eventBus `source: 'mf-catalog'`; `mf-catalog` tag; lint ✓, typecheck ✓, test ✓ 6/6, build ✓; self-contained CI)
+- [x] A.4 `user/` repo — `@mf/user` (Vue 3) — ✅ done (2026-08-29; commit `8912ea4`; full faithful port: `UserPanel` render-function component + `UserElement` web component, byte-for-byte match to reference; `mf-user` tag; lint ✓, typecheck ✓, test ✓ 10/10, build ✓; self-contained CI)
+- [x] A.5 `shell/` repo — `@mf/shell` (Angular 20 SSR) — ✅ done (2026-08-29; commit `3e1c04f`; standalone Angular CLI (`angular.json`, `@angular/build:application`), consumes all 3 MFs as ESM modules; SSR composition (`mf-ssr.server.ts` renders catalog/cart/user server-side) + client bootstrap (`mf-client-bootstrap.ts` register/hydrate + shared Apollo/EventBus/Bridge); `mf-*` tags; lint ✓, typecheck ✓, test ✓ 4/4, build ✓, SSR runtime ✓ (catalog/cart/account render MF HTML, `/`→302→`/catalog`); self-contained CI checks out `shared`+`cart`+`catalog`+`user` siblings)
+- [x] A.6 Root workspace glue — ✅ done (2026-08-29; commit `ccf7b18`; root `package.json` + `pnpm-workspace.yaml` (local dev workspace spanning `shared/packages/*`, `cart`, `catalog`, `user`, `shell`) + `pnpm-lock.yaml`)
+
+## Phase B — Per-repo CI/CD + cross-repo orchestration
+
+> **Goal:** Each repository has its own segregated deployment pipeline; the pipelines
+> are **orchestrated/organized/coordinated** across repos (shared → MFs → shell →
+> backend → mobile). The `mf-orchestrator` repo holds the cross-repo coordination
+> (release ordering, version bumping, publish fan-out).
+
+- [ ] B.1 `gateway/` repo — NestJS GraphQL gateway (stitched `@graphql-tools/stitch`, `@apollo/server`) — ⬜ pending (port from `microfrontend/apps/api-gateway`; own CI/CD; depends on `@shared/contracts`)
+- [ ] B.2 `services/` repo — NestJS micro-services (catalog/cart/user backends + Prisma) — ⬜ pending (port from `microfrontend/libs/server/*` + `prisma/`; own CI/CD; PostgreSQL via docker-compose)
+- [ ] B.3 `mobile/` repo — Capacitor hybrid app (JDK 21, AGP 8.13.0, compileSdk 36) — ⬜ pending (port from `microfrontend/apps/mobile`; consumes shell + `@shared/bridge`)
+- [ ] B.4 `mf-orchestrator/` repo — cross-repo CI/CD coordination (release ordering shared→MFs→shell→backend→mobile, version bumping, publish fan-out to GitHub Packages) — ⬜ pending
+- [ ] B.5 Push all repos to origin + verify per-repo CI green — ⬜ pending (6 local commits `59f1bcd`/`c1d025c`/`965cc2c`/`8912ea4`/`3e1c04f`/`ccf7b18` not yet pushed; **note:** GitHub Packages is unavailable on this free account — `npm publish` → 403 `create_package`, so publish jobs will fail but ci jobs should pass)
+- [ ] B.6 README consistency pass across all repos (cross-repo references, versioning, CI/CD) — ⬜ pending
+
 ## Notes / blockers
 - **✅ VUE USER MF (2C) RESOLVED (2026-08-27):** `nx build/test/lint user-mf` all green (10/10 tests).
   - **Vue SSR is async**: `renderToString` from `@vue/server-renderer` returns `Promise<string>` — so `ssr.ts` `render()` is `async` and tests `await` it (unlike React's sync `renderToString`).
