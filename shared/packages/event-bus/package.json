@@ -1,0 +1,25 @@
+{
+  "name": "@shared/event-bus",
+  "version": "0.0.1",
+  "description": "Framework-agnostic event bus for cross-micro-frontend communication.",
+  "private": false,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": ["src"],
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --test",
+    "build": "node -e \"console.log('@shared/event-bus is source-only (no build step).')\""
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "eslint": "9.39.5",
+    "typescript": "5.9.3",
+    "typescript-eslint": "^8.35.0"
+  }
+}

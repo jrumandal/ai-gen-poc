@@ -1,0 +1,10 @@
+/* @shared/design-system — design tokens (CSS custom properties).
+ * Phase B populates this with the full token set ported from the monorepo
+ * (libs/shared/design-tokens/tokens.css). */
+:root {
+  --mf-color-primary: #2563eb;
+  --mf-color-surface: #ffffff;
+  --mf-color-text: #0f172a;
+  --mf-radius-md: 0.5rem;
+  --mf-space-4: 1rem;
+}

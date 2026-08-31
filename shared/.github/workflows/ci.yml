@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '22'
+  PNPM_VERSION: '11.24.0'
+
+jobs:
+  ci:
+    name: Lint · Typecheck · Test · Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+  # Publish to GitHub Packages on every push to main (auto-increment patch).
+  # Requires the NPM_TOKEN repo secret (a PAT with read:packages + write:packages).
+  publish:
+    name: Publish to GitHub Packages
+    needs: ci
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      - name: Configure npm auth (GitHub Packages)
+        run: |
+          echo "//npm.pkg.github.com/:username=${{ github.actor }}" > ~/.npmrc
+          echo "//npm.pkg.github.com/:password=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Publish (auto-increment patch)
+        run: node scripts/publish.mjs
+
+      # --- Tag-based publish (future) -------------------------------------
+      # To publish only on version tags instead of every main push, replace
+      # the `if:` above with:
+      #   if: startsWith(github.ref, 'refs/tags/v')
+      # and replace the publish step with:
+      #   - name: Publish (tag)
+      #     run: pnpm -r exec npm publish --access public --registry=https://npm.pkg.github.com/
+      # ---------------------------------------------------------------------

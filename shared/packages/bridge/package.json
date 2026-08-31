@@ -1,0 +1,27 @@
+{
+  "name": "@shared/bridge",
+  "version": "0.0.1",
+  "description": "Capacitor bridge adapter — the single integration surface for native capabilities, with a Web-API fallback for the browser.",
+  "private": false,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "files": ["src"],
+  "scripts": {
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --test",
+    "build": "node -e \"console.log('@shared/bridge is source-only (no build step).')\""
+  },
+  "devDependencies": {
+    "@capacitor/camera": "8.2.3",
+    "@capacitor/core": "8.5.0",
+    "@eslint/js": "^9.39.5",
+    "eslint": "9.39.5",
+    "typescript": "5.9.3",
+    "typescript-eslint": "^8.35.0"
+  }
+}
