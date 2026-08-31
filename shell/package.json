@@ -37,14 +37,15 @@
     "zone.js": "~0.15.1"
   },
   "devDependencies": {
+    "@angular-devkit/core": "~20.3.0",
+    "@angular-devkit/schematics": "~20.3.0",
     "@angular/build": "~20.3.0",
     "@angular/cli": "~20.3.0",
     "@angular/compiler-cli": "20.3.29",
     "@angular/language-service": "~20.3.0",
-    "@angular-devkit/core": "~20.3.0",
-    "@angular-devkit/schematics": "~20.3.0",
-    "@schematics/angular": "~20.3.0",
     "@eslint/js": "^9.39.5",
+    "@schematics/angular": "~20.3.0",
+    "@tailwindcss/postcss": "^4.1.11",
     "@types/express": "^4.17.21",
     "@types/jest": "~30.0.0",
     "@types/node": "^22.0.0",
@@ -53,6 +54,7 @@
     "jest": "~30.3.0",
     "jest-environment-jsdom": "^30.4.1",
     "jest-preset-angular": "~14.6.1",
+    "tailwindcss": "^4.1.11",
     "ts-jest": "^29.4.7",
     "typescript": "5.9.3",
     "typescript-eslint": "^8.35.0"

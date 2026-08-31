@@ -1,8 +1,6 @@
-import type { CSSProperties } from 'react';
-import type { Cart, CartItem, Money, MfApolloClient } from '@shared/contracts';
-import { cssVar, Tokens } from '@shared/design-tokens';
-import type { EventBus, MFEventMap } from '@shared/event-bus';
-import { CartEvent } from '@shared/event-bus';
+import type { Cart, CartItem, Money, MfApolloClient } from "@shared/contracts";
+import type { EventBus, MFEventMap } from "@shared/event-bus";
+import { CartEvent } from "@shared/event-bus";
 
 /**
  * Props accepted by the `Cart` component.
@@ -46,146 +44,6 @@ export function lineTotal(item: CartItem): Money {
   };
 }
 
-const styles: Record<string, CSSProperties> = {
-  root: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: cssVar(Tokens.space.s3),
-    fontFamily: cssVar(Tokens.font.familySans),
-    color: cssVar(Tokens.color.textPrimary),
-    fontSize: cssVar(Tokens.font.sizeMd),
-    lineHeight: cssVar(Tokens.font.lineHeightNormal),
-    padding: cssVar(Tokens.space.s4),
-    border: `1px solid ${cssVar(Tokens.color.border)}`,
-    borderRadius: cssVar(Tokens.radius.md),
-    background: cssVar(Tokens.color.surface),
-  },
-  header: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: cssVar(Tokens.space.s2),
-  },
-  title: {
-    margin: 0,
-    fontSize: cssVar(Tokens.font.sizeLg),
-    fontWeight: cssVar(Tokens.font.weightSemibold),
-  },
-  count: {
-    display: 'inline-block',
-    padding: `${cssVar(Tokens.space.s1)} ${cssVar(Tokens.space.s2)}`,
-    borderRadius: cssVar(Tokens.radius.full),
-    background: cssVar(Tokens.color.brand500),
-    color: cssVar(Tokens.color.textInverse),
-    fontSize: cssVar(Tokens.font.sizeSm),
-    fontWeight: cssVar(Tokens.font.weightMedium),
-  },
-  list: {
-    listStyle: 'none',
-    margin: 0,
-    padding: 0,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: cssVar(Tokens.space.s3),
-  },
-  item: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: cssVar(Tokens.space.s3),
-    padding: cssVar(Tokens.space.s2),
-    border: `1px solid ${cssVar(Tokens.color.border)}`,
-    borderRadius: cssVar(Tokens.radius.sm),
-    background: cssVar(Tokens.color.surfaceSubtle),
-  },
-  thumb: {
-    width: 48,
-    height: 48,
-    objectFit: 'cover',
-    borderRadius: cssVar(Tokens.radius.sm),
-    flexShrink: 0,
-  },
-  itemBody: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: cssVar(Tokens.space.s1),
-    flex: 1,
-    minWidth: 0,
-  },
-  itemName: {
-    margin: 0,
-    fontSize: cssVar(Tokens.font.sizeMd),
-    fontWeight: cssVar(Tokens.font.weightMedium),
-    overflow: 'hidden',
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-  },
-  itemMeta: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: cssVar(Tokens.space.s2),
-    fontSize: cssVar(Tokens.font.sizeSm),
-    color: cssVar(Tokens.color.textSecondary),
-  },
-  qty: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: cssVar(Tokens.space.s1),
-  },
-  btn: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: 28,
-    height: 28,
-    border: `1px solid ${cssVar(Tokens.color.border)}`,
-    borderRadius: cssVar(Tokens.radius.sm),
-    background: cssVar(Tokens.color.surface),
-    color: cssVar(Tokens.color.textPrimary),
-    cursor: 'pointer',
-    fontSize: cssVar(Tokens.font.sizeMd),
-    lineHeight: 1,
-    padding: 0,
-  },
-  remove: {
-    border: 'none',
-    background: 'transparent',
-    color: cssVar(Tokens.color.danger),
-    cursor: 'pointer',
-    fontSize: cssVar(Tokens.font.sizeSm),
-    padding: cssVar(Tokens.space.s1),
-  },
-  lineTotal: {
-    fontSize: cssVar(Tokens.font.sizeMd),
-    fontWeight: cssVar(Tokens.font.weightSemibold),
-    whiteSpace: 'nowrap',
-  },
-  footer: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: cssVar(Tokens.space.s2),
-    paddingTop: cssVar(Tokens.space.s2),
-    borderTop: `1px solid ${cssVar(Tokens.color.border)}`,
-  },
-  subtotalGroup: {
-    display: 'flex',
-    alignItems: 'baseline',
-    gap: cssVar(Tokens.space.s2),
-  },
-  subtotalLabel: {
-    color: cssVar(Tokens.color.textSecondary),
-  },
-  subtotalValue: {
-    fontSize: cssVar(Tokens.font.sizeLg),
-    fontWeight: cssVar(Tokens.font.weightSemibold),
-  },
-  empty: {
-    padding: cssVar(Tokens.space.s4),
-    textAlign: 'center',
-    color: cssVar(Tokens.color.textSecondary),
-  },
-};
-
 /**
  * A presentational React `Cart` component.
  *
@@ -193,6 +51,11 @@ const styles: Record<string, CSSProperties> = {
  * cross-MF events (via the shared `EventBus`) when the user interacts with it.
  * The actual GraphQL mutations are performed by the host shell, which wires
  * the `on*` callbacks to its data layer.
+ *
+ * Styling uses Tailwind v4 utility classes. The design tokens are mapped into
+ * Tailwind namespaces by the host shell (see `@theme inline` in the shell's
+ * `styles.css`), so utilities like `bg-brand-500` / `p-4` / `rounded-md`
+ * resolve to the shared CSS custom properties.
  */
 export function Cart(props: CartProps) {
   const { cart, eventBus, onRemoveItem, onUpdateQuantity, onClearCart } = props;
@@ -202,13 +65,13 @@ export function Cart(props: CartProps) {
     if (next === item.quantity) return;
     if (next === 0) {
       onRemoveItem?.(item.id);
-      eventBus?.emit(CartEvent['cart:itemRemoved'], {
+      eventBus?.emit(CartEvent["cart:itemRemoved"], {
         productId: item.productId,
       });
       return;
     }
     onUpdateQuantity?.(item.id, next);
-    eventBus?.emit(CartEvent['cart:updated'], {
+    eventBus?.emit(CartEvent["cart:updated"], {
       itemCount: cart.itemCount,
       subtotal: cart.subtotal,
     });
@@ -216,48 +79,51 @@ export function Cart(props: CartProps) {
 
   const removeItem = (item: CartItem): void => {
     onRemoveItem?.(item.id);
-    eventBus?.emit(CartEvent['cart:itemRemoved'], {
+    eventBus?.emit(CartEvent["cart:itemRemoved"], {
       productId: item.productId,
     });
   };
 
   const clearCart = (): void => {
     onClearCart?.();
-    eventBus?.emit(CartEvent['cart:cleared'], undefined);
+    eventBus?.emit(CartEvent["cart:cleared"], undefined);
   };
 
   const isEmpty = cart.items.length === 0;
 
   return (
-    <section className="mf-cart" style={styles.root} aria-label="Shopping cart">
-      <header style={styles.header}>
-        <h2 style={styles.title}>Your cart</h2>
-        <span style={styles.count} aria-live="polite">
-          {cart.itemCount} {cart.itemCount === 1 ? 'item' : 'items'}
+    <section
+      className="mf-cart flex flex-col gap-3 font-sans text-text-primary text-md leading-normal p-4 border border-border rounded-md bg-surface"
+      aria-label="Shopping cart"
+    >
+      <header className="flex items-center justify-between gap-2">
+        <h2 className="m-0 text-lg font-semibold">Your cart</h2>
+        <span className="inline-block px-2 py-1 rounded-full bg-brand-500 text-text-inverse text-sm font-medium" aria-live="polite">
+          {cart.itemCount} {cart.itemCount === 1 ? "item" : "items"}
         </span>
       </header>
 
       {isEmpty ? (
-        <p style={styles.empty}>Your cart is empty.</p>
+        <p className="p-4 text-center text-text-secondary">Your cart is empty.</p>
       ) : (
-        <ul style={styles.list}>
+        <ul className="m-0 p-0 list-none flex flex-col gap-3">
           {cart.items.map((item) => (
-            <li key={item.id} style={styles.item}>
+            <li key={item.id} className="flex items-center gap-3 p-2 border border-border rounded-sm bg-surface-subtle">
               {item.product.imageUrl ? (
                 <img
-                  style={styles.thumb}
+                  className="w-12 h-12 object-cover rounded-sm shrink-0"
                   src={item.product.imageUrl}
                   alt={item.product.name}
                 />
               ) : null}
-              <div style={styles.itemBody}>
-                <p style={styles.itemName}>{item.product.name}</p>
-                <div style={styles.itemMeta}>
+              <div className="flex flex-col gap-1 flex-1 min-w-0">
+                <p className="m-0 text-md font-medium overflow-hidden text-ellipsis whitespace-nowrap">{item.product.name}</p>
+                <div className="flex items-center gap-2 text-sm text-text-secondary">
                   <span>{formatMoney(item.unitPrice)} each</span>
-                  <span style={styles.qty} aria-label={`Quantity ${item.quantity}`}>
+                  <span className="inline-flex items-center gap-1" aria-label={`Quantity ${item.quantity}`}>
                     <button
                       type="button"
-                      style={styles.btn}
+                      className="inline-flex items-center justify-center w-7 h-7 border border-border rounded-sm bg-surface text-text-primary cursor-pointer text-md leading-none p-0"
                       aria-label="Decrease quantity"
                       onClick={() => changeQuantity(item, -1)}
                     >
@@ -266,7 +132,7 @@ export function Cart(props: CartProps) {
                     <span>{item.quantity}</span>
                     <button
                       type="button"
-                      style={styles.btn}
+                      className="inline-flex items-center justify-center w-7 h-7 border border-border rounded-sm bg-surface text-text-primary cursor-pointer text-md leading-none p-0"
                       aria-label="Increase quantity"
                       onClick={() => changeQuantity(item, 1)}
                     >
@@ -275,10 +141,10 @@ export function Cart(props: CartProps) {
                   </span>
                 </div>
               </div>
-              <span style={styles.lineTotal}>{formatMoney(lineTotal(item))}</span>
+              <span className="text-md font-semibold whitespace-nowrap">{formatMoney(lineTotal(item))}</span>
               <button
                 type="button"
-                style={styles.remove}
+                className="border-0 bg-transparent text-danger cursor-pointer text-sm p-1"
                 aria-label={`Remove ${item.product.name}`}
                 onClick={() => removeItem(item)}
               >
@@ -290,12 +156,12 @@ export function Cart(props: CartProps) {
       )}
 
       {!isEmpty ? (
-        <footer style={styles.footer}>
-          <span style={styles.subtotalGroup}>
-            <span style={styles.subtotalLabel}>Subtotal</span>
-            <span style={styles.subtotalValue}>{formatMoney(cart.subtotal)}</span>
+        <footer className="flex items-center justify-between gap-2 pt-2 border-t border-border">
+          <span className="flex items-baseline gap-2">
+            <span className="text-text-secondary">Subtotal</span>
+            <span className="text-lg font-semibold">{formatMoney(cart.subtotal)}</span>
           </span>
-          <button type="button" style={styles.remove} onClick={clearCart}>
+          <button type="button" className="border-0 bg-transparent text-danger cursor-pointer text-sm p-1" onClick={clearCart}>
             Clear cart
           </button>
         </footer>

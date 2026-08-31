@@ -1,14 +1,33 @@
-<header class="shell-header">
-  <div class="shell-header__inner">
-    <a class="shell-brand" routerLink="/catalog">{{ title }}</a>
-    <nav class="shell-nav" aria-label="Primary">
-      <a routerLink="/catalog" routerLinkActive="active">Catalog</a>
-      <a routerLink="/cart" routerLinkActive="active">Cart</a>
-      <a routerLink="/account" routerLinkActive="active">Account</a>
+<header class="shell-header sticky top-0 z-10 bg-surface border-b border-border shadow-sm">
+  <div class="shell-header__inner flex items-center gap-5 max-w-[var(--layout-max-width)] mx-auto py-3 px-5">
+    <a
+      class="shell-brand text-lg font-semibold text-brand-600 no-underline whitespace-nowrap"
+      routerLink="/catalog"
+      >{{ title }}</a
+    >
+    <nav class="shell-nav flex items-center gap-2 ml-auto" aria-label="Primary">
+      <a
+        routerLink="/catalog"
+        routerLinkActive="active"
+        class="px-3 py-2 rounded-md text-text-secondary no-underline font-medium transition-colors hover:bg-surface-subtle hover:text-text-primary [&.active]:bg-brand-50 [&.active]:text-brand-700"
+        >Catalog</a
+      >
+      <a
+        routerLink="/cart"
+        routerLinkActive="active"
+        class="px-3 py-2 rounded-md text-text-secondary no-underline font-medium transition-colors hover:bg-surface-subtle hover:text-text-primary [&.active]:bg-brand-50 [&.active]:text-brand-700"
+        >Cart</a
+      >
+      <a
+        routerLink="/account"
+        routerLinkActive="active"
+        class="px-3 py-2 rounded-md text-text-secondary no-underline font-medium transition-colors hover:bg-surface-subtle hover:text-text-primary [&.active]:bg-brand-50 [&.active]:text-brand-700"
+        >Account</a
+      >
     </nav>
     <button
       type="button"
-      class="shell-theme-toggle"
+      class="shell-theme-toggle border border-border bg-surface rounded-full px-2 py-1 cursor-pointer text-md leading-none transition-colors hover:bg-surface-subtle"
       (click)="toggleTheme()"
       [attr.aria-label]="'Switch to ' + (theme() === 'light' ? 'dark' : 'light') + ' theme'"
     >
@@ -17,6 +36,6 @@
   </div>
 </header>
 
-<main class="shell-main">
+<main class="shell-main min-h-[calc(100vh-64px)]">
   <router-outlet></router-outlet>
 </main>
