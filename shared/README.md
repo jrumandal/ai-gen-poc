@@ -19,7 +19,7 @@ services depend on its packages.
 ```
 shared/
 ├── .github/workflows/ci.yml   # lint → typecheck → test → build → publish
-├── .npmrc                     # @shared / @mf → GitHub Packages
+├── .npmrc                     # @jrumandal / @mf → GitHub Packages
 ├── .nvmrc                     # Node 22
 ├── eslint.config.mjs          # flat ESLint 9 config
 ├── package.json               # workspace root (private)
@@ -72,7 +72,7 @@ Other repos install these as versioned dependencies:
 
 ```jsonc
 // .npmrc
-@shared:registry=https://npm.pkg.github.com/
+@jrumandal:registry=https://npm.pkg.github.com/
 ```
 
 ```jsonc
