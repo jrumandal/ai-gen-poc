@@ -2,7 +2,7 @@
  * The Capacitor bridge adapter.
  *
  * This is the single integration surface for native (Capacitor) capabilities.
- * Micro-frontends and the shell import from `@jrumandal/bridge` — never from
+ * Micro-frontends and the shell import from `@shared/bridge` — never from
  * `@capacitor/*` directly — so that:
  *
  *  1. Native calls are isolated in one place (easy to swap / mock / test).

@@ -5,7 +5,7 @@
 import 'zone.js';
 import '@angular/compiler';
 import { render } from './ssr';
-import type { Category, Product } from '@jrumandal/contracts';
+import type { Category, Product } from '@shared/contracts';
 
 const categories: Category[] = [
   {

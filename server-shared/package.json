@@ -1,8 +1,8 @@
 {
-  "name": "@jrumandal/shared",
+  "name": "@server/shared",
   "version": "0.0.1",
   "description": "Shared NestJS building blocks (Prisma, config, health, logging, error handling) for the micro-frontend backend services.",
-  "private": false,
+  "private": true,
   "type": "commonjs",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

@@ -1,5 +1,5 @@
 {
-  "name": "@jrumandal/design-tokens",
+  "name": "@shared/design-tokens",
   "version": "0.0.1",
   "description": "Design tokens (CSS custom properties + typed accessors) for the micro-frontend design system. Tailwind v4 maps these tokens via @theme.",
   "private": false,
@@ -16,7 +16,7 @@
     "lint": "eslint .",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "node --test",
-    "build": "node -e \"console.log('@jrumandal/design-tokens is source-only (no build step).')\""
+    "build": "node -e \"console.log('@shared/design-tokens is source-only (no build step).')\""
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",

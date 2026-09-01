@@ -1,6 +1,6 @@
 import { render } from './ssr';
 import { formatAddress } from './lib/user-panel';
-import type { User, Address } from '@jrumandal/contracts';
+import type { User, Address } from '@shared/contracts';
 
 const address: Address = {
   line1: '1 Main St',

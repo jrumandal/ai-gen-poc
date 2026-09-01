@@ -13,32 +13,18 @@
           "builder": "@angular/build:application",
           "options": {
             "browser": "src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
-            "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
-            ],
-            "styles": [
-              "src/styles.css"
-            ],
+            "assets": ["public/"],
+            "styles": ["src/styles.css"],
             "server": "src/main.server.ts",
             "ssr": {
               "entry": "src/server.ts"
             },
             "outputMode": "server",
-            "externalDependencies": [
-              "@capacitor/camera"
-            ],
+            "externalDependencies": ["@capacitor/camera"],
             "security": {
-              "allowedHosts": [
-                "localhost",
-                "127.0.0.1"
-              ]
+              "allowedHosts": ["localhost", "127.0.0.1"]
             }
           },
           "configurations": {

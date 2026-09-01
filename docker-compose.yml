@@ -1,0 +1,48 @@
+# Local development database stack for the multi-repo micro-frontend architecture.
+#
+#   docker compose up -d     # start postgres + pgadmin
+#   docker compose down      # stop (data persists in the named volume)
+#
+# Connection string (mirrored in each service's .env):
+#   postgresql://mf:mf@localhost:5432/microfrontend?schema=public
+
+name: microfrontend-db
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: mf-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: mf
+      POSTGRES_PASSWORD: mf
+      POSTGRES_DB: microfrontend
+    ports:
+      - "5432:5432"
+    volumes:
+      - mf_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mf -d microfrontend"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  pgadmin:
+    image: dpage/pgadmin4:8
+    container_name: mf-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    ports:
+      - "5050:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - mf_pgadmin_data:/var/lib/pgadmin
+
+volumes:
+  mf_pgdata:
+  mf_pgadmin_data:

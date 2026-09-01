@@ -12,7 +12,7 @@ module.exports = {
     ],
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(.*\\.mjs$|@angular/common/locales/.*\\.js$|@jrumandal/|@mf/))',
+    'node_modules/(?!(.*\\.mjs$|@angular/common/locales/.*\\.js$|@shared/|@mf/))',
   ],
   moduleFileExtensions: ['ts', 'html', 'js', 'json', 'mjs'],
   snapshotSerializers: [

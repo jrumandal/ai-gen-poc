@@ -33,3 +33,19 @@ allowBuilds:
   msgpackr-extract: true
   prisma: true
   unrs-resolver: true
+# Force a single @angular/* version across the whole local workspace so the
+# shell (20.3.29) and the Angular MF apps (catalog) don't pull two copies of
+# @angular/core, which breaks the esbuild-based Angular compiler.
+overrides:
+  '@angular/common': 20.3.29
+  '@angular/compiler': 20.3.29
+  '@angular/compiler-cli': 20.3.29
+  '@angular/core': 20.3.29
+  '@angular/elements': 20.3.29
+  '@angular/language-service': 20.3.29
+  '@angular/platform-browser': 20.3.29
+  '@angular/platform-server': 20.3.29
+  '@angular/router': 20.3.29
+  '@angular/ssr': 20.3.29
+  '@angular/build': 20.3.29
+  '@angular/cli': 20.3.29

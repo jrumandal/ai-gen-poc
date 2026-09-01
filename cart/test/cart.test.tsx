@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Cart, formatMoney, lineTotal } from '../src/index';
-import type { Cart as CartModel, CartItem } from '@jrumandal/contracts';
+import type { Cart as CartModel, CartItem } from '@shared/contracts';
 
 const sampleItem: CartItem = {
   id: 'item-1',

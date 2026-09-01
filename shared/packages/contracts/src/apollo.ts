@@ -7,7 +7,7 @@ import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
  * A single `ApolloClient` is bootstrapped by the shell and injected into each
  * MF via the `hydrate()` options. MFs consume only the *type* (erased at
  * runtime via `import type`), so they do not each need a direct
- * `@apollo/client` dependency — `@jrumandal/contracts` is the canonical home of
+ * `@apollo/client` dependency — `@shared/contracts` is the canonical home of
  * the shared GraphQL client.
  *
  * `ApolloClient` without an explicit generic defaults to

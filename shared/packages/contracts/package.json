@@ -1,5 +1,5 @@
 {
-  "name": "@jrumandal/contracts",
+  "name": "@shared/contracts",
   "version": "0.0.1",
   "description": "Typed API contracts (domain types + shared GraphQL client) shared by all micro-frontends.",
   "private": false,
@@ -14,7 +14,7 @@
     "lint": "eslint .",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "node --test",
-    "build": "node -e \"console.log('@jrumandal/contracts is source-only (no build step).')\""
+    "build": "node -e \"console.log('@shared/contracts is source-only (no build step).')\""
   },
   "dependencies": {
     "@apollo/client": "^4.2.12"
