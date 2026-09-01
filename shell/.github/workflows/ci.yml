@@ -13,61 +13,65 @@ jobs:
     steps:
       - name: Checkout shell
         uses: actions/checkout@v4
+        with:
+          repository: jrumandal/shell
+          path: shell
 
       - name: Checkout shared (sibling workspace)
         uses: actions/checkout@v4
         with:
           repository: jrumandal/shared
-          path: ../shared
+          path: shared
 
       - name: Checkout cart (sibling workspace)
         uses: actions/checkout@v4
         with:
           repository: jrumandal/cart
-          path: ../cart
+          path: cart
 
       - name: Checkout catalog (sibling workspace)
         uses: actions/checkout@v4
         with:
           repository: jrumandal/catalog
-          path: ../catalog
+          path: catalog
 
       - name: Checkout user (sibling workspace)
         uses: actions/checkout@v4
         with:
           repository: jrumandal/user
-          path: ../user
+          path: user
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 11.24.0
-          runInstall: false
+          run_install: false
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: pnpm
 
-      - name: Link sibling packages into a workspace
+      - name: Link siblings into a workspace
         run: |
-          cd ..
-          printf 'packages:\n  - shared/packages/*\n  - cart\n  - catalog\n  - user\n  - shell\n' > pnpm-workspace.yaml
-          printf '{"name":"mf-ci","private":true,"packageManager":"pnpm@11.24.0"}\n' > package.json
-          cd shell
+          printf 'packages:\n  - "shell"\n  - "shared/packages/*"\n  - "cart"\n  - "catalog"\n  - "user"\n' > pnpm-workspace.yaml
+          printf '{\n  "name": "mf-workspace",\n  "private": true\n}\n' > package.json
 
       - name: Install
         run: pnpm install
 
       - name: Lint
+        working-directory: shell
         run: pnpm lint
 
       - name: Typecheck
+        working-directory: shell
         run: pnpm typecheck
 
       - name: Test
+        working-directory: shell
         run: pnpm test
 
       - name: Build
+        working-directory: shell
         run: pnpm build

@@ -18,13 +18,12 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: 11.24.0
-          runInstall: false
+          run_install: false
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: pnpm
 
       - name: Install
         run: pnpm install
@@ -40,37 +39,3 @@ jobs:
 
       - name: Build
         run: pnpm build
-
-  publish:
-    name: Publish to GitHub Packages
-    needs: ci
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 11.24.0
-          runInstall: false
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-
-      - name: Configure npm auth
-        run: |
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-
-      - name: Install
-        run: pnpm install
-
-      - name: Build
-        run: pnpm build
-
-      - name: Publish
-        run: node scripts/publish.mjs

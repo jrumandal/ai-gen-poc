@@ -29,24 +29,56 @@ jobs:
           path: shell
           ref: main
 
+      - name: Checkout shared (sibling workspace)
+        uses: actions/checkout@v4
+        with:
+          repository: jrumandal/shared
+          path: shared
+          ref: main
+
+      - name: Checkout cart (sibling workspace)
+        uses: actions/checkout@v4
+        with:
+          repository: jrumandal/cart
+          path: cart
+          ref: main
+
+      - name: Checkout catalog (sibling workspace)
+        uses: actions/checkout@v4
+        with:
+          repository: jrumandal/catalog
+          path: catalog
+          ref: main
+
+      - name: Checkout user (sibling workspace)
+        uses: actions/checkout@v4
+        with:
+          repository: jrumandal/user
+          path: user
+          ref: main
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 11.24.0
-          runInstall: false
+          run_install: false
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: pnpm
-          cache-dependency-path: mobile/pnpm-lock.yaml
+
+      - name: Link siblings into a workspace
+        run: |
+          printf 'packages:\n  - "shell"\n  - "shared/packages/*"\n  - "cart"\n  - "catalog"\n  - "user"\n' > pnpm-workspace.yaml
+          printf '{\n  "name": "mf-workspace",\n  "private": true\n}\n' > package.json
+
+      - name: Install (shell workspace)
+        run: pnpm install
 
       - name: Build shell (web source)
         working-directory: shell
-        run: |
-          pnpm install
-          pnpm build
+        run: pnpm build
 
       - name: Install mobile deps
         working-directory: mobile
