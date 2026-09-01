@@ -27,10 +27,10 @@ workspace during development):
 | `@mf/catalog` | Angular micro-frontend (catalog) |
 | `@mf/cart` | React micro-frontend (cart) |
 | `@mf/user` | Vue micro-frontend (account) |
-| `@shared/contracts` | Shared domain types + Apollo client factory |
-| `@shared/design-tokens` | Design tokens (CSS variables) + `Tokens`/`cssVar` |
-| `@shared/event-bus` | Cross-MF event bus (`emit`/`on`/`once`/`off`) |
-| `@shared/bridge` | Native bridge adapter (Capacitor) |
+| `@jrumandal/contracts` | Shared domain types + Apollo client factory |
+| `@jrumandal/design-tokens` | Design tokens (CSS variables) + `Tokens`/`cssVar` |
+| `@jrumandal/event-bus` | Cross-MF event bus (`emit`/`on`/`once`/`off`) |
+| `@jrumandal/bridge` | Native bridge adapter (Capacitor) |
 
 The shell also provides `react`, `react-dom`, `vue`, and
 `@vue/server-renderer` as its **own** dependencies so the MFs' `peerDependencies`
@@ -45,7 +45,7 @@ corresponding CSS and ships it to the browser.
 - `postcss.config.json` — enables `@tailwindcss/postcss` (Tailwind v4).
 - `src/styles.css` —
   - `@import "tailwindcss";` (triggers Tailwind processing);
-  - `@import "@shared/design-tokens/tokens.css";` (the CSS-variable token set);
+  - `@import "@jrumandal/design-tokens/tokens.css";` (the CSS-variable token set);
   - `@theme inline { … }` — maps every design token into the Tailwind v4 theme
     namespace (`--color-*`, `--spacing-*`, `--font-*`, `--radius-*`,
     `--shadow-*`, …) so utilities like `bg-brand-500`, `text-text-primary`,

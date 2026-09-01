@@ -21,6 +21,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           version: ${{ env.PNPM_VERSION }}
+          runInstall: false
 
       - uses: actions/setup-node@v4
         with:
@@ -55,6 +56,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           version: ${{ env.PNPM_VERSION }}
+          runInstall: false
 
       - uses: actions/setup-node@v4
         with:
@@ -63,8 +65,7 @@ jobs:
 
       - name: Configure npm auth (GitHub Packages)
         run: |
-          echo "//npm.pkg.github.com/:username=${{ github.actor }}" > ~/.npmrc
-          echo "//npm.pkg.github.com/:password=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ github.token }}" > ~/.npmrc
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile

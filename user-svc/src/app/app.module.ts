@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { AppConfigModule, HealthModule, SharedModule } from '@server/shared';
+import { AppConfigModule, HealthModule, SharedModule } from '@jrumandal/shared';
 import { AppController } from './app.controller';
 import { UserResolver } from './resolvers/user.resolver';
 import { DateTime } from './dto/datetime.type';

@@ -18,7 +18,7 @@
 import { render as renderCatalog, type CatalogProps } from '@mf/catalog';
 import { render as renderCart, type CartProps } from '@mf/cart';
 import { render as renderUser, type UserPanelProps } from '@mf/user';
-import { getBridgeAdapter } from '@shared/bridge';
+import { getBridgeAdapter } from '@jrumandal/bridge';
 import { MF_SSR_HTML, type MfSsrHtml } from './mf-ssr-token';
 import type { ApplicationConfig } from '@angular/core';
 

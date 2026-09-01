@@ -33,6 +33,7 @@ jobs:
         uses: pnpm/action-setup@v4
         with:
           version: 11.24.0
+          runInstall: false
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -44,12 +45,12 @@ jobs:
       - name: Build shell (web source)
         working-directory: shell
         run: |
-          pnpm install --frozen-lockfile
+          pnpm install
           pnpm build
 
       - name: Install mobile deps
         working-directory: mobile
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
 
       - name: Sync shell build into web/
         working-directory: mobile

@@ -1,5 +1,5 @@
 {
-  "name": "@shared/bridge",
+  "name": "@jrumandal/bridge",
   "version": "0.0.1",
   "description": "Capacitor bridge adapter — the single integration surface for native capabilities, with a Web-API fallback for the browser.",
   "private": false,
@@ -14,7 +14,7 @@
     "lint": "eslint .",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "node --test",
-    "build": "node -e \"console.log('@shared/bridge is source-only (no build step).')\""
+    "build": "node -e \"console.log('@jrumandal/bridge is source-only (no build step).')\""
   },
   "devDependencies": {
     "@capacitor/camera": "8.2.3",

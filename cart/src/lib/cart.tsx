@@ -1,6 +1,6 @@
-import type { Cart, CartItem, Money, MfApolloClient } from "@shared/contracts";
-import type { EventBus, MFEventMap } from "@shared/event-bus";
-import { CartEvent } from "@shared/event-bus";
+import type { Cart, CartItem, Money, MfApolloClient } from "@jrumandal/contracts";
+import type { EventBus, MFEventMap } from "@jrumandal/event-bus";
+import { CartEvent } from "@jrumandal/event-bus";
 
 /**
  * Props accepted by the `Cart` component.

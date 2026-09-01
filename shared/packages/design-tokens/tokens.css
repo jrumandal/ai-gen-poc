@@ -1,7 +1,7 @@
 /* ===========================================================================
-   @shared/design-tokens
+   @jrumandal/design-tokens
    CSS custom properties consumed by every micro-frontend.
-   Import this file once at the shell root:  @import "@shared/design-tokens/tokens.css";
+   Import this file once at the shell root:  @import "@jrumandal/design-tokens/tokens.css";
    The shell also maps these tokens into Tailwind v4 via `@theme inline`.
    =========================================================================== */
 

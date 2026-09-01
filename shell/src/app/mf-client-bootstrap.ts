@@ -19,7 +19,7 @@ import { hydrate as catalogHydrate } from '@mf/catalog';
 import { hydrate as cartHydrate } from '@mf/cart';
 import { hydrate as userHydrate } from '@mf/user';
 import { gql } from '@apollo/client';
-import { EventBus, type MFEventMap } from '@shared/event-bus';
+import { EventBus, type MFEventMap } from '@jrumandal/event-bus';
 import {
   createSharedApolloClient,
   type MfApolloClient,
@@ -27,8 +27,8 @@ import {
   type Category,
   type Cart,
   type User,
-} from '@shared/contracts';
-import { getBridgeAdapter } from '@shared/bridge';
+} from '@jrumandal/contracts';
+import { getBridgeAdapter } from '@jrumandal/bridge';
 
 let _eventBus: EventBus<MFEventMap> | null = null;
 let _apolloClient: MfApolloClient | null = null;

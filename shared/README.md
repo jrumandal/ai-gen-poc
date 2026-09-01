@@ -9,10 +9,10 @@ services depend on its packages.
 
 | Package | Description |
 | --- | --- |
-| `@shared/design-tokens` | Design tokens: typed `Tokens` const + `cssVar()` helper, and `tokens.css` (CSS variables + dark theme). The shell maps these into Tailwind v4 via `@theme inline`. |
-| `@shared/contracts` | Typed API contracts (OpenAPI + GraphQL) shared by clients and services. |
-| `@shared/event-bus` | Framework-agnostic event bus for cross-MF communication. |
-| `@shared/bridge` | Web-component bridge / host utilities used by the shell and MFs. |
+| `@jrumandal/design-tokens` | Design tokens: typed `Tokens` const + `cssVar()` helper, and `tokens.css` (CSS variables + dark theme). The shell maps these into Tailwind v4 via `@theme inline`. |
+| `@jrumandal/contracts` | Typed API contracts (OpenAPI + GraphQL) shared by clients and services. |
+| `@jrumandal/event-bus` | Framework-agnostic event bus for cross-MF communication. |
+| `@jrumandal/bridge` | Web-component bridge / host utilities used by the shell and MFs. |
 
 ## Repository layout
 
@@ -77,7 +77,7 @@ Other repos install these as versioned dependencies:
 
 ```jsonc
 // package.json
-{ "dependencies": { "@shared/design-tokens": "^0.0.1" } }
+{ "dependencies": { "@jrumandal/design-tokens": "^0.0.1" } }
 ```
 
 ## Dependency graph

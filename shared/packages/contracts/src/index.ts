@@ -1,5 +1,5 @@
 /**
- * @shared/contracts — the canonical home of the shared domain types and the
+ * @jrumandal/contracts — the canonical home of the shared domain types and the
  * shared GraphQL client for the micro-frontend architecture.
  *
  * MFs consume these types (via `import type`) and the shared Apollo client so

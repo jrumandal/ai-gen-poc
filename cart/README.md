@@ -6,7 +6,7 @@ architecture. Published to **GitHub Packages** as a **source-only ESM package**
 owns the build, so this repo ships TypeScript source, not a pre-bundled IIFE.
 
 > **Status:** Full faithful port of the reference cart feature, styled with
-> **Tailwind v4** utility classes driven by the `@shared/design-tokens` design
+> **Tailwind v4** utility classes driven by the `@jrumandal/design-tokens` design
 > system (CSS variables).
 
 ## Stack
@@ -24,9 +24,9 @@ owns the build, so this repo ships TypeScript source, not a pre-bundled IIFE.
 
 This repo consumes the shared libraries published from the `shared` repo:
 
-- `@shared/contracts` — typed API contracts (`Cart`, `CartItem`, `Money`, `MfApolloClient`)
-- `@shared/design-tokens` — design tokens (`Tokens`, `cssVar`) + `tokens.css`
-- `@shared/event-bus` — cross-MF event bus (`CartEvent`, `defaultEventBus`)
+- `@jrumandal/contracts` — typed API contracts (`Cart`, `CartItem`, `Money`, `MfApolloClient`)
+- `@jrumandal/design-tokens` — design tokens (`Tokens`, `cssVar`) + `tokens.css`
+- `@jrumandal/event-bus` — cross-MF event bus (`CartEvent`, `defaultEventBus`)
 
 These are resolved from the GitHub Packages registry (see `.npmrc`).
 

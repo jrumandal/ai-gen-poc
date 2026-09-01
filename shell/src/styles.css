@@ -6,7 +6,7 @@
       shared CSS variables.
    4. @source lets Tailwind scan the sibling micro-frontend repos for utilities. */
 @import "tailwindcss";
-@import "@shared/design-tokens/tokens.css";
+@import "@jrumandal/design-tokens/tokens.css";
 
 @theme inline {
   /* ---- Colors ----------------------------------------------------------- */

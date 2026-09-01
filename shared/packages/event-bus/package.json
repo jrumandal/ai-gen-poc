@@ -1,5 +1,5 @@
 {
-  "name": "@shared/event-bus",
+  "name": "@jrumandal/event-bus",
   "version": "0.0.1",
   "description": "Framework-agnostic event bus for cross-micro-frontend communication.",
   "private": false,
@@ -14,7 +14,7 @@
     "lint": "eslint .",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "node --test",
-    "build": "node -e \"console.log('@shared/event-bus is source-only (no build step).')\""
+    "build": "node -e \"console.log('@jrumandal/event-bus is source-only (no build step).')\""
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",

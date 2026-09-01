@@ -1,7 +1,7 @@
 import { createRoot, hydrateRoot, type Root } from 'react-dom/client';
 import { Cart, type CartProps } from './lib/cart';
-import type { Cart as CartModel, MfApolloClient } from '@shared/contracts';
-import type { EventBus, MFEventMap } from '@shared/event-bus';
+import type { Cart as CartModel, MfApolloClient } from '@jrumandal/contracts';
+import type { EventBus, MFEventMap } from '@jrumandal/event-bus';
 
 /**
  * The `<mf-cart>` custom element.

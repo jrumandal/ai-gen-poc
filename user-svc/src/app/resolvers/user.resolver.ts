@@ -5,7 +5,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from '@server/shared';
+import { PrismaService } from '@jrumandal/shared';
 import { LoginInput } from '../dto/login.input';
 import { UpdateProfileInput } from '../dto/update-profile.input';
 import { User } from '../dto/user.type';

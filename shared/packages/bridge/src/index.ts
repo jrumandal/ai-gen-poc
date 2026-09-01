@@ -1,5 +1,5 @@
 /**
- * Public API for the `@shared/bridge` Capacitor bridge adapter.
+ * Public API for the `@jrumandal/bridge` Capacitor bridge adapter.
  *
  * This is the single integration surface for native (Capacitor) capabilities.
  * Micro-frontends and the shell import from here — never from `@capacitor/*`
