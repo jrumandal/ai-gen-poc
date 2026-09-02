@@ -7,6 +7,10 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  packages: write
+
 env:
   NODE_VERSION: '22'
   PNPM_VERSION: '11.24.0'
@@ -43,7 +47,7 @@ jobs:
         run: pnpm build
 
   # Publish to GitHub Packages on every push to main (auto-increment patch).
-  # Requires the NPM_TOKEN repo secret (a PAT with read:packages + write:packages).
+  # Uses the built-in GITHUB_TOKEN with `packages: write` permission (see `permissions:` above).
   publish:
     name: Publish to GitHub Packages
     needs: ci
@@ -63,8 +67,7 @@ jobs:
 
       - name: Configure npm auth (GitHub Packages)
         run: |
-          echo "//npm.pkg.github.com/:username=${{ github.actor }}" > ~/.npmrc
-          echo "//npm.pkg.github.com/:password=${{ secrets.NPM_TOKEN }}" >> ~/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" > ~/.npmrc
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
