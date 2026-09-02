@@ -12,14 +12,14 @@
  * `hasSSRContent()` → `hydrate()` pattern, so the shell does not need to
  * re-render them.
  */
-import { register as catalogRegister } from '@mf/catalog';
-import { register as cartRegister } from '@mf/cart';
-import { register as userRegister } from '@mf/user';
-import { hydrate as catalogHydrate } from '@mf/catalog';
-import { hydrate as cartHydrate } from '@mf/cart';
-import { hydrate as userHydrate } from '@mf/user';
+import { register as catalogRegister } from '@jrumandal/catalog';
+import { register as cartRegister } from '@jrumandal/cart';
+import { register as userRegister } from '@jrumandal/user';
+import { hydrate as catalogHydrate } from '@jrumandal/catalog';
+import { hydrate as cartHydrate } from '@jrumandal/cart';
+import { hydrate as userHydrate } from '@jrumandal/user';
 import { gql } from '@apollo/client';
-import { EventBus, type MFEventMap } from '@shared/event-bus';
+import { EventBus, type MFEventMap } from '@jrumandal/event-bus';
 import {
   createSharedApolloClient,
   type MfApolloClient,
@@ -27,8 +27,8 @@ import {
   type Category,
   type Cart,
   type User,
-} from '@shared/contracts';
-import { getBridgeAdapter } from '@shared/bridge';
+} from '@jrumandal/contracts';
+import { getBridgeAdapter } from '@jrumandal/bridge';
 
 let _eventBus: EventBus<MFEventMap> | null = null;
 let _apolloClient: MfApolloClient | null = null;
@@ -46,7 +46,7 @@ export function getSharedEventBus(): EventBus<MFEventMap> {
  * Returns the shared bridge adapter instance (created lazily).
  *
  * This is a **direct** dependency of the shell (not just a transitive
- * dependency of `@mf/catalog`) so that the build bundles it from source
+ * dependency of `@jrumandal/catalog`) so that the build bundles it from source
  * rather than pre-bundling it with esbuild (which fails on the
  * source-only TypeScript package).
  */

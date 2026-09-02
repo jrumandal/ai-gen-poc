@@ -1,5 +1,5 @@
 {
-  "name": "@server/user-svc",
+  "name": "@jrumandal/user-svc",
   "version": "0.0.1",
   "description": "User domain micro-service (users, sessions, orders) — NestJS GraphQL + Prisma.",
   "private": true,

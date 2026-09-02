@@ -1,11 +1,11 @@
-# `@server/user-svc` — User microservice
+# `@jrumandal/user-svc` — User microservice
 
 The **user-svc** is the NestJS microservice that owns the **user domain**
 (user accounts, sessions, and orders). It exposes a GraphQL API (via
 `@nestjs/graphql` + Apollo) backed by **Prisma** (PostgreSQL), and is one of
 the three upstream services that the **api-gateway** stitches together.
 
-> **Package name is `@server/user-svc`** — see `package.json`.
+> **Package name is `@jrumandal/user-svc`** — see `package.json`.
 > **Status:** Faithful port of the reference `libs/server/user-svc`,
 > re-homed as a standalone, independently versioned repository.
 
@@ -157,7 +157,7 @@ user-svc/
 ├── .env.example               # PORT, DATABASE_URL, …
 ├── eslint.config.mjs          # flat ESLint 9 config
 ├── jest.config.cts            # Jest + ts-jest
-├── package.json               # @server/user-svc (private)
+├── package.json               # @jrumandal/user-svc (private)
 ├── tsconfig.json              # base compiler options
 ├── tsconfig.build.json        # build → dist/
 ├── tsconfig.spec.json         # test (Jest)

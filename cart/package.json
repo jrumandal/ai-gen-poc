@@ -1,5 +1,5 @@
 {
-  "name": "@mf/cart",
+  "name": "@jrumandal/cart",
   "version": "0.0.1",
   "description": "Cart micro-frontend (React 19) — source-only ESM web component `mf-cart`.",
   "private": false,
@@ -16,7 +16,7 @@
     "lint": "eslint .",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
-    "build": "node -e \"console.log('@mf/cart is source-only (no build step).')\"",
+    "build": "node -e \"console.log('@jrumandal/cart is source-only (no build step).')\"",
     "publish": "node scripts/publish.mjs"
   },
   "dependencies": {

@@ -1,4 +1,4 @@
-# @microfrontend/mobile
+# @jrumandal/mobile
 
 Capacitor hybrid wrapper around the **shell** web app. It packages the shell's
 production build into a native Android / iOS shell so the micro-frontend

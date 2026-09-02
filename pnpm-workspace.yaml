@@ -1,7 +1,7 @@
 # Top-level local development workspace.
 #
 # This links the separate repos together for LOCAL development and local CI
-# validation, so `@shared/*` and `@mf/*` resolve to the local source instead of
+# validation, so `@jrumandal/*` resolves to the local source instead of
 # a remote registry. Each repo still keeps its own package.json, toolchain, and
 # CI workflow — this file is only a local-dev convenience.
 #

@@ -2,7 +2,7 @@
  * Account page.
  *
  * Hosts the `mf-user` custom element (the Vue micro-frontend). The element
- * is defined by `@mf/user` and registered in `main.ts` before Angular
+ * is defined by `@jrumandal/user` and registered in `main.ts` before Angular
  * bootstrap.
  *
  * The page binds the pre-rendered SSR HTML (from `MfSsrService`) to the

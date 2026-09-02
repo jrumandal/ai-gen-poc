@@ -2,7 +2,7 @@
  * Cart page.
  *
  * Hosts the `mf-cart` custom element (the React micro-frontend). The element
- * is defined by `@mf/cart` and registered in `main.ts` before Angular
+ * is defined by `@jrumandal/cart` and registered in `main.ts` before Angular
  * bootstrap.
  *
  * The page binds the pre-rendered SSR HTML (from `MfSsrService`) to the

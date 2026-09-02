@@ -1,11 +1,11 @@
-# `@server/cart-svc` — Cart microservice
+# `@jrumandal/cart-svc` — Cart microservice
 
 The **cart-svc** is the NestJS microservice that owns the **cart domain**
 (shopping carts + line items). It exposes a GraphQL API (via `@nestjs/graphql`
 + Apollo) backed by **Prisma** (PostgreSQL), and is one of the three upstream
 services that the **api-gateway** stitches together.
 
-> **Package name is `@server/cart-svc`** — see `package.json`.
+> **Package name is `@jrumandal/cart-svc`** — see `package.json`.
 > **Status:** Faithful port of the reference `libs/server/cart-svc`,
 > re-homed as a standalone, independently versioned repository.
 
@@ -128,7 +128,7 @@ cart-svc/
 ├── .env.example               # PORT, DATABASE_URL, …
 ├── eslint.config.mjs          # flat ESLint 9 config
 ├── jest.config.cts            # Jest + ts-jest
-├── package.json               # @server/cart-svc (private)
+├── package.json               # @jrumandal/cart-svc (private)
 ├── tsconfig.json              # base compiler options
 ├── tsconfig.build.json        # build → dist/
 ├── tsconfig.spec.json         # test (Jest)

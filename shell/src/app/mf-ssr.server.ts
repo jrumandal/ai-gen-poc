@@ -15,10 +15,10 @@
  * This file is only imported by `main.server.ts` (the server entry), so it
  * is never bundled into the client.
  */
-import { render as renderCatalog, type CatalogProps } from '@mf/catalog';
-import { render as renderCart, type CartProps } from '@mf/cart';
-import { render as renderUser, type UserPanelProps } from '@mf/user';
-import { getBridgeAdapter } from '@shared/bridge';
+import { render as renderCatalog, type CatalogProps } from '@jrumandal/catalog';
+import { render as renderCart, type CartProps } from '@jrumandal/cart';
+import { render as renderUser, type UserPanelProps } from '@jrumandal/user';
+import { getBridgeAdapter } from '@jrumandal/bridge';
 import { MF_SSR_HTML, type MfSsrHtml } from './mf-ssr-token';
 import type { ApplicationConfig } from '@angular/core';
 
@@ -26,7 +26,7 @@ import type { ApplicationConfig } from '@angular/core';
  * Returns the shared bridge adapter instance (created lazily).
  *
  * This is a **direct** dependency of the shell (not just a transitive
- * dependency of `@mf/catalog`) so that the build bundles it from source
+ * dependency of `@jrumandal/catalog`) so that the build bundles it from source
  * rather than pre-bundling it with esbuild (which fails on the
  * source-only TypeScript package).
  */

@@ -1,4 +1,4 @@
-# @mf/user — User Micro-Frontend (Vue 3)
+# @jrumandal/user — User Micro-Frontend (Vue 3)
 
 The **user** micro-frontend (MF) is a **source-only ESM package** that renders a
 signed-in profile (name, email, address) or a sign-in form, as a web component
@@ -20,9 +20,9 @@ bundles it with Vite.
 
 | Package | Purpose |
 | --- | --- |
-| `@shared/contracts` | Domain types (`User`, `Address`, `LoginInput`, `UpdateProfileInput`) + `MfApolloClient` |
-| `@shared/design-tokens` | Design tokens (`Tokens`, `cssVar`) — Tailwind v4 / CSS variables |
-| `@shared/event-bus` | Typed cross-MF event bus (`EventBus`, `MFEventMap`) |
+| `@jrumandal/contracts` | Domain types (`User`, `Address`, `LoginInput`, `UpdateProfileInput`) + `MfApolloClient` |
+| `@jrumandal/design-tokens` | Design tokens (`Tokens`, `cssVar`) — Tailwind v4 / CSS variables |
+| `@jrumandal/event-bus` | Typed cross-MF event bus (`EventBus`, `MFEventMap`) |
 
 ## Public API
 
@@ -36,7 +36,7 @@ import {
   register,           // register the <mf-user> custom element (idempotent)
   USER_ELEMENT_TAG,   // 'mf-user'
   hydrate,            // hydrate existing <mf-user> elements
-} from '@mf/user';
+} from '@jrumandal/user';
 ```
 
 ### Web component

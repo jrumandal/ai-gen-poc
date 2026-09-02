@@ -2,7 +2,7 @@
  * Catalog page.
  *
  * Hosts the `mf-catalog` custom element (the Angular micro-frontend). The
- * element is defined by `@mf/catalog` and registered in `main.ts` before
+ * element is defined by `@jrumandal/catalog` and registered in `main.ts` before
  * Angular bootstrap.
  *
  * The page binds the pre-rendered SSR HTML (from `MfSsrService`) to the

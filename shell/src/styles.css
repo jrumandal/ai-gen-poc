@@ -1,6 +1,6 @@
 /* Global styles. Design tokens are imported first so every component and
    micro-frontend can use the shared CSS custom properties. */
-@import '@shared/design-tokens/tokens.css';
+@import '@jrumandal/design-tokens/tokens.css';
 
 *,
 *::before,

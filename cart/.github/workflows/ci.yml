@@ -11,64 +11,53 @@ jobs:
     name: Lint, typecheck, test, build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout cart
         uses: actions/checkout@v4
+        with:
+          repository: jrumandal/cart
+          path: cart
+
+      - name: Checkout shared (sibling workspace)
+        uses: actions/checkout@v4
+        with:
+          repository: jrumandal/shared
+          path: shared
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 11.24.0
+          run_install: false
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: pnpm
+
+      - name: Link shared packages into a workspace
+        run: |
+          cat > pnpm-workspace.yaml <<'WSPEOF'
+          packages:
+            - "shared/packages/*"
+            - "cart"
+          WSPEOF
+          printf '{\n  "name": "mf-workspace",\n  "private": true\n}\n' > package.json
 
       - name: Install
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
 
       - name: Lint
+        working-directory: cart
         run: pnpm lint
 
       - name: Typecheck
+        working-directory: cart
         run: pnpm typecheck
 
       - name: Test
+        working-directory: cart
         run: pnpm test
 
       - name: Build
+        working-directory: cart
         run: pnpm build
-
-  publish:
-    name: Publish to GitHub Packages
-    needs: ci
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 11.24.0
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-
-      - name: Configure npm auth
-        run: |
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-
-      - name: Install
-        run: pnpm install --frozen-lockfile
-
-      - name: Build
-        run: pnpm build
-
-      - name: Publish
-        run: node scripts/publish.mjs

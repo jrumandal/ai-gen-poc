@@ -127,7 +127,7 @@ Each MF consumes the **shared GraphQL client** (`libs/shared/contracts`) for typ
 
 **2A. Angular MF (`libs/mf/catalog`)**
 14. `nx generate @nx/angular:library` + enable `customElements: true` in its tsconfig (`@angular/compiler-cli` custom elements mode).
-15. Implement `CatalogComponent` wrapped in a `catalog-mf` custom element; consumes `@shared/contracts` GraphQL client (product queries, category browse).
+15. Implement `CatalogComponent` wrapped in a `catalog-mf` custom element; consumes `@jrumandal/contracts` GraphQL client (product queries, category browse).
 16. SSR: `@angular/ssr` render entry (`renderModule`) producing an HTML string for the element; expose `ssr.ts` + `hydrate.ts`.
 
 **2B. React MF (`libs/mf/cart`)**

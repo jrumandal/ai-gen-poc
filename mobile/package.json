@@ -1,5 +1,5 @@
 {
-  "name": "@microfrontend/mobile",
+  "name": "@jrumandal/mobile",
   "version": "0.0.1",
   "private": true,
   "description": "Capacitor hybrid mobile wrapper for the micro-frontend shell (Android + iOS).",
