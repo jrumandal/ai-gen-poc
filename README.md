@@ -65,8 +65,8 @@ The micro-frontends are exposed to the shell as **custom elements**
 - It works identically in a browser, in the **Capacitor WebView**, and in any
   future shell framework.
 - No framework is required to *consume* an MF — only to *build* one.
-- Cross-MF state is decoupled through a **typed event bus** + shared store
-  (BroadcastChannel / window observable). There are **no direct cross-MF
+- Cross-MF state is decoupled through a **typed event bus** + a **shell-level
+  NgRx store** (the single source of truth). There are **no direct cross-MF
   imports**.
 
 ### The API contract: GraphQL
@@ -90,6 +90,23 @@ The micro-frontends are exposed to the shell as **custom elements**
   hydration; Angular uses `createApplication`).
 - The shell owns a **shared `ApolloClient` singleton** that is injected into
   every MF after hydration.
+
+### State management: shell-level NgRx store
+
+- The **shell is the composition root** and the **single source of truth** for
+  cross-MF state. The three MFs are plain Web Components (Angular, React, Vue)
+  with no shared DI container, so the store lives in the shell rather than
+  inside each MF.
+- The store holds `catalog`, `cart`, `user`, and `navigation` slices. Route
+  components dispatch `load` actions; **effects** fetch from the gateway
+  (guarded by a `loaded` flag so re-navigation reuses the cache); and each
+  navigation **pushes the store state into the MF element's properties** so the
+  MF re-renders.
+- **`@ngrx/router-store`** records every completed navigation into the
+  `navigation` slice (`current`, `previous`, `history`), giving a **backtrace**
+  of the session.
+- This keeps the MFs **self-contained** (they render whatever props they are
+  given) and preserves the "no direct cross-MF imports" rule.
 
 ### Mobile: Capacitor
 
@@ -118,7 +135,7 @@ they are built and published first.
 |---|----------|-----------|
 | 1 | **Web Components** as the integration contract | Framework-agnostic; works in Capacitor WebView + any shell. |
 | 2 | **Light-DOM hydration** for React/Vue MFs | Simpler SSR/hydration story than shadow DOM; styles stay in the shell. |
-| 3 | **Decoupled cross-MF state** via typed event bus + shared store | No direct cross-MF imports; safe across frameworks. |
+| 3 | **Decoupled cross-MF state** via typed event bus + **shell-level NgRx store** | No direct cross-MF imports; shell is the single source of truth; navigation backtrace. |
 | 4 | **GraphQL** (introspection stitching) as the API contract | Single endpoint; codegen types; OpenAPI retained for REST fallback. |
 | 5 | **Shell-level SSR + per-MF hydration** | SEO + first-paint perf without forcing every MF to be SSR-capable. |
 | 6 | **PostgreSQL + Prisma ORM** | One schema, typed client, migrations; shared via `server-shared`. |

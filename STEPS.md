@@ -139,6 +139,21 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 - [x] B.5 Push all repos to origin + verify per-repo CI green — ✅ done (all 12 repos pushed to `main`; **12/12 CI green**: shared, server-shared, mf-orchestrator, gateway, catalog-svc, cart-svc, user-svc, catalog, user, cart, shell, mobile)
 - [x] B.6 README consistency pass across all repos (cross-repo references, versioning, CI/CD) — ✅ done (stale @shared/@server scopes corrected to @jrumandal; all 12 READMEs consistent; 12/12 CI green)
 
+## Phase C — NgRx state management + state hydration (shell-level store)
+
+> **Context (2026-08-29):** The shell's pages (catalog, cart, account) were hydrating MFs with state on initial navigation, but re-navigation within the same session did not re-propagate state — only a full page refresh re-hydrated. Root cause: no centralized state management; each page independently fetched data and set it on the MF element, but re-navigation did not re-trigger the fetch.
+>
+> **Design decision:** Store is implemented at the **shell level** (composition root), NOT inside each MF. Rationale: the three MFs are plain Web Components (Angular/React/Vue) with no Angular DI and no store of their own; the shell is the single source of truth. Pages dispatch `load` actions, effects fetch (guarded by a `loaded` flag so re-navigation reuses cache), and pages push the store state into the MF element's properties so the MF re-renders on every navigation. A `navigation` slice records every completed navigation (backtracing) via `ROUTER_NAVIGATED`.
+
+- [x] C.1 Install `@ngrx/store`, `@ngrx/router-store`, `@ngrx/effects` in the shell — ✅ done (2026-08-29; `@ngrx/store@20.1.0`, `@ngrx/router-store@20.1.0`, `@ngrx/effects@20.1.0` added to `shell/package.json`; compatible with Angular core 20.3.29)
+- [x] C.2 Create store slices: `catalog`, `cart`, `account`, `navigation` — ✅ done (2026-08-29; `shell/src/app/store/` with `actions.ts`, `reducers.ts`, `selectors.ts`, `models.ts`, `index.ts`; 4 slices with typed state interfaces)
+- [x] C.3 Create `AppEffects` with `@Effect()` methods for catalog/cart/account loads — ✅ done (2026-08-29; `effects.ts` with `loaded` flag guard for cache reuse; Apollo Client 4.x Promise→Observable wrapping via rxjs `from()`)
+- [x] C.4 Wire `provideStore`, `provideEffects`, `provideRouterStore` into `app.config.ts` — ✅ done (2026-08-29; `provideStore(appReducers)`, `provideEffects([AppEffects])`, `provideRouterStore({ stateKey: 'navigation' })`)
+- [x] C.5 Update pages to dispatch `load` actions and subscribe to store — ✅ done (2026-08-29; `catalog-page.ts`, `cart-page.ts`, `account-page.ts` each inject `Store`, dispatch `load` in `ngOnInit`, subscribe to store state, push state into MF element properties)
+- [x] C.6 Remove `loadMfData()` from `mf-client-bootstrap.ts` — ✅ done (2026-08-29; data now flows through the NgRx store; bootstrap file cleaned to ~99 lines)
+- [x] C.7 Verify: `ng build` passes; re-navigation re-propagates state — ✅ done (2026-08-29; build exit code 0; `loaded` flag guard prevents redundant fetches on re-navigation; `navigation` slice records backtracing history via `ROUTER_NAVIGATED`)
+- [x] C.8 Documentation: `shell/README.md` (NgRx state management section) + root `README.md` (state management subsection) + `plan.md` (Phase C) + `STEPS.md` (this section) — ✅ done (2026-08-29; all 4 docs updated)
+
 ## Notes / blockers
 - **✅ VUE USER MF (2C) RESOLVED (2026-08-27):** `nx build/test/lint user-mf` all green (10/10 tests).
   - **Vue SSR is async**: `renderToString` from `@vue/server-renderer` returns `Promise<string>` — so `ssr.ts` `render()` is `async` and tests `await` it (unlike React's sync `renderToString`).

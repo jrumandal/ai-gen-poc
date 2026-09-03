@@ -14,7 +14,10 @@ The shell owns:
   the page before first paint;
 - **client bootstrap** — registering the MF custom elements and attaching the
   shared services (event bus + Apollo client) after hydration;
-- the **shared `ApolloClient` singleton** that is injected into every MF.
+- the **shared `ApolloClient` singleton** that is injected into every MF;
+- the **NgRx store** — the single source of truth for catalog, cart, user, and
+  navigation state, hydrated from the gateway and pushed into the MF elements
+  on every navigation (see [State management](#state-management-ngrx)).
 
 ## Dependencies
 
@@ -31,6 +34,9 @@ workspace during development):
 | `@jrumandal/design-tokens` | Design tokens (CSS variables) + `Tokens`/`cssVar` |
 | `@jrumandal/event-bus` | Cross-MF event bus (`emit`/`on`/`once`/`off`) |
 | `@jrumandal/bridge` | Native bridge adapter (Capacitor) |
+| `@ngrx/store` | NgRx state management (single source of truth) |
+| `@ngrx/effects` | NgRx side-effect handling (gateway fetches) |
+| `@ngrx/router-store` | NgRx router state (navigation backtracing) |
 
 The shell also provides `react`, `react-dom`, `vue`, and
 `@vue/server-renderer` as its **own** dependencies so the MFs' `peerDependencies`
@@ -76,7 +82,12 @@ flip — no per-MF CSS.
 | `app/mf-ssr-token.ts` | `MF_SSR_HTML` injection token + `MfSsrHtml` shape. |
 | `app/mf-ssr.service.ts` | `MfSsrService` — typed access to the per-MF SSR HTML. |
 | `app/mf-ssr.server.ts` | `renderMfSsrHtml()` (cached) + `provideMfSsrHtml()` + sample props. |
-| `app/catalog-page.ts` / `cart-page.ts` / `account-page.ts` | Route components that inject the SSR HTML. |
+| `app/store/index.ts` | Store barrel — `AppState`, `FeatureState`, `NavigationEntry`, `NavigationState`, `StoreEffects`. |
+| `app/store/actions.ts` | NgRx actions (`LoadCatalog`, `LoadCart`, `LoadUser`, `NavigationRecorded`, …). |
+| `app/store/reducers.ts` | NgRx reducers (`catalogReducer`, `cartReducer`, `userReducer`, `navigationReducer`, `appReducer`). |
+| `app/store/effects.ts` | `StoreEffects` — gateway fetches guarded by the `loaded` flag (cache on re-navigation). |
+| `app/store/selectors.ts` | NgRx selectors (`selectCatalog`, `selectCart`, `selectUser`, `selectNavigation`, …). |
+| `app/catalog-page.ts` / `cart-page.ts` / `account-page.ts` | Route components that hydrate the MF element from the store on every navigation. |
 
 ## Routes
 
@@ -109,11 +120,58 @@ flip — no per-MF CSS.
 1. **`main.ts`** runs once on the client:
    - `registerMfElements()` — registers the three MF custom elements
      (`<mf-catalog>`, `<mf-cart>`, `<mf-user>`).
-   - `bootstrapApplication(App, appConfig)` — bootstraps Angular.
+   - `bootstrapApplication(App, appConfig)` — bootstraps Angular (the NgRx
+     store, effects, and router-store are provided in `app.config.ts`).
    - `attachMfSharedServices()` — hydrates each MF with the shared event bus +
      Apollo client.
-   - `loadMfData()` — fetches real data (catalog, cart, user) and sets it on the
-     MF elements.
+
+Data loading is **not** done in the bootstrap. Each route component dispatches
+a `load` action and hydrates the MF element from the store on every navigation
+(see [State management](#state-management-ngrx)).
+
+## State management (NgRx)
+
+The shell is the **composition root** and the **single source of truth** for
+cross-MF state. The three micro-frontends are plain Web Components (Angular,
+React, Vue) with no shared DI container, so the store lives in the shell rather
+than inside each MF.
+
+**Why shell-level, not per-MF:**
+
+- The MFs are independent frameworks with no common DI; a per-MF store would be
+  three isolated stores with no way to coordinate.
+- The shell is the only place that sees *all three* MFs and the router, so it is
+  the natural owner of shared state and navigation history.
+- Keeping the store in the shell keeps the MFs **self-contained** (they render
+  whatever props they are given) and preserves the "no direct cross-MF imports"
+  rule.
+
+**Shape of the store** (`app/store/`):
+
+| Slice | Contents |
+| --- | --- |
+| `catalog` | `products`, `loaded`, `loading`, `error` |
+| `cart` | `items`, `total`, `loaded`, `loading`, `error` |
+| `user` | `profile`, `orders`, `loaded`, `loading`, `error` |
+| `navigation` | `current`, `previous`, `history` (backtrace of completed navigations) |
+
+**Flow:**
+
+1. A route component dispatches `LoadCatalog` / `LoadCart` / `LoadUser` on
+   `ngOnInit`.
+2. `StoreEffects` fetches from the gateway via the shared `ApolloClient`,
+   **guarded by the `loaded` flag** — so re-navigating to a page reuses the
+   cached state instead of re-fetching.
+3. The reducer stores the result in the matching slice.
+4. The route component subscribes to the slice and **pushes the state into the
+   MF element's properties** (`el.products = …`, `el.items = …`, `el.profile = …`),
+   so the MF re-renders on every navigation.
+5. `@ngrx/router-store` records every completed navigation into the `navigation`
+   slice (`current`, `previous`, `history`), giving a **backtrace** of the
+   session.
+
+This fixes the "state not propagated on re-navigation" issue: the store persists
+across route changes, and each navigation re-hydrates the MF from the store.
 
 ## Development
 

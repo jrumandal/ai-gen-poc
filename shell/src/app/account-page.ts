@@ -10,17 +10,35 @@
  * SSR markup; on the client the bound value is empty so the MF's own
  * light-DOM rendering is left untouched.
  */
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgIf } from '@angular/common';
+import {
+  Component,
+  CUSTOM_ELEMENTS_SCHEMA,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Subscription } from 'rxjs';
 import { MfSsrService } from './mf-ssr.service';
 import { MfSsrHtmlDirective } from './mf-ssr-html.directive';
+import { load as userLoad } from './store/user.actions';
+import {
+  selectUser,
+  selectUserError,
+  selectUserLoading,
+} from './store/user.selectors';
 
 @Component({
   selector: 'app-account-page',
-  imports: [MfSsrHtmlDirective],
+  imports: [NgIf, MfSsrHtmlDirective],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   template: `
     <h1>Account</h1>
-    <mf-user [appMfSsrHtml]="ssrHtml"></mf-user>
+    <p *ngIf="loading" class="status">Loading account…</p>
+    <p *ngIf="error" class="error">{{ error }}</p>
+    <mf-user #mf [appMfSsrHtml]="ssrHtml"></mf-user>
   `,
   styles: [
     `
@@ -36,15 +54,68 @@ import { MfSsrHtmlDirective } from './mf-ssr-html.directive';
         color: var(--color-text-primary);
         margin: 0 0 var(--space-4);
       }
+      .status {
+        color: var(--color-text-secondary);
+      }
+      .error {
+        color: #b00020;
+      }
       mf-user {
         display: block;
       }
     `,
   ],
 })
-export class AccountPage {
+export class AccountPage implements OnInit, OnDestroy {
+  @ViewChild('mf', { static: false }) mfEl?: ElementRef<HTMLElement>;
+
+  loading = false;
+  error: string | null = null;
+
   private readonly ssrService = new MfSsrService();
 
   /** The pre-rendered SSR HTML for the user MF (empty on the client). */
   readonly ssrHtml = this.ssrService.user;
+
+  private readonly subs: Subscription[] = [];
+
+  constructor(private readonly store: Store) {}
+
+  ngOnInit(): void {
+    // Request the signed-in user from the store. The effect fetches it only
+    // when the slice is not yet loaded, so re-navigating reuses the cached
+    // state.
+    this.store.dispatch(userLoad());
+
+    this.subs.push(
+      this.store
+        .select(selectUserLoading)
+        .subscribe((loading) => (this.loading = loading))
+    );
+    this.subs.push(
+      this.store
+        .select(selectUserError)
+        .subscribe((error) => (this.error = error))
+    );
+    // Push the store state into the web component whenever the user changes,
+    // so the MF re-renders on every navigation (the shell is the source of
+    // truth; the MF is a plain web component with no store of its own).
+    this.subs.push(
+      this.store.select(selectUser).subscribe((user) => {
+        this.pushStateToElement(user);
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subs.forEach((s) => s.unsubscribe());
+  }
+
+  private pushStateToElement(user: unknown): void {
+    const el = this.mfEl?.nativeElement;
+    if (!el) {
+      return;
+    }
+    (el as unknown as { user: unknown }).user = user;
+  }
 }

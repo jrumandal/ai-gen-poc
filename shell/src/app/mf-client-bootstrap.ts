@@ -18,15 +18,10 @@ import { register as userRegister } from '@jrumandal/user';
 import { hydrate as catalogHydrate } from '@jrumandal/catalog';
 import { hydrate as cartHydrate } from '@jrumandal/cart';
 import { hydrate as userHydrate } from '@jrumandal/user';
-import { gql } from '@apollo/client';
 import { EventBus, type MFEventMap } from '@jrumandal/event-bus';
 import {
   createSharedApolloClient,
   type MfApolloClient,
-  type Product,
-  type Category,
-  type Cart,
-  type User,
 } from '@jrumandal/contracts';
 import { getBridgeAdapter } from '@jrumandal/bridge';
 
@@ -101,139 +96,4 @@ export async function attachMfSharedServices(): Promise<void> {
     cartHydrate({ eventBus, apolloClient }),
     userHydrate({ eventBus, apolloClient }),
   ]);
-}
-
-/* ------------------------------------------------------------------ */
-/* Client-side data loading                                            */
-/* ------------------------------------------------------------------ */
-
-/**
- * The MFs are purely presentational: they render whatever data the shell sets
- * on them. During SSR the shell injects sample data; on the client the shell
- * must fetch real data from the gateway and set it on the elements, otherwise
- * the elements re-render with their initial (empty) state and the SSR markup
- * is wiped.
- *
- * This function fetches the catalog, user, and cart data from the gateway
- * (via the shared Apollo client) and sets it on the connected MF elements.
- * Call AFTER `attachMfSharedServices()` so the elements exist in the DOM.
- */
-export async function loadMfData(): Promise<void> {
-  if (typeof document === 'undefined') return;
-  const apolloClient = getSharedApolloClient();
-
-  // ---- Catalog (products + categories) ----
-  try {
-    const { data } = await apolloClient.query<{
-      products: Product[];
-      categories: Category[];
-    }>({
-      query: gql`
-        query Catalog {
-          products {
-            id
-            name
-            description
-            price {
-              amount
-              currency
-            }
-            imageUrl
-            inStock
-            categories {
-              id
-              name
-              slug
-            }
-          }
-          categories {
-            id
-            name
-            slug
-          }
-        }
-      `,
-    });
-    const products = data?.products ?? [];
-    const categories = data?.categories ?? [];
-    document.querySelectorAll('mf-catalog').forEach((el) => {
-      const target = el as unknown as {
-        products: Product[];
-        categories: Category[];
-      };
-      target.products = products;
-      target.categories = categories;
-    });
-  } catch (err) {
-    console.warn('[mf] failed to load catalog data', err);
-  }
-
-  // ---- User + Cart ----
-  try {
-    const { data } = await apolloClient.query<{ me: User | null }>({
-      query: gql`
-        query Me {
-          me {
-            id
-            name
-            email
-            address {
-              line1
-              city
-              state
-              postalCode
-              country
-            }
-          }
-        }
-      `,
-    });
-    const user = data?.me ?? null;
-    if (user) {
-      document.querySelectorAll('mf-user').forEach((el) => {
-        (el as unknown as { user: User | null }).user = user;
-      });
-
-      // Resolve the cart from the user id (no hard-coded cart id).
-      const { data: cartData } = await apolloClient.query<{
-        cartForUser: Cart | null;
-      }>({
-        query: gql`
-          query CartForUser($userId: ID!) {
-            cartForUser(userId: $userId) {
-              id
-              itemCount
-              subtotal {
-                amount
-                currency
-              }
-              items {
-                id
-                productId
-                quantity
-                unitPrice {
-                  amount
-                  currency
-                }
-                product {
-                  id
-                  name
-                  imageUrl
-                }
-              }
-            }
-          }
-        `,
-        variables: { userId: user.id },
-      });
-      const cart = cartData?.cartForUser ?? null;
-      if (cart) {
-        document.querySelectorAll('mf-cart').forEach((el) => {
-          (el as unknown as { cart: Cart | null }).cart = cart;
-        });
-      }
-    }
-  } catch (err) {
-    console.warn('[mf] failed to load user/cart data', err);
-  }
 }

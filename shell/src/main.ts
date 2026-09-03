@@ -4,7 +4,6 @@ import { App } from './app/app';
 import {
   registerMfElements,
   attachMfSharedServices,
-  loadMfData,
 } from './app/mf-client-bootstrap';
 
 /**
@@ -15,10 +14,14 @@ import {
  * 2. Bootstrap the Angular app.
  * 3. Attach the shared services (event bus + Apollo client) to the connected
  *    MF elements.
+ *
+ * Data loading is no longer a one-shot step here: each page dispatches a
+ * `load` action on navigation and the NgRx effects fetch (or reuse the cached
+ * slice), then the page pushes the store state into the MF element. This is
+ * what fixes the "state not propagated on re-navigation" bug.
  */
 (async () => {
   await registerMfElements();
   await bootstrapApplication(App, appConfig);
   await attachMfSharedServices();
-  await loadMfData();
 })().catch((err) => console.error(err));
