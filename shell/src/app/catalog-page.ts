@@ -12,6 +12,7 @@
  */
 import { NgIf } from '@angular/common';
 import {
+  AfterViewInit,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   ElementRef,
@@ -21,7 +22,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { combineLatest, Subscription } from 'rxjs';
+import { combineLatest, Subscription, take } from 'rxjs';
 import { MfSsrService } from './mf-ssr.service';
 import { MfSsrHtmlDirective } from './mf-ssr-html.directive';
 import { load as catalogLoad } from './store/catalog.actions';
@@ -68,7 +69,7 @@ import {
     `,
   ],
 })
-export class CatalogPage implements OnInit, OnDestroy {
+export class CatalogPage implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('mf', { static: false }) mfEl?: ElementRef<HTMLElement>;
 
   loading = false;
@@ -109,6 +110,21 @@ export class CatalogPage implements OnInit, OnDestroy {
         this.pushStateToElement(products, categories);
       })
     );
+  }
+
+  ngAfterViewInit(): void {
+    // `mfEl` is only resolved after view init (static: false). On re-navigation
+    // the store already holds the catalog, so the ngOnInit subscription fired
+    // before the element existed and the push was dropped. Re-push the current
+    // state now that the element is present.
+    combineLatest([
+      this.store.select(selectProducts),
+      this.store.select(selectCategories),
+    ])
+      .pipe(take(1))
+      .subscribe(([products, categories]) =>
+        this.pushStateToElement(products, categories)
+      );
   }
 
   ngOnDestroy(): void {

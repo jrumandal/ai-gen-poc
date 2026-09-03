@@ -12,6 +12,7 @@
  */
 import { NgIf } from '@angular/common';
 import {
+  AfterViewInit,
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   ElementRef,
@@ -21,7 +22,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Subscription } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import { MfSsrService } from './mf-ssr.service';
 import { MfSsrHtmlDirective } from './mf-ssr-html.directive';
 import { load as userLoad } from './store/user.actions';
@@ -67,7 +68,7 @@ import {
     `,
   ],
 })
-export class AccountPage implements OnInit, OnDestroy {
+export class AccountPage implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('mf', { static: false }) mfEl?: ElementRef<HTMLElement>;
 
   loading = false;
@@ -106,6 +107,17 @@ export class AccountPage implements OnInit, OnDestroy {
         this.pushStateToElement(user);
       })
     );
+  }
+
+  ngAfterViewInit(): void {
+    // `mfEl` is only resolved after view init (static: false). On re-navigation
+    // the store already holds the user, so the ngOnInit subscription fired
+    // before the element existed and the push was dropped. Re-push the current
+    // state now that the element is present.
+    this.store
+      .select(selectUser)
+      .pipe(take(1))
+      .subscribe((user) => this.pushStateToElement(user));
   }
 
   ngOnDestroy(): void {
