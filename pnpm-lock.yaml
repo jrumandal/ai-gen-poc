@@ -17,6 +17,7 @@ overrides:
   '@angular/ssr': 22.1.7
   '@angular/build': 22.1.7
   '@angular/cli': 22.1.7
+  zone.js: 0.16.3
 
 importers:
 
@@ -217,7 +218,7 @@ importers:
         specifier: ^3.2.0
         version: 3.2.7(@types/node@22.20.1)(jiti@2.7.0)(jsdom@26.1.0(supports-color@8.1.1))(lightningcss@1.32.0)(sass@1.101.0)(supports-color@8.1.1)(tsx@4.23.13)
       zone.js:
-        specifier: ~0.16.0
+        specifier: 0.16.3
         version: 0.16.3
 
   catalog-svc:
@@ -606,7 +607,7 @@ importers:
         specifier: ^3.5.41
         version: 3.5.42(typescript@6.0.3)
       zone.js:
-        specifier: ~0.16.3
+        specifier: 0.16.3
         version: 0.16.3
     devDependencies:
       '@angular-devkit/core':

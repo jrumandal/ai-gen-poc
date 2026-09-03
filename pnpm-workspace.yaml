@@ -59,3 +59,6 @@ overrides:
   '@angular/ssr': 22.1.7
   '@angular/build': 22.1.7
   '@angular/cli': 22.1.7
+  # Force a single zone.js version so shell (0.16.3) and catalog (0.16.0)
+  # don't pull two copies of @angular/core (duplicate-instance TS2322 errors).
+  'zone.js': 0.16.3

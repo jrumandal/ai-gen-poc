@@ -86,6 +86,7 @@ jobs:
             '@angular/ssr': 22.1.7
             '@angular/build': 22.1.7
             '@angular/cli': 22.1.7
+            'zone.js': 0.16.3
           WSPEOF
           printf '{\n  "name": "mf-workspace",\n  "private": true\n}\n' > package.json
 
