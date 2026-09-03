@@ -33,19 +33,29 @@ allowBuilds:
   msgpackr-extract: true
   prisma: true
   unrs-resolver: true
+minimumReleaseAgeExclude:
+  - '@angular/common@22.1.5'
+  - '@angular/compiler-cli@22.1.5'
+  - '@angular/compiler@22.1.5'
+  - '@angular/core@22.1.5'
+  - '@angular/elements@22.1.5'
+  - '@angular/language-service@22.1.5'
+  - '@angular/platform-browser@22.1.5'
+  - '@angular/platform-server@22.1.5'
+  - '@angular/router@22.1.5'
 # Force a single @angular/* version across the whole local workspace so the
-# shell (20.3.29) and the Angular MF apps (catalog) don't pull two copies of
+# shell (22.1.5) and the Angular MF apps (catalog) don't pull two copies of
 # @angular/core, which breaks the esbuild-based Angular compiler.
 overrides:
-  '@angular/common': 20.3.29
-  '@angular/compiler': 20.3.29
-  '@angular/compiler-cli': 20.3.29
-  '@angular/core': 20.3.29
-  '@angular/elements': 20.3.29
-  '@angular/language-service': 20.3.29
-  '@angular/platform-browser': 20.3.29
-  '@angular/platform-server': 20.3.29
-  '@angular/router': 20.3.29
-  '@angular/ssr': 20.3.29
-  '@angular/build': 20.3.29
-  '@angular/cli': 20.3.29
+  '@angular/common': 22.1.5
+  '@angular/compiler': 22.1.5
+  '@angular/compiler-cli': 22.1.5
+  '@angular/core': 22.1.5
+  '@angular/elements': 22.1.5
+  '@angular/language-service': 22.1.5
+  '@angular/platform-browser': 22.1.5
+  '@angular/platform-server': 22.1.5
+  '@angular/router': 22.1.5
+  '@angular/ssr': 22.1.7
+  '@angular/build': 22.1.7
+  '@angular/cli': 22.1.7

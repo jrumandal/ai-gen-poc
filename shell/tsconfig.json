@@ -25,7 +25,6 @@
     "noEmit": true,
     "allowImportingTsExtensions": true,
     "useDefineForClassFields": false,
-    "downlevelIteration": true,
     "jsx": "react-jsx"
   },
   "angularCompilerOptions": {

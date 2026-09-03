@@ -10,7 +10,6 @@
  * SSR markup; on the client the bound value is empty so the MF's own
  * light-DOM rendering is left untouched.
  */
-import { NgIf } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -35,12 +34,16 @@ import {
 
 @Component({
   selector: 'app-catalog-page',
-  imports: [NgIf, MfSsrHtmlDirective],
+  imports: [MfSsrHtmlDirective],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   template: `
     <h1>Catalog</h1>
-    <p *ngIf="loading" class="status">Loading catalog…</p>
-    <p *ngIf="error" class="error">{{ error }}</p>
+    @if (loading) {
+      <p class="status">Loading catalog…</p>
+    }
+    @if (error) {
+      <p class="error">{{ error }}</p>
+    }
     <mf-catalog #mf [appMfSsrHtml]="ssrHtml"></mf-catalog>
   `,
   styles: [
