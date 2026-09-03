@@ -181,6 +181,15 @@ than inside each MF.
 This fixes the "state not propagated on re-navigation" issue: the store persists
 across route changes, and each navigation re-hydrates the MF from the store.
 
+> **Hydration timing note:** the MF element is captured with
+> `@ViewChild('mf', { static: false })`, which is **not resolved in
+> `ngOnInit()`**. On re-navigation the store already holds the data, so the
+> `ngOnInit` subscription fires before the element exists and the push is
+> dropped. Each page therefore also re-selects the current store state in
+> `ngAfterViewInit()` (`take(1)`) and pushes it into the element once the view
+> is initialized — this is what makes re-navigation re-hydrate without a full
+> page refresh.
+
 ## Development
 
 ```bash

@@ -153,6 +153,7 @@ Workspace: `d:\workspace` (git root) · Project: `d:\workspace\microfrontend` (N
 - [x] C.6 Remove `loadMfData()` from `mf-client-bootstrap.ts` — ✅ done (2026-08-29; data now flows through the NgRx store; bootstrap file cleaned to ~99 lines)
 - [x] C.7 Verify: `ng build` passes; re-navigation re-propagates state — ✅ done (2026-08-29; build exit code 0; pages push store state into MF element properties on every navigation; `navigation` slice records backtracing history via `ROUTER_NAVIGATED`)
 - [x] C.8 Documentation: `shell/README.md` (NgRx state management section) + root `README.md` (state management subsection) + `plan.md` (Phase C) + `STEPS.md` (this section) — ✅ done (2026-08-29; all 4 docs updated)
+- [x] C.9 Fix re-navigation hydration timing — ✅ done (2026-08-29; root cause: `@ViewChild('mf', { static: false })` is not resolved in `ngOnInit()`, so on re-navigation the store subscription fired before the MF element existed and the state push was dropped; fix: `ngAfterViewInit()` in `catalog-page.ts`, `cart-page.ts`, `account-page.ts` re-selects the current store state with `take(1)` and pushes it into the element; browser-verified — cart 3 items / catalog 4 products / account profile all re-hydrate on re-navigation; ai-gen-poc `28cab39` + standalone shell `503f68f`, CI green)
 
 ## Notes / blockers
 - **✅ VUE USER MF (2C) RESOLVED (2026-08-27):** `nx build/test/lint user-mf` all green (10/10 tests).

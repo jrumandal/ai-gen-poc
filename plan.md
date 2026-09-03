@@ -194,6 +194,7 @@ Each MF consumes the **shared GraphQL client** (`libs/shared/contracts`) for typ
 48. Update pages (`catalog-page.ts`, `cart-page.ts`, `account-page.ts`) to dispatch `load` actions in `ngOnInit`, subscribe to store state, and push state into MF element properties.
 49. Remove `loadMfData()` from `mf-client-bootstrap.ts` — data now flows through the NgRx store.
 50. **Verify:** `ng build` passes; re-navigation re-propagates state without full page refresh; `navigation` slice records backtracing history.
+51. **Fix re-navigation hydration timing:** `@ViewChild('mf', { static: false })` is not resolved in `ngOnInit()`, so on re-navigation (store already holds data) the subscription fires before the element exists and the push is dropped. Add `ngAfterViewInit()` to each page to re-select the current store state (`take(1)`) and push it into the MF element now that `mfEl` is available. Verified in browser: catalog/cart/account all re-hydrate on re-navigation without a full page refresh.
 
 **References:** `shell/README.md` (updated with NgRx state management section).
 
