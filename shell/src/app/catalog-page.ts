@@ -15,13 +15,13 @@ import {
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   ElementRef,
+  inject,
   OnDestroy,
   OnInit,
   ViewChild,
 } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, Subscription } from 'rxjs';
-import type { Category, Product } from '@jrumandal/contracts';
 import { MfSsrService } from './mf-ssr.service';
 import { MfSsrHtmlDirective } from './mf-ssr-html.directive';
 import { load as catalogLoad } from './store/catalog.actions';
@@ -81,7 +81,7 @@ export class CatalogPage implements OnInit, OnDestroy {
 
   private readonly subs: Subscription[] = [];
 
-  constructor(private readonly store: Store) {}
+  private readonly store = inject(Store);
 
   ngOnInit(): void {
     // Request the catalog from the store. The effect fetches it only when the

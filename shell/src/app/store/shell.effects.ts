@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { select, Store } from '@ngrx/store';
 import {
@@ -34,6 +34,14 @@ import { selectUserFeature } from './user.selectors';
  */
 @Injectable({ providedIn: 'root' })
 export class ShellEffects {
+  // NOTE: `actions$` and `store` MUST be declared before the `createEffect`
+  // fields below. `createEffect` invokes its factory eagerly at construction
+  // time, and the factories reference `this.actions$` / `this.store`. Field
+  // initializers run in declaration order, so these have to be initialized
+  // first or the factories throw "Cannot read properties of undefined
+  // (reading 'pipe')" during SSR route extraction.
+  private readonly actions$ = inject(Actions);
+  private readonly store = inject(Store);
   private readonly apollo = getSharedApolloClient();
 
   /** Fetch the catalog (products + categories) when `catalog/load` is dispatched. */
@@ -138,11 +146,6 @@ export class ShellEffects {
       )
     )
   );
-
-  constructor(
-    private readonly actions$: Actions,
-    private readonly store: Store
-  ) {}
 
   /** Fetch the cart for a given user id. */
   private fetchCart(userId: string) {

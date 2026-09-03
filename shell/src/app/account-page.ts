@@ -15,6 +15,7 @@ import {
   Component,
   CUSTOM_ELEMENTS_SCHEMA,
   ElementRef,
+  inject,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -79,7 +80,7 @@ export class AccountPage implements OnInit, OnDestroy {
 
   private readonly subs: Subscription[] = [];
 
-  constructor(private readonly store: Store) {}
+  private readonly store = inject(Store);
 
   ngOnInit(): void {
     // Request the signed-in user from the store. The effect fetches it only
