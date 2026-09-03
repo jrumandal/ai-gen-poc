@@ -98,12 +98,12 @@ The micro-frontends are exposed to the shell as **custom elements**
   with no shared DI container, so the store lives in the shell rather than
   inside each MF.
 - The store holds `catalog`, `cart`, `user`, and `navigation` slices. Route
-  components dispatch `load` actions; **effects** fetch from the gateway
-  (guarded by a `loaded` flag so re-navigation reuses the cache); and each
-  navigation **pushes the store state into the MF element's properties** so the
-  MF re-renders.
+  components dispatch `load` actions; **`ShellEffects`** fetch from the gateway
+  via the shared `ApolloClient` (the cart effect first ensures the `user` slice
+  is loaded, since the cart is fetched per user); and each navigation **pushes
+  the store state into the MF element's properties** so the MF re-renders.
 - **`@ngrx/router-store`** records every completed navigation into the
-  `navigation` slice (`current`, `previous`, `history`), giving a **backtrace**
+  `navigation` slice (`current` plus a bounded `history`), giving a **backtrace**
   of the session.
 - This keeps the MFs **self-contained** (they render whatever props they are
   given) and preserves the "no direct cross-MF imports" rule.

@@ -185,12 +185,12 @@ Each MF consumes the **shared GraphQL client** (`libs/shared/contracts`) for typ
 ### Phase C — NgRx state management + state hydration (shell-level store)
 > **Context (2026-08-29):** The shell's pages (catalog, cart, account) were hydrating MFs with state on initial navigation, but re-navigation within the same session did not re-propagate state — only a full page refresh re-hydrated. Root cause: no centralized state management; each page independently fetched data and set it on the MF element, but re-navigation did not re-trigger the fetch.
 
-**Design decision:** Store is implemented at the **shell level** (composition root), NOT inside each MF. Rationale: the three MFs are plain Web Components (Angular/React/Vue) with no Angular DI and no store of their own; the shell is the single source of truth. Pages dispatch `load` actions, effects fetch (guarded by a `loaded` flag so re-navigation reuses cache), and pages push the store state into the MF element's properties so the MF re-renders on every navigation. A `navigation` slice records every completed navigation (backtracing) via `ROUTER_NAVIGATED`.
+**Design decision:** Store is implemented at the **shell level** (composition root), NOT inside each MF. Rationale: the three MFs are plain Web Components (Angular/React/Vue) with no Angular DI and no store of their own; the shell is the single source of truth. Pages dispatch `load` actions, `ShellEffects` fetch from the gateway via the shared `ApolloClient`, and pages push the store state into the MF element's properties so the MF re-renders on every navigation. The cart effect sequences the cross-slice user→cart dependency (it waits for the user's `loaded` flag before fetching the cart). A `navigation` slice records every completed navigation (backtracing) via `ROUTER_NAVIGATED`.
 
 44. Install `@ngrx/store`, `@ngrx/router-store`, `@ngrx/effects` in the shell.
-45. Create store slices: `catalog`, `cart`, `account`, `navigation` (actions, reducers, selectors, models).
-46. Create `AppEffects` with `@Effect()` methods for catalog/cart/account loads (guarded by `loaded` flag for cache reuse).
-47. Wire `provideStore(appReducers)`, `provideEffects([AppEffects])`, `provideRouterStore({ stateKey: 'navigation' })` into `app.config.ts`.
+45. Create per-slice store files under `shell/src/app/store/`: `{catalog,cart,user,navigation}.{actions,reducer,selectors}.ts` (12 files) + `shell.effects.ts`. Slices: `catalog` (`products`, `categories`), `cart` (`cart`), `user` (`user` profile), `navigation` (`current` + bounded `history`).
+46. Create `ShellEffects` (functional `createEffect`) for the catalog/cart/user loads; the cart effect sequences the cross-slice user→cart dependency (waits for the user's `loaded` flag before fetching the cart).
+47. Wire `provideStore({ catalog, cart, user, navigation, router: routerReducer })`, `provideEffects([ShellEffects])`, `provideRouterStore()` into `app.config.ts`.
 48. Update pages (`catalog-page.ts`, `cart-page.ts`, `account-page.ts`) to dispatch `load` actions in `ngOnInit`, subscribe to store state, and push state into MF element properties.
 49. Remove `loadMfData()` from `mf-client-bootstrap.ts` — data now flows through the NgRx store.
 50. **Verify:** `ng build` passes; re-navigation re-propagates state without full page refresh; `navigation` slice records backtracing history.

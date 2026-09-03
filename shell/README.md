@@ -82,11 +82,19 @@ flip — no per-MF CSS.
 | `app/mf-ssr-token.ts` | `MF_SSR_HTML` injection token + `MfSsrHtml` shape. |
 | `app/mf-ssr.service.ts` | `MfSsrService` — typed access to the per-MF SSR HTML. |
 | `app/mf-ssr.server.ts` | `renderMfSsrHtml()` (cached) + `provideMfSsrHtml()` + sample props. |
-| `app/store/index.ts` | Store barrel — `AppState`, `FeatureState`, `NavigationEntry`, `NavigationState`, `StoreEffects`. |
-| `app/store/actions.ts` | NgRx actions (`LoadCatalog`, `LoadCart`, `LoadUser`, `NavigationRecorded`, …). |
-| `app/store/reducers.ts` | NgRx reducers (`catalogReducer`, `cartReducer`, `userReducer`, `navigationReducer`, `appReducer`). |
-| `app/store/effects.ts` | `StoreEffects` — gateway fetches guarded by the `loaded` flag (cache on re-navigation). |
-| `app/store/selectors.ts` | NgRx selectors (`selectCatalog`, `selectCart`, `selectUser`, `selectNavigation`, …). |
+| `app/store/catalog.actions.ts` | Catalog actions — `load`, `loadSuccess`, `loadFailure`. |
+| `app/store/catalog.reducer.ts` | `catalogReducer` — `CatalogState { products, categories, loading, loaded, error }`. |
+| `app/store/catalog.selectors.ts` | `selectProducts`, `selectCategories`, `selectCatalogLoading`, `selectCatalogLoaded`, `selectCatalogError`. |
+| `app/store/cart.actions.ts` | Cart actions — `load`, `loadSuccess`, `loadFailure`. |
+| `app/store/cart.reducer.ts` | `cartReducer` — `CartState { cart, loading, loaded, error }`. |
+| `app/store/cart.selectors.ts` | `selectCart`, `selectCartLoading`, `selectCartLoaded`, `selectCartError`. |
+| `app/store/user.actions.ts` | User actions — `load`, `loadSuccess`, `loadFailure`. |
+| `app/store/user.reducer.ts` | `userReducer` — `UserState { user, loading, loaded, error }`. |
+| `app/store/user.selectors.ts` | `selectUser`, `selectUserLoading`, `selectUserLoaded`, `selectUserError`. |
+| `app/store/navigation.actions.ts` | `routeChanged` action + `NavigationEntry` type. |
+| `app/store/navigation.reducer.ts` | `navigationReducer` — `NavigationState { current, history }` (bounded to 50 entries). |
+| `app/store/navigation.selectors.ts` | `selectCurrentRoute`, `selectNavigationHistory`. |
+| `app/store/shell.effects.ts` | `ShellEffects` — functional `createEffect` fetches via the shared `ApolloClient`; cart effect sequences the cross-slice user→cart dependency. |
 | `app/catalog-page.ts` / `cart-page.ts` / `account-page.ts` | Route components that hydrate the MF element from the store on every navigation. |
 
 ## Routes
@@ -150,25 +158,25 @@ than inside each MF.
 
 | Slice | Contents |
 | --- | --- |
-| `catalog` | `products`, `loaded`, `loading`, `error` |
-| `cart` | `items`, `total`, `loaded`, `loading`, `error` |
-| `user` | `profile`, `orders`, `loaded`, `loading`, `error` |
-| `navigation` | `current`, `previous`, `history` (backtrace of completed navigations) |
+| `catalog` | `products`, `categories`, `loading`, `loaded`, `error` |
+| `cart` | `cart` (the `Cart` object or `null`), `loading`, `loaded`, `error` |
+| `user` | `user` (the `User` object or `null`), `loading`, `loaded`, `error` |
+| `navigation` | `current`, `history` (backtrace of completed navigations, capped at 50) |
+| `router` | `@ngrx/router-store` state (current/previous router state) |
 
 **Flow:**
 
-1. A route component dispatches `LoadCatalog` / `LoadCart` / `LoadUser` on
-   `ngOnInit`.
-2. `StoreEffects` fetches from the gateway via the shared `ApolloClient`,
-   **guarded by the `loaded` flag** — so re-navigating to a page reuses the
-   cached state instead of re-fetching.
+1. A route component dispatches the slice's `load` action on `ngOnInit`.
+2. `ShellEffects` (functional `createEffect`) fetches from the gateway via the
+   shared `ApolloClient`. The cart effect first ensures the `user` slice is
+   loaded (the cart is fetched per user), then fetches the cart.
 3. The reducer stores the result in the matching slice.
 4. The route component subscribes to the slice and **pushes the state into the
-   MF element's properties** (`el.products = …`, `el.items = …`, `el.profile = …`),
-   so the MF re-renders on every navigation.
-5. `@ngrx/router-store` records every completed navigation into the `navigation`
-   slice (`current`, `previous`, `history`), giving a **backtrace** of the
-   session.
+   MF element's properties** (`el.products = …`, `el.categories = …`,
+   `el.cart = …`, `el.user = …`), so the MF re-renders on every navigation.
+5. `ShellEffects.navigation$` listens to `ROUTER_NAVIGATED` and records every
+   completed navigation into the `navigation` slice (`current` plus a bounded
+   `history`), giving a **backtrace** of the session.
 
 This fixes the "state not propagated on re-navigation" issue: the store persists
 across route changes, and each navigation re-hydrates the MF from the store.
