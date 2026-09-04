@@ -1,7 +1,7 @@
 # @jrumandal/shell — Angular SSR shell
 
 The **shell** is the host application of the micro-frontend reference
-architecture. It is an **Angular 20** app (standalone components, signals)
+architecture. It is an **Angular 22** app (standalone components, signals)
 served through the **`@angular/ssr` Express adapter**, and it composes the three
 micro-frontends (`@jrumandal/catalog`, `@jrumandal/cart`, `@jrumandal/user`) as **Web Components**
 (`<mf-catalog>`, `<mf-cart>`, `<mf-user>`).
@@ -200,6 +200,27 @@ pnpm start        # run the SSR server (node dist/shell/server/server.mjs)
 pnpm test         # Jest (jest-preset-angular)
 pnpm lint         # ESLint (angular-eslint)
 pnpm typecheck    # tsc --noEmit
+```
+
+## Docker deployment
+
+The shell ships as a **multi-stage** image (`mf/shell:latest`, ~333 MB, down
+from ~2.3 GB single-stage):
+
+- **Build stage** — `node:22-slim` + pnpm: `pnpm install` (workspace, with the
+  `@jrumandal/*` frontend packages linked from source) then `ng build`
+  (`@angular/build:application`, `outputMode: server`).
+- **Runtime stage** — `node:22-slim` with **no `node_modules`**: the Angular
+  build fully bundles the app (including the `@jrumandal/*` packages) into
+  `dist/shell/`, so the runtime stage copies only `dist/shell/` and runs
+  `node dist/shell/server/server.mjs` (Express SSR on `PORT`, default 4300 in
+  the compose stack).
+
+Build it from the orchestrator's Docker context (see
+`mf-orchestrator/README.md` → *Docker deployment*):
+
+```bash
+docker build -f Dockerfile.shell -t mf/shell:latest .
 ```
 
 ## CI

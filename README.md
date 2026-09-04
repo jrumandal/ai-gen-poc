@@ -34,11 +34,11 @@ versioned, built, and published, and the dependency direction is strictly
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │  CLIENT LAYER                                                                │
-│  shell (Angular 20, SSR)  ·  mobile (Capacitor wrapper)                      │
+│  shell (Angular 22, SSR)  ·  mobile (Capacitor wrapper)                      │
 │  composes the 3 MFs as <mf-catalog> <mf-cart> <mf-user>                     │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │  MICRO-FRONTEND LAYER  (Web Components, one per framework)                   │
-│  catalog (Angular 20)   ·   cart (React 19)   ·   user (Vue 3)              │
+│  catalog (Angular 22)   ·   cart (React 19)   ·   user (Vue 3)              │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │  SHARED LAYER  (framework-agnostic, published to GitHub Packages)            │
 │  @jrumandal/contracts · event-bus · design-tokens · bridge                  │
@@ -157,10 +157,10 @@ All are published under the **`@jrumandal`** npm scope (GitHub Packages).
 |------|---------|------|-------------------|
 | [`shared`](./shared) | `@jrumandal/{contracts,event-bus,design-tokens,bridge}` | Frontend foundation (4 packages) | TS, framework-agnostic |
 | [`server-shared`](./server-shared) | `@jrumandal/shared` | Backend foundation (NestJS building blocks + Prisma) | NestJS 11, Prisma 6 |
-| [`catalog`](./catalog) | `@jrumandal/catalog` | Catalog MF (`<mf-catalog>`) | Angular 20 |
+| [`catalog`](./catalog) | `@jrumandal/catalog` | Catalog MF (`<mf-catalog>`) | Angular 22 |
 | [`cart`](./cart) | `@jrumandal/cart` | Cart MF (`<mf-cart>`) | React 19, Vite 6 |
 | [`user`](./user) | `@jrumandal/user` | User MF (`<mf-user>`) | Vue 3.5 |
-| [`shell`](./shell) | `@jrumandal/shell` | Host app, SSR composition | Angular 20, `@angular/ssr` |
+| [`shell`](./shell) | `@jrumandal/shell` | Host app, SSR composition | Angular 22, `@angular/ssr` |
 | [`gateway`](./gateway) | `@jrumandal/gateway` | GraphQL gateway (schema stitching) | NestJS 11, Apollo Server 4 |
 | [`catalog-svc`](./catalog-svc) | `@jrumandal/catalog-svc` | Catalog domain service | NestJS 11, Prisma |
 | [`cart-svc`](./cart-svc) | `@jrumandal/cart-svc` | Cart domain service | NestJS 11, Prisma |
@@ -187,7 +187,7 @@ graph TD
     end
 
     subgraph Frontend["Frontend (Node)"]
-        Shell["shell<br/>Angular 20 SSR<br/>:4300"]
+        Shell["shell<br/>Angular 22 SSR<br/>:4300"]
     end
 
     subgraph API["API Gateway (Node)"]
@@ -359,10 +359,10 @@ documentation.
 | Component | Package | One-line summary | Documentation |
 |-----------|---------|------------------|---------------|
 | **shared** | `@jrumandal/{contracts,event-bus,design-tokens,bridge}` | Framework-agnostic foundation: typed API contracts, cross-MF event bus, design tokens, and web-component bridge. | [README](./shared/README.md) · [github.com/jrumandal/shared](https://github.com/jrumandal/shared) |
-| **catalog** | `@jrumandal/catalog` | Angular 20 catalog MF (`<mf-catalog>`): product grid, category/price filtering, search, scan-product. | [README](./catalog/README.md) · [github.com/jrumandal/catalog](https://github.com/jrumandal/catalog) |
+| **catalog** | `@jrumandal/catalog` | Angular 22 catalog MF (`<mf-catalog>`): product grid, category/price filtering, search, scan-product. | [README](./catalog/README.md) · [github.com/jrumandal/catalog](https://github.com/jrumandal/catalog) |
 | **cart** | `@jrumandal/cart` | React 19 cart MF (`<mf-cart>`), Vite 6 IIFE bundle published to GitHub Packages. | [README](./cart/README.md) · [github.com/jrumandal/cart](https://github.com/jrumandal/cart) |
 | **user** | `@jrumandal/user` | Vue 3 user MF (`<mf-user>`): signed-in profile or sign-in form. | [README](./user/README.md) · [github.com/jrumandal/user](https://github.com/jrumandal/user) |
-| **shell** | `@jrumandal/shell` | Angular 20 SSR host app that composes the 3 MFs, owns routing + shared ApolloClient. | [README](./shell/README.md) · [github.com/jrumandal/shell](https://github.com/jrumandal/shell) |
+| **shell** | `@jrumandal/shell` | Angular 22 SSR host app that composes the 3 MFs, owns routing + shared ApolloClient. | [README](./shell/README.md) · [github.com/jrumandal/shell](https://github.com/jrumandal/shell) |
 | **mobile** | `@jrumandal/mobile` | Capacitor hybrid wrapper that packages the shell's web build into native Android/iOS. | [README](./mobile/README.md) · [github.com/jrumandal/mobile](https://github.com/jrumandal/mobile) |
 
 ### Backend

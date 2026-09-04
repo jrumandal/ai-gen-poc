@@ -198,6 +198,29 @@ Each MF consumes the **shared GraphQL client** (`libs/shared/contracts`) for typ
 
 **References:** `shell/README.md` (updated with NgRx state management section).
 
+### Phase D — Docker image size reduction (multi-stage builds, build-time deps)
+> **Context (2026-08-29):** The single-stage Docker images were bloated — the shell image was **2.3 GB** and each of the 4 backend services (gateway, catalog-svc, cart-svc, user-svc) was **2.83 GB**. The goal was to install dependencies at **build time** (in a throwaway build stage) and ship only the runtime artifacts, so the final images are dramatically smaller.
+
+**Design decision:** Multi-stage builds. The **build stage** runs `pnpm install` + `prisma generate` + `tsc`/`ng build` and is discarded. The **runtime stage** copies only the compiled output. For the shell, the Angular SSR output (`dist/shell/`) is a fully-bundled `server.mjs` (835 KB) with **zero** runtime `node_modules` — verified by running it standalone. For the backends (NestJS, not bundled), `pnpm deploy --legacy -P` produces a minimal prod `node_modules`, plus the generated Prisma client is copied in.
+
+**Results (verified):**
+| Image | Before | After | Reduction |
+|---|---|---|---|
+| `mf/shell` | 2.3 GB | **333 MB** | ~85% |
+| `mf/gateway` | 2.83 GB | **~750 MB** | ~73% |
+| `mf/catalog-svc` | 2.83 GB | **~750 MB** | ~73% |
+| `mf/cart-svc` | 2.83 GB | **~750 MB** | ~73% |
+| `mf/user-svc` | 2.83 GB | **~750 MB** | ~73% |
+
+**Key gotchas resolved:**
+- **Prisma client stub vs. real client:** `pnpm deploy` carries the registry **stub** `.prisma/client` (which throws "did not initialize yet"). The **real** generated client (with the `libquery_engine-*.so.node` engine) lives in the build stage's `server-shared/node_modules/.pnpm/...`. The Dockerfile locates the real client by searching for the dir containing a `*.so.node` file, then copies it over the stub in the deploy target.
+- **`cp -r` nesting bug:** because the stub `.prisma/client` already existed in the deploy target, `cp -r SRC dest` nested the real client *inside* the stub. Fixed with `rm -rf "$NM/.prisma"` + `mkdir -p "$NM/.prisma"` before the copy.
+- **Layer caching masked the error:** a cached `RUN` layer skipped the buggy copy step, so only a `--no-cache` build surfaced the true failure. Always `--no-cache` when verifying a changed `RUN` step.
+
+**Verification:** all 7 services (postgres, pgadmin, catalog-svc, cart-svc, user-svc, gateway, shell) come up **Healthy**; runtime smoke tests pass (gateway GraphQL, service health endpoints, shell SSR HTML).
+
+**References:** `mf-orchestrator/README.md` (Docker deployment section), `STEPS.md` (Phase D).
+
 ## Relevant files (to be created)
 - `microfrontend/nx.json`, `package.json`, `pnpm-workspace.yaml`, `tsconfig.base.json` — workspace config
 - `microfrontend/openapi/{catalog,cart,user}.yaml` — canonical API contracts
